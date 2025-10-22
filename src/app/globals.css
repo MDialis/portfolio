@@ -1,26 +1,39 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary: 98 88 222;
+  --secondary: 234 128 123;
+  --accent: 53 192 199;
+  
+  --bg-base: 255 255 255;
+  --bg-surface: 245 245 245;
+
+  --text-base: 10 10 10;
+  --text-muted: 110 110 110;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="Dark"] {
+  --primary: 129 118 240;
+  --secondary: 238 153 149;
+  --accent: 77 208 214;
+
+  --bg-base: 23 24 28;
+  --bg-surface: 37 38 43;
+
+  --text-base: 230 230 230;
+  --text-muted: 160 160 160;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme {
+  colors: {
+    'primary': 'rgb(var(--primary) / <alpha-value>)',
+    'secondary': 'rgb(var(--secondary) / <alpha-value>)',
+    'accent': 'rgb(var(--accent) / <alpha-value>)',
+    'bg-base': 'rgb(var(--bg-base) / <alpha-value>)',
+    'bg-surface': 'rgb(var(--bg-surface) / <alpha-value>)',
+    'text-base': 'rgb(var(--text-base) / <alpha-value>)',
+    'text-muted': 'rgb(var(--text-muted) / <alpha-value>)'
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
