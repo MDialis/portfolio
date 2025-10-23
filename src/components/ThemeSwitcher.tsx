@@ -1,32 +1,35 @@
 'use client'
 
-import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
-import { Sun, Moon } from 'lucide-react' 
+import { useTheme } from '@/components/ThemeProvider'
+import { Sun, Moon, Palette } from 'lucide-react'
+
 export const ThemeSwitcher = () => {
-  const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme, themes } = useTheme()
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const cycleTheme = () => {
+    const currentIndex = themes.indexOf(theme)
+    const nextIndex = (currentIndex + 1) % themes.length
+    setTheme(themes[nextIndex])
+  }
 
-  if (!mounted) {
-    // Evita piscar a UI no carregamento
-    return <div className="h-8 w-8" /> 
+  const renderIcon = () => {
+    const className = "h-4 w-4 text-text-base"
+    if (theme === 'dark') {
+      return <Moon className={className} />
+    }
+    if (theme === 'light') {
+      return <Sun className={className} />
+    }
+    return <Palette className={className} />
   }
 
   return (
     <button
-      aria-label="Toggle Theme"
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="rounded-full p-2 transition-colors hover:bg-bg-surface"
+      aria-label="Cycle Theme"
+      onClick={cycleTheme}
+      className="rounded-full p-2 transition-colors hover:bg-bg-card"
     >
-      {theme === 'dark' ? (
-        <Sun className="h-4 w-4 text-text-base" />
-      ) : (
-        <Moon className="h-4 w-4 text-text-base" />
-      )}
+      {renderIcon()}
     </button>
   )
 }
