@@ -1,5 +1,4 @@
 import Card from "@/components/Card";
-import { link } from "fs";
 
 export default function Home() {
   return (

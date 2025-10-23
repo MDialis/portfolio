@@ -7,7 +7,7 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 w-full bg-bg-card shadow-md z-10">
       <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-primary">MyPortfolio</h1>
+        <h1 className="text-xl font-bold text-secondary">MyPortfolio</h1>
 
         <ThemeSwitcher />
 
