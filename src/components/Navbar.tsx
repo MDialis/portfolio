@@ -5,11 +5,11 @@ import { ThemeSwitcher } from "./ThemeSwitcher";
 export default function Navbar() {
 
   return (
-    <nav className="sticky top-0 w-full bg-bg-card shadow-md z-10">
+    <nav className="sticky top-0 w-full bg-secondary shadow-md z-10">
       <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-secondary">MyPortfolio</h1>
+        <h1 className="text-xl font-bold text-accent">MyPortfolio</h1>
 
-        <ThemeSwitcher />
+        <ThemeSwitcher className="text-accent"/>
 
         {/* 
         <div className="flex items-center gap-2">

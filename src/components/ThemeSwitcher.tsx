@@ -2,8 +2,13 @@
 
 import { useTheme } from '@/components/ThemeProvider'
 import { Sun, Moon, Palette } from 'lucide-react'
+import { twMerge } from 'tailwind-merge'
 
-export const ThemeSwitcher = () => {
+type ThemeSwitcherProps = {
+  className?: string
+}
+
+export const ThemeSwitcher = ({ className }: ThemeSwitcherProps) => {
   const { theme, setTheme, themes } = useTheme()
 
   const cycleTheme = () => {
@@ -13,21 +18,24 @@ export const ThemeSwitcher = () => {
   }
 
   const renderIcon = () => {
-    const className = "h-4 w-4 text-text-base"
+    const iconClass = twMerge(
+      'h-5 w-5 text-base-content',
+      className
+    )
     if (theme === 'dark') {
-      return <Moon className={className} />
+      return <Moon className={iconClass} />
     }
     if (theme === 'light') {
-      return <Sun className={className} />
+      return <Sun className={iconClass} />
     }
-    return <Palette className={className} />
+    return <Palette className={iconClass} />
   }
 
   return (
     <button
       aria-label="Cycle Theme"
       onClick={cycleTheme}
-      className="rounded-full p-2 transition-colors hover:bg-bg-card"
+      className="rounded-full p-2 transition-colors hover:bg-secondary"
     >
       {renderIcon()}
     </button>

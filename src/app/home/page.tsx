@@ -2,7 +2,7 @@ import Card from "@/components/Card";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-bg-base text-text-base transition-colors duration-200">
+    <div className="min-h-screen bg-base-200 text-base-content transition-colors duration-200">
       {/* Main content */}
       <main className="max-w-5xl mx-auto px-4 py-12">
         
@@ -13,19 +13,19 @@ export default function Home() {
               Howdy! I'm Mateus Diális
             </span>
           </h2>
-          <p className="mt-4 text-xl text-text-muted max-w-2xl mx-auto">
+          <p className="mt-4 text-xl text-base-content max-w-2xl mx-auto">
             A front-end developer passionate about crafting beautiful and functional web experiences. Welcome to my portfolio!
           </p>
           <div className="mt-10 flex gap-4 justify-center">
             <a
               href="#projects"
-              className="px-6 py-3 rounded-lg font-semibold text-white bg-primary shadow-lg hover:opacity-80 transition-opacity"
+              className="px-6 py-3 rounded-lg font-semibold text-primary-content bg-primary shadow-lg hover:opacity-80 transition-opacity"
             >
               My Projects
             </a>
             <a
               href="#contact"
-              className="px-6 py-3 rounded-lg font-semibold text-text-base bg-bg-card shadow-lg hover:bg-bg-base transition-colors"
+              className="px-6 py-3 rounded-lg font-semibold text-base-content bg-neutral shadow-lg hover:opacity-80 transition-colors"
             >
               Contact me!
             </a>
@@ -34,7 +34,7 @@ export default function Home() {
 
         {/* Projects section */}
         <section id="projects" className="py-20">
-          <h3 className="text-4xl font-bold text-center mb-12 text-secondary">
+          <h3 className="text-4xl font-bold text-center mb-12 text-base-content">
             Projects
           </h3>
           
