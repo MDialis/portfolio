@@ -102,3 +102,57 @@
   --color-error: oklch(57% 0.245 27.325);
   --color-error-content: oklch(97% 0.013 17.38);
 }  
+
+/*
+ * O Contêiner
+ * Ele ocupa espaço na página e é o ponto de referência.
+ */
+.ghost-container {
+  position: relative;
+  
+  /* Defina o tamanho que o fantasma deve ocupar no layout */
+  /* Ajuste conforme o tamanho real da sua arte */
+  width: 60px;
+  height: 90px;
+  
+  /* Apenas para depuração, você pode remover isso */
+  /* border: 1px dashed red; */
+}
+
+/*
+ * As Partes
+ * Elas são 'absolute' para flutuar dentro do contêiner
+ */
+.ghost-part {
+  position: absolute;
+  /* Impede que o mouse trave nelas */
+  pointer-events: none; 
+  
+  /* A transição suave de 'transform' será aplicada pelo JS */
+  /* Isso é importante para o movimento suave */
+  will-change: transform;
+}
+
+/*
+ * Estilos de exemplo para posicionar as partes DENTRO do contêiner
+ * (Ajuste isso para o seu design)
+ */
+#ghost-skull {
+  top: 0;
+  left: 5px; /* Centraliza (60px contêiner - 50px caveira) / 2 */
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 50%;
+  z-index: 1001;
+}
+
+#ghost-cape {
+  top: -5px; /* Começa no meio da caveira */
+  left: -5px; /* Centraliza (60px contêiner - 40px capa) / 2 */
+  width: 70px;
+  height: 140px;
+  background-color: black;
+  z-index: 1000;
+  /* ... outros estilos para a capa ... */
+}
