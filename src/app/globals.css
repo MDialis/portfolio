@@ -11,7 +11,7 @@
   --color-primary: var(--theme-primary);
   --color-primary-content: var(--theme-primary-content);
   --color-secondary: var(--theme-secondary);
-  --color-secondary: var(--theme-secondary-content);
+  --color-secondary-content: var(--theme-secondary-content);
 
   --color-accent: var(--theme-accent);
   --color-accent-content: var(--theme-accent-content);
