@@ -103,56 +103,50 @@
   --color-error-content: oklch(97% 0.013 17.38);
 }  
 
-/*
- * O Contêiner
- * Ele ocupa espaço na página e é o ponto de referência.
- */
+
 .ghost-container {
   position: relative;
-  
-  /* Defina o tamanho que o fantasma deve ocupar no layout */
-  /* Ajuste conforme o tamanho real da sua arte */
-  width: 60px;
-  height: 90px;
-  
-  /* Apenas para depuração, você pode remover isso */
-  /* border: 1px dashed red; */
+  width: 200px;
+  height: 200px;
 }
 
-/*
- * As Partes
- * Elas são 'absolute' para flutuar dentro do contêiner
- */
-.ghost-part {
+.ghost-assembly {
   position: absolute;
-  /* Impede que o mouse trave nelas */
-  pointer-events: none; 
-  
-  /* A transição suave de 'transform' será aplicada pelo JS */
-  /* Isso é importante para o movimento suave */
-  will-change: transform;
-}
-
-/*
- * Estilos de exemplo para posicionar as partes DENTRO do contêiner
- * (Ajuste isso para o seu design)
- */
-#ghost-skull {
   top: 0;
-  left: 5px; /* Centraliza (60px contêiner - 50px caveira) / 2 */
-  width: 50px;
-  height: 50px;
-  background-color: white;
-  border-radius: 50%;
-  z-index: 1001;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform; 
 }
 
-#ghost-cape {
-  top: -5px; /* Começa no meio da caveira */
-  left: -5px; /* Centraliza (60px contêiner - 40px capa) / 2 */
-  width: 70px;
-  height: 140px;
-  background-color: black;
-  z-index: 1000;
-  /* ... outros estilos para a capa ... */
+.ghost-assembly svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; 
 }
+
+#front-hoodie {
+  z-index: 50;
+}
+#eyes {
+  z-index: 49; 
+}
+#nose {
+  z-index: 49;
+}
+#skull {
+  z-index: 48;
+}
+#back-hoodie {
+  z-index: 47;
+}
+#front-cape {
+  z-index: 46;
+}
+#back-cape {
+  z-index: 45;
+}
+

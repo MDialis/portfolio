@@ -1,29 +1,58 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, MutableRefObject, RefObject } from "react";
 
-// SKULL: Reacts faster (higher smoothing), moves less (higher moveFactor)
-const SKULL_SMOOTHING = 0.3;
-const SKULL_MOVE_FACTOR = 35;
-const SKULL_MAX_MOVE_PX = 20; 
+// Importações dos SVGs (sem alteração)
+import FrontHoodie from "../assets/reaper/FrontHoodie.svg";
+import Eyes from "../assets/reaper/Eyes.svg";
+import Nose from "../assets/reaper/Nose.svg";
+import Skull from "../assets/reaper/Skull.svg";
+import BackHoodie from "../assets/reaper/BackHoodie.svg";
+import FrontCape from "../assets/reaper/FrontCape.svg";
+import BackCape from "../assets/reaper/BackCape.svg";
 
-// CAPE: Reacts slower (lower smoothing), moves more (lower moveFactor)
-const CAPE_SMOOTHING = 0.1;
-const CAPE_MOVE_FACTOR = 35;
-const CAPE_MAX_MOVE_PX = 12;
+const SKULL_SMOOTHING = 0.2;
+const SKULL_MOVE_FACTOR = 40;
+const SKULL_MAX_MOVE_PX = 15;
+
+const EYES_SMOOTHING = 0.18;
+const EYES_MOVE_FACTOR = 35;
+const EYES_MAX_MOVE_PX = 18;
+
+const FRONT_HOODIE_SMOOTHING = 0.15;
+const FRONT_HOODIE_MOVE_FACTOR = 38;
+const FRONT_HOODIE_MAX_MOVE_PX = 16;
+
+const BACK_HOODIE_SMOOTHING = 0.1;
+const BACK_HOODIE_MOVE_FACTOR = 45;
+const BACK_HOODIE_MAX_MOVE_PX = 12;
+
+const FRONT_CAPE_SMOOTHING = 0.12;
+const FRONT_CAPE_MOVE_FACTOR = 30;
+const FRONT_CAPE_MAX_MOVE_PX = 22;
+
+const BACK_CAPE_SMOOTHING = 0.08;
+const BACK_CAPE_MOVE_FACTOR = 50;
+const BACK_CAPE_MAX_MOVE_PX = 10;
 
 export default function Reaper() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const skullRef = useRef<HTMLDivElement>(null);
-  const capeRef = useRef<HTMLDivElement>(null);
+  const skullGroupRef = useRef<HTMLDivElement>(null);
+  const eyesRef = useRef<HTMLDivElement>(null);
+  const frontHoodieRef = useRef<HTMLDivElement>(null);
+  const backHoodieRef = useRef<HTMLDivElement>(null);
+  const frontCapeRef = useRef<HTMLDivElement>(null);
+  const backCapeRef = useRef<HTMLDivElement>(null);
 
-  // Cursor position
+  // --- Refs de Posição ---
   const cursorPos = useRef({ x: 0, y: 0 });
   const isCursorActive = useRef(false);
-
-  // Separate CURRENT positions for each part
-  const skullPos = useRef({ x: 0, y: 0 });
-  const capePos = useRef({ x: 0, y: 0 });
+  const skullGroupPos = useRef({ x: 0, y: 0 });
+  const eyesPos = useRef({ x: 0, y: 0 });
+  const frontHoodiePos = useRef({ x: 0, y: 0 });
+  const backHoodiePos = useRef({ x: 0, y: 0 });
+  const frontCapePos = useRef({ x: 0, y: 0 });
+  const backCapePos = useRef({ x: 0, y: 0 });
 
   const animFrameRef = useRef<number>(0);
 
@@ -38,8 +67,30 @@ export default function Reaper() {
     };
 
     window.addEventListener("mousemove", handleCursorMove);
-    // FIX: Changed this to call handleCursorLeave
     document.documentElement.addEventListener("mouseleave", handleCursorLeave);
+
+    const updatePartPosition = (
+      baseTargetX: number,
+      baseTargetY: number,
+      domRef: RefObject<HTMLDivElement>,
+      posRef: MutableRefObject<{ x: number; y: number }>,
+      moveFactor: number,
+      maxMovePx: number,
+      smoothing: number
+    ) => {
+      let targetX = baseTargetX / moveFactor;
+      let targetY = baseTargetY / moveFactor;
+      targetX = Math.min(Math.max(targetX, -maxMovePx), maxMovePx);
+      targetY = Math.min(Math.max(targetY, -maxMovePx), maxMovePx);
+      const currentX = posRef.current.x;
+      const currentY = posRef.current.y;
+      const newX = currentX + (targetX - currentX) * smoothing;
+      const newY = currentY + (targetY - currentY) * smoothing;
+      posRef.current = { x: newX, y: newY };
+      if (domRef.current) {
+        domRef.current.style.transform = `translate(${newX}px, ${newY}px)`;
+      }
+    };
 
     const animate = () => {
       let baseTargetX = 0;
@@ -49,79 +100,111 @@ export default function Reaper() {
         const rect = containerRef.current.getBoundingClientRect();
         const containerCenterX = rect.left + rect.width / 2;
         const containerCenterY = rect.top + rect.height / 2;
-
-        // Distance from cursor to center
-        const offsetX = cursorPos.current.x - containerCenterX;
-        const offsetY = cursorPos.current.y - containerCenterY;
-
-        baseTargetX = offsetX;
-        baseTargetY = offsetY;
-      }
-      
-      // --- Skull Movement ---
-      // Skull's target position (divided by factor AND clamped)
-      let skullTargetX = baseTargetX / SKULL_MOVE_FACTOR;
-      let skullTargetY = baseTargetY / SKULL_MOVE_FACTOR;
-      
-      // Apply the maximum limit (clamp)
-      skullTargetX = Math.min(Math.max(skullTargetX, -SKULL_MAX_MOVE_PX), SKULL_MAX_MOVE_PX);
-      skullTargetY = Math.min(Math.max(skullTargetY, -SKULL_MAX_MOVE_PX), SKULL_MAX_MOVE_PX);
-
-      // Skull's current position
-      const skullCurrentX = skullPos.current.x;
-      const skullCurrentY = skullPos.current.y;
-
-      // Interpolate (Lerp) to the new position
-      const skullNewX = skullCurrentX + (skullTargetX - skullCurrentX) * SKULL_SMOOTHING;
-      const skullNewY = skullCurrentY + (skullTargetY - skullCurrentY) * SKULL_SMOOTHING;
-      
-      // Update the current position and the DOM
-      skullPos.current = { x: skullNewX, y: skullNewY };
-      if (skullRef.current) {
-        skullRef.current.style.transform = `translate(${skullNewX}px, ${skullNewY}px)`;
+        baseTargetX = cursorPos.current.x - containerCenterX;
+        baseTargetY = cursorPos.current.y - containerCenterY;
       }
 
-      // --- Cape Movement ---
-      // Cape's target position (with its own factors)
-      let capeTargetX = baseTargetX / CAPE_MOVE_FACTOR;
-      let capeTargetY = baseTargetY / CAPE_MOVE_FACTOR;
-      
-      // Apply the maximum limit (clamp)
-      capeTargetX = Math.min(Math.max(capeTargetX, -CAPE_MAX_MOVE_PX), CAPE_MAX_MOVE_PX);
-      capeTargetY = Math.min(Math.max(capeTargetY, -CAPE_MAX_MOVE_PX), CAPE_MAX_MOVE_PX);
+      updatePartPosition(
+        baseTargetX,
+        baseTargetY,
+        backCapeRef,
+        backCapePos,
+        BACK_CAPE_MOVE_FACTOR,
+        BACK_CAPE_MAX_MOVE_PX,
+        BACK_CAPE_SMOOTHING
+      );
 
-      // Cape's current position
-      const capeCurrentX = capePos.current.x;
-      const capeCurrentY = capePos.current.y;
+      updatePartPosition(
+        baseTargetX,
+        baseTargetY,
+        backHoodieRef,
+        backHoodiePos,
+        BACK_HOODIE_MOVE_FACTOR,
+        BACK_HOODIE_MAX_MOVE_PX,
+        BACK_HOODIE_SMOOTHING
+      );
 
-      // Interpolate (Lerp) to the new position
-      const capeNewX = capeCurrentX + (capeTargetX - capeCurrentX) * CAPE_SMOOTHING;
-      const capeNewY = capeCurrentY + (capeTargetY - capeCurrentY) * CAPE_SMOOTHING;
+      updatePartPosition(
+        baseTargetX,
+        baseTargetY,
+        skullGroupRef,
+        skullGroupPos,
+        SKULL_MOVE_FACTOR,
+        SKULL_MAX_MOVE_PX,
+        SKULL_SMOOTHING
+      );
 
-      // Update the current position and the DOM
-      capePos.current = { x: capeNewX, y: capeNewY };
-      if (capeRef.current) {
-        capeRef.current.style.transform = `translate(${capeNewX}px, ${capeNewY}px)`;
-      }
-      
-      // Continue the loop
+      updatePartPosition(
+        baseTargetX,
+        baseTargetY,
+        eyesRef,
+        eyesPos,
+        EYES_MOVE_FACTOR,
+        EYES_MAX_MOVE_PX,
+        EYES_SMOOTHING
+      );
+
+      updatePartPosition(
+        baseTargetX,
+        baseTargetY,
+        frontHoodieRef,
+        frontHoodiePos,
+        FRONT_HOODIE_MOVE_FACTOR,
+        FRONT_HOODIE_MAX_MOVE_PX,
+        FRONT_HOODIE_SMOOTHING
+      );
+
+      updatePartPosition(
+        baseTargetX,
+        baseTargetY,
+        frontCapeRef,
+        frontCapePos,
+        FRONT_CAPE_MOVE_FACTOR,
+        FRONT_CAPE_MAX_MOVE_PX,
+        FRONT_CAPE_SMOOTHING
+      );
+
       animFrameRef.current = requestAnimationFrame(animate);
     };
 
-    animate(); // Start the loop
+    animate(); 
 
-    // Cleanup
     return () => {
       window.removeEventListener("mousemove", handleCursorMove);
-      document.documentElement.removeEventListener("mouseleave", handleCursorLeave);
+      document.documentElement.addEventListener(
+        "mouseleave",
+        handleCursorLeave
+      );
       cancelAnimationFrame(animFrameRef.current);
     };
-  }, []); // [] = Runs only once
+  }, []);
 
   return (
     <div ref={containerRef} className="ghost-container">
-      <div ref={skullRef} id="ghost-skull" className="ghost-part"></div>
-      <div ref={capeRef} id="ghost-cape" className="ghost-part"></div>
+      <div ref={backCapeRef} className="ghost-assembly">
+        <BackCape id="back-cape" />
+      </div>
+
+      <div ref={frontCapeRef} className="ghost-assembly">
+        <FrontCape id="front-cape" />
+      </div>
+
+      <div ref={backHoodieRef} className="ghost-assembly">
+        <BackHoodie id="back-hoodie" />
+      </div>
+
+      <div ref={skullGroupRef} className="ghost-assembly">
+        <Skull id="skull" />
+        <Nose id="nose" />
+      </div>
+
+      <div ref={eyesRef} className="ghost-assembly">
+        <Eyes id="eyes" />
+      </div>
+
+      <div ref={frontHoodieRef} className="ghost-assembly">
+        <FrontHoodie id="front-hoodie" />
+      </div>
     </div>
   );
 }
