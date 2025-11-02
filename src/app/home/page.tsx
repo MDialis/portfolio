@@ -33,8 +33,12 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="flex justify-center mb-20">
-          <Reaper />
+        <div className="relative move-vertical">
+          <div className="move-horizontal">
+            <div className="move-sway">
+              <Reaper size={350} />
+            </div>
+          </div>
         </div>
 
         {/* Projects section */}
