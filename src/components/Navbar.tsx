@@ -5,30 +5,11 @@ import { ThemeSwitcher } from "./ThemeSwitcher";
 export default function Navbar() {
 
   return (
-    <nav className="sticky top-0 w-full bg-secondary shadow-md z-10">
+    <nav className="sticky top-0 w-full bg-linear-to-b z-50 from-base-300 to-transparent">
       <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-accent">MyPortfolio</h1>
+        <h1 className="text-xl font-bold text-accent">MDialis</h1>
 
         <ThemeSwitcher className="text-accent"/>
-
-        {/* 
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-text-muted hidden sm:inline">
-            Theme:
-          </span>
-          <select
-            value={theme}
-            onChange={(e) => setTheme(e.target.value as any)}
-            className="rounded-md p-1.5 text-text-base bg-bg-base border border-text-muted/20 focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            {themes.map((t) => (
-              <option key={t} value={t}>
-                {t.charAt(0).toUpperCase() + t.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-        */}
       </div>
     </nav>
   );

@@ -1,4 +1,11 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Asimovian&display=swap');
+
+.asimovian-regular {
+  font-family: "Asimovian", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
 
 @theme {
   --color-base-100: var(--theme-primary);
@@ -52,32 +59,6 @@
 }
 
 :is([data-theme="dark"], [data-theme="dark"] *) {
-  --color-base-100: oklch(37% 0.044 257.287);
-  --color-base-200: oklch(27% 0.041 260.031);
-  --color-base-300: oklch(20% 0.042 265.755);
-  --color-base-content: oklch(96% 0.003 264.542);
-
-  --color-primary: oklch(0.4805 0.114 253.57);
-  --color-primary-content: oklch(97% 0.013 236.62);
-  --color-secondary: oklch(0.3516 0.1331 267);
-  --color-secondary-content: oklch(97% 0.014 254.604);
-
-  --color-accent: oklch(0.8868 0.1098 204.04);
-  --color-accent-content: oklch(0.2671 0.056 229.695);
-  --color-neutral: oklch(44% 0.03 256.802);
-  --color-neutral-content: oklch(98% 0.002 247.839);
-  --color-info: oklch(60% 0.126 221.723);
-  --color-info-content: oklch(98% 0.019 200.873);
-
-  --color-success: oklch(62% 0.194 149.214);
-  --color-success-content: oklch(98% 0.018 155.826);
-  --color-warning: oklch(66% 0.179 58.318);
-  --color-warning-content: oklch(98% 0.022 95.277);
-  --color-error: oklch(57% 0.245 27.325);
-  --color-error-content: oklch(97% 0.013 17.38);
-}
-
-:is([data-theme="portfolio-blue"], [data-theme="portfolio-blue"] *) {
   --color-base-100: oklch(37% 0.044 257.287);
   --color-base-200: oklch(27% 0.041 260.031);
   --color-base-300: oklch(20% 0.042 265.755);
