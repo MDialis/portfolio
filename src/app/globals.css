@@ -1,11 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Asimovian&display=swap');
-
-.asimovian-regular {
-  font-family: "Asimovian", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
 
 @theme {
   --color-base-100: var(--theme-primary);
