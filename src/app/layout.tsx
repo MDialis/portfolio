@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"; 
+import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -23,15 +23,17 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-base-200 text-base-content transition-colors duration-200`}
       >
-        <ThemeProvider>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
+        <div className="flex flex-col min-h-screen">
+          <ThemeProvider>
+            <div className="absolute top-0 left-0 w-full z-50">
+              <Navbar />
+            </div>
+          </ThemeProvider>
 
-            {children}
+          {children}
 
-            <Footer />
-          </div>
-        </ThemeProvider>
+          <Footer />
+        </div>
       </body>
     </html>
   );

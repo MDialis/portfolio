@@ -1,11 +1,12 @@
 "use client";
 
 import Card from "@/components/Card";
+import Lamp from "@/components/Lamp";
 import Reaper from "@/components/Reaper";
-import { Asimovian } from "next/font/google";
+import { Bodoni_Moda } from "next/font/google";
 import { useEffect, useState } from "react";
 
-const asimovian = Asimovian({ subsets: ["latin"], weight: "400" });
+const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
 
 const BREAKPOINTS = {
   md: 768,
@@ -29,9 +30,6 @@ export default function Home() {
     return screenWidth / 2;
   };
 
-  {
-    /*  */
-  }
   useEffect(() => {
     const handleResize = () => {
       setReaperSize(getDynamicReaperSize());
@@ -46,17 +44,14 @@ export default function Home() {
     };
   }, []);
 
-  {
-    /*  */
-  }
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const heroHeight = window.innerHeight;
 
-      const progress = Math.min(scrollY / (heroHeight * 0.9), 1);
+      const progress = Math.min(scrollY / (heroHeight * 0.8), 1);
 
-      setOpacityOnScroll(1 - progress);
+      setOpacityOnScroll(1 - progress * 1.6);
 
       setOverlayOpacity(progress * 0.9);
     };
@@ -69,34 +64,56 @@ export default function Home() {
     <div className="flex-1">
       <main>
         <section className="sticky top-0 h-screen flex flex-col justify-center items-center overflow-hidden">
-          <div className="absolute top-[-150px] w-[500vh] h-100 bg-black z-0 rotate-5" />
-          <h1
-            className={`${asimovian.className} absolute font-extrabold text-[15rem] text-black z-0 left-0 top-30 rotate-5`}
-          >
-            WEB
-          </h1>
-          <h1
-            className={`${asimovian.className} absolute font-extrabold text-[15rem] text-black z-0 right-0 bottom-38 rotate-5`}
-          >
-            DEVELOPER
-          </h1>
-          <div className="absolute bottom-[-150px] w-[500vh] h-100 bg-black z-0 rotate-5" />
-
           <div
-            className="absolute inset-0 bg-black z-10"
-            style={{ opacity: overlayOpacity }}
-          />
-
-          <div
-            className="relative move-vertical mt-8 top-[-260px]"
-            style={{ opacity: OpacityOnScroll }}
+            className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center"
+            style={{ isolation: "isolate" }}
           >
-            <div className="move-horizontal">
-              <div className="move-sway">
-                <Reaper size={reaperSize} />
+            <div className="absolute top-[-150px] w-[500vh] h-100 bg-black z-0 rotate-5" />
+            <h1
+              className={`${bodoniModa.className} absolute font-extrabold text-[18rem] text-black z-0 left-0 top-30 rotate-5`}
+            >
+              WEB
+            </h1>
+            <h1
+              className={`${bodoniModa.className} absolute font-extrabold text-[18rem] text-black z-0 right-0 bottom-38 rotate-5`}
+            >
+              DEVELOPER
+            </h1>
+            <div className="absolute bottom-[-150px] w-[500vh] h-100 bg-black z-0 rotate-5" />
+
+            <div
+              className="relative move-vertical mt-8 top-[-260px]"
+              style={{ opacity: OpacityOnScroll }}
+            >
+              <div className="move-horizontal">
+                <div className="move-sway">
+                  <Reaper size={reaperSize} />
+
+                  <div
+                    className="relative top-[220px] -right-50"
+                    style={{ mixBlendMode: "screen" }}
+                  >
+                    <div
+                      className="absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                      style={{
+                        background:
+                          "radial-gradient(circle, rgba(249, 115, 22, 0.6) 0%, rgba(249, 115, 22, 0) 60%)",
+                        filter: "blur(40px)",
+                      }}
+                    />
+
+                    <div className="relative">
+                      <Lamp size={reaperSize / 4} />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          <div
+            className="absolute inset-0 bg-black z-20 pointer-events-none"
+            style={{ opacity: overlayOpacity }}
+          />
         </section>
 
         <div className="bg-base-300 relative py-20">
