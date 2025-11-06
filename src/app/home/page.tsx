@@ -14,7 +14,7 @@ const BREAKPOINTS = {
 };
 
 export default function Home() {
-  const [reaperSize, setReaperSize] = useState(250);
+  const [reaperSize, setReaperSize] = useState(0);
   const [OpacityOnScroll, setOpacityOnScroll] = useState(1);
   const [overlayOpacity, setOverlayOpacity] = useState(0);
 
@@ -22,12 +22,12 @@ export default function Home() {
     const screenWidth = window.innerWidth;
 
     if (screenWidth >= BREAKPOINTS.lg) {
-      return screenWidth / 3;
-    }
-    if (screenWidth >= BREAKPOINTS.md) {
       return screenWidth / 2.5;
     }
-    return screenWidth / 2;
+    if (screenWidth >= BREAKPOINTS.md) {
+      return screenWidth / 1.4;
+    }
+    return screenWidth / 1;
   };
 
   useEffect(() => {
@@ -68,42 +68,51 @@ export default function Home() {
             className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center"
             style={{ isolation: "isolate" }}
           >
-            <div className="absolute top-[-150px] w-[500vh] h-100 bg-black z-0 rotate-5" />
+            <div className="absolute top-[-30px] md:top-[-50px] lg:top-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-black z-0 rotate-5" />
+
             <h1
-              className={`${bodoniModa.className} absolute font-extrabold text-[18rem] text-black z-0 left-0 top-30 rotate-5`}
+              className={`${bodoniModa.className} absolute font-extrabold text-black z-0 left-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
+                top-[clamp(15rem,35vh,23rem)] 
+                md:top-[clamp(15rem,25vh,22rem)]
+                lg:top-[clamp(7rem,14vh,10rem)]
+              `}
             >
               WEB
             </h1>
             <h1
-              className={`${bodoniModa.className} absolute font-extrabold text-[18rem] text-black z-0 right-0 bottom-38 rotate-5`}
+              className={`${bodoniModa.className} absolute font-extrabold text-black z-0 right-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
+                bottom-[clamp(15rem,35vh,23rem)]
+                md:bottom-[clamp(15rem,25vh,22rem)] 
+                lg:bottom-[clamp(7rem,14vh,10rem)]`}
             >
               DEVELOPER
             </h1>
-            <div className="absolute bottom-[-150px] w-[500vh] h-100 bg-black z-0 rotate-5" />
+
+            <div className="absolute bottom-[-30px] md:bottom-[-50px] lg:bottom-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-black z-0 rotate-5" />
 
             <div
-              className="relative move-vertical mt-8 top-[-260px]"
+              className="relative move-vertical top-[-25%]"
               style={{ opacity: OpacityOnScroll }}
             >
               <div className="move-horizontal">
-                <div className="move-sway">
+                <div className="relative move-sway">
                   <Reaper size={reaperSize} />
 
                   <div
-                    className="relative top-[220px] -right-50"
-                    style={{ mixBlendMode: "screen" }}
+                    className="absolute move-vertical z-40 top-[18vh] md:top-[20vh] lg:top-[20vh] left-[15vh] md:left-[18vh] lg:left-[25vh]"
+                    style={{ mixBlendMode: "hard-light" }}
                   >
                     <div
-                      className="absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                      className="absolute w-[100vh] h-screen top-15 left-1/2 -translate-x-1/2 -translate-y-1/2"
                       style={{
                         background:
-                          "radial-gradient(circle, rgba(249, 115, 22, 0.6) 0%, rgba(249, 115, 22, 0) 60%)",
+                          "radial-gradient(circle, rgba(28, 50, 127, 0.7) 10%, rgb(41, 95, 156, 0.3) 40%, rgba(118, 239, 251, 0.1) 70%, rgb(0, 0, 0, 0) 0%)",
                         filter: "blur(40px)",
                       }}
                     />
 
                     <div className="relative">
-                      <Lamp size={reaperSize / 4} />
+                      <Lamp size={reaperSize / 4.5} />
                     </div>
                   </div>
                 </div>
