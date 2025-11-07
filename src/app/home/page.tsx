@@ -64,10 +64,7 @@ export default function Home() {
     <div className="flex-1">
       <main>
         <section className="sticky top-0 h-screen flex flex-col justify-center items-center overflow-hidden">
-          <div
-            className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center"
-            style={{ isolation: "isolate" }}
-          >
+          <div className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center">
             <div className="absolute top-[-30px] md:top-[-50px] lg:top-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-black z-0 rotate-5" />
 
             <h1
@@ -77,7 +74,7 @@ export default function Home() {
                 lg:top-[clamp(7rem,14vh,10rem)]
               `}
             >
-              WEB
+              MATEUS
             </h1>
             <h1
               className={`${bodoniModa.className} absolute font-extrabold text-black z-0 right-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
@@ -85,7 +82,7 @@ export default function Home() {
                 md:bottom-[clamp(15rem,25vh,22rem)] 
                 lg:bottom-[clamp(7rem,14vh,10rem)]`}
             >
-              DEVELOPER
+              DIÁLIS
             </h1>
 
             <div className="absolute bottom-[-30px] md:bottom-[-50px] lg:bottom-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-black z-0 rotate-5" />
@@ -97,20 +94,20 @@ export default function Home() {
               <div className="move-horizontal">
                 <div className="relative move-sway">
                   <Reaper size={reaperSize} />
+                </div>
+              </div>
+            </div>
 
-                  <div
-                    className="absolute move-vertical z-40 top-[18vh] md:top-[20vh] lg:top-[20vh] left-[15vh] md:left-[18vh] lg:left-[25vh]"
-                    style={{ mixBlendMode: "hard-light" }}
-                  >
-                    <div
-                      className="absolute w-[100vh] h-screen top-15 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        background:
-                          "radial-gradient(circle, rgba(28, 50, 127, 0.7) 10%, rgb(41, 95, 156, 0.3) 40%, rgba(118, 239, 251, 0.1) 70%, rgb(0, 0, 0, 0) 0%)",
-                        filter: "blur(40px)",
-                      }}
-                    />
-
+            <div
+              className="relative move-vertical top-[-25%]"
+              style={{
+                opacity: OpacityOnScroll,
+                mixBlendMode: "overlay",
+              }}
+            >
+              <div className="move-horizontal">
+                <div className="relative move-sway">
+                  <div className="absolute move-vertical z-40 top-[18vh] md:top-[20vh] lg:top-[20vh] left-[15vh] md:left-[18vh] lg:left-[25vh]">
                     <div className="relative">
                       <Lamp size={reaperSize / 4.5} />
                     </div>
