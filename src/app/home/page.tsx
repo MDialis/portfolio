@@ -122,59 +122,66 @@ export default function Home() {
           />
         </section>
 
-        <div className="bg-base-300 relative py-20">
-          <section>
-            <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
-              <div>
-                <h2 className="text-5xl md:text-6xl font-extrabold">
-                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-accent">
-                    Howdy! I'm Mateus Diális
-                  </span>
-                </h2>
-                <p className="mt-4 text-xl text-base-content max-w-2xl mx-auto">
-                  A front-end developer passionate about crafting beautiful and
-                  functional web experiences. Welcome to my portfolio!
-                </p>
-                <div className="mt-10 flex gap-4 justify-center">
-                  <a
-                    href="#projects"
-                    className="px-6 py-3 rounded-lg font-semibold text-primary-content bg-primary shadow-lg hover:opacity-80 transition-opacity"
-                  >
-                    My Projects
-                  </a>
-                  <a
-                    href="#contact"
-                    className="px-6 py-3 rounded-lg font-semibold text-base-content bg-neutral shadow-lg hover:opacity-80 transition-colors"
-                  >
-                    Contact me!
-                  </a>
+        <div className="bg-base-200 relative py-20">
+          <section id="aboutMe" className="py-10">
+            <div className="relative z-10 max-w-7xl mx-auto px-12">
+              <div className="flex flex-col md:flex-row items-center md:gap-12">
+                <div className="w-full md:w-1/3 mb-8 md:mb-0">
+                  <img
+                    src="/mateus.jpeg"
+                    alt="Mateus Diális"
+                    className="rounded-4xl shadow-lg w-full h-auto object-cover"
+                  />
+                </div>
+
+                <div className="w-full md:w-2/3 flex flex-col">
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-primary text-left">
+                    About Me
+                  </h2>
+
+                  <p className="mt-4 text-xl text-base-content text-left">
+                    A front-end developer passionate about crafting beautiful
+                    and functional web experiences. Welcome to my portfolio!
+                  </p>
+
+                  <div className="mt-10 flex justify-start md:justify-end">
+                    <a
+                      href="#contact"
+                      className="px-6 py-3 rounded-lg font-semibold text-primary-content bg-primary shadow-lg hover:opacity-80 transition-colors"
+                    >
+                      Contact me!
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </section>
 
-          <section id="projects" className="py-20">
-            <div className="max-w-5xl mx-auto px-4 py-12">
-              <h3 className="text-4xl font-bold text-center mb-12 text-base-content">
+          <section id="projects" className="py-10">
+            <div className="max-w-7xl mx-auto px-4">
+              <h3 className="text-4xl font-bold text-center mb-12 text-primary">
                 Projects
               </h3>
 
               {/* Card Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <Card
-                  title="Project Title"
+                  title="Project Title 1"
                   text="Project Description"
                   link="#"
+                  imageUrl="/project-1.jpg"
                 />
                 <Card
-                  title="Project Title"
+                  title="Project Title 2"
                   text="Project Description"
                   link="#"
+                  imageUrl="/project-2.jpg"
                 />
                 <Card
-                  title="Project Title"
+                  title="Project Title 3"
                   text="Project Description"
                   link="#"
+                  imageUrl="/project-3.jpg"
                 />
               </div>
             </div>
