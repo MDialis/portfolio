@@ -102,14 +102,14 @@ export default function Home() {
               className="relative move-vertical top-[-25%]"
               style={{
                 opacity: OpacityOnScroll,
-                mixBlendMode: "overlay",
+                mixBlendMode: "screen",
               }}
             >
               <div className="move-horizontal">
                 <div className="relative move-sway">
-                  <div className="absolute move-vertical z-40 top-[18vh] md:top-[20vh] lg:top-[20vh] left-[15vh] md:left-[18vh] lg:left-[25vh]">
+                  <div className="absolute move-vertical z-40">
                     <div className="relative">
-                      <Lamp size={reaperSize / 4.5} />
+                      <Lamp size={reaperSize} />
                     </div>
                   </div>
                 </div>

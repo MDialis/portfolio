@@ -3,8 +3,9 @@
 import { useRef, useCallback, useState } from "react";
 import { followMove, updatePartPosition } from "@/hooks/followMove";
 
-import LampOff from "@/assets/lamp/LampOff.svg";
-import LampOn from "@/assets/lamp/LampOn.svg";
+import ReaperLamp from "@/assets/lamp/Lamp.svg";
+// import LampOff from "@/assets/lamp/LampOff.svg";
+// import LampOn from "@/assets/lamp/LampOn.svg";
 
 const BODY_SMOOTHING = 0.2;
 const BODY_MOVE_FACTOR = 12;
@@ -73,14 +74,17 @@ export default function Lamp({ size }: LampProps) {
           }}
         >
           <div
-            className="absolute w-[100vh] h-screen top-15 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="absolute w-[100vh] h-screen left-[-13vh] top-[-12vh]"
             style={{
               background:
                 "radial-gradient(circle, rgba(28, 50, 127, 0.7) 5%, rgb(41, 95, 156, 0.5) 10%, rgba(118, 239, 251, 0.1) 20%, rgb(0, 0, 0, 0) 40%)",
               filter: "blur(100px)",
             }}
           />
-          <LampOff />
+          <div style={{ mixBlendMode: "normal" }}>
+            <ReaperLamp />
+            {/* <LampOff /> */}
+          </div>
         </div>
 
         {/* "On" State Wrapper */}
@@ -92,17 +96,19 @@ export default function Lamp({ size }: LampProps) {
           }}
         >
           <div
-            className="absolute w-[100vh] h-screen top-15 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="absolute w-[100vh] h-screen left-[-13vh] top-[-12vh]"
             style={{
               background:
-                "radial-gradient(circle, rgba(28, 50, 127, 0.8) 5%, rgb(41, 95, 156, 0.7) 10%, rgba(118, 239, 251, 0.15) 50%, rgb(0, 0, 0, 0) 70%)",
+                "radial-gradient(circle, rgba(253, 218, 119, 0.8) 5%, rgb(242, 240, 183, 0.7) 10%, rgba(118, 239, 251, 0.15) 40%, rgb(0, 0, 0, 0) 70%)",
               filter: "blur(100px)",
             }}
           />
           <div style={{ mixBlendMode: "normal" }}>
-            <LampOn />
+            <ReaperLamp />
+            {/* <LampOn /> */}
           </div>
         </div>
+        
       </div>
     </div>
   );
