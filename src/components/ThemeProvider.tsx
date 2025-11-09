@@ -2,9 +2,9 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
-type Theme = 'light' | 'dark' | 'portfolio-blue'
+type Theme = 'light' | 'dark'
 
-const THEMES: Theme[] = ['light', 'dark', 'portfolio-blue']
+const THEMES: Theme[] = ['light', 'dark' ]
 
 interface ThemeContextType {
   theme: Theme

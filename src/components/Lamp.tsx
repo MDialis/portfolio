@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback } from "react";
 import { followMove, updatePartPosition } from "@/hooks/followMove";
+import { useTheme } from "@/components/ThemeProvider";
 
 import ReaperLamp from "@/assets/lamp/Lamp.svg";
 // import LampOff from "@/assets/lamp/LampOff.svg";
@@ -16,7 +17,10 @@ interface LampProps {
 }
 
 export default function Lamp({ size }: LampProps) {
-  const [isOn, setIsOn] = useState(false);
+  //  const [isOn, setIsOn] = useState(false);
+
+  const { theme, setTheme } = useTheme();
+  const isOn = theme === "light";
 
   const containerRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -41,18 +45,16 @@ export default function Lamp({ size }: LampProps) {
   followMove(containerRef, handleAnimate);
 
   const toggleLamp = useCallback(() => {
-    setIsOn((prev) => !prev);
-  }, []);
+    setTheme(theme === "light" ? "dark" : "light");
+  }, [theme, setTheme]);
 
   return (
     <div
       ref={containerRef}
-      onClick={toggleLamp}
       className="ghost-container"
       style={{
         width: `${size}px`,
         height: `${size}px`,
-        cursor: "pointer",
         position: "relative",
         mixBlendMode: "screen",
       }}
@@ -65,50 +67,55 @@ export default function Lamp({ size }: LampProps) {
           inset: 0,
         }}
       >
-        {/* "Off" State Wrapper */}
-        <div
-          className="absolute inset-0"
-          style={{
-            opacity: isOn ? 0 : 1,
-            transition: "opacity 0.2s ease-in-out",
-          }}
-        >
+        <div>
           <div
-            className="absolute w-[100vh] h-screen left-[-13vh] top-[-12vh]"
+            className="absolute inset-0"
             style={{
-              background:
-                "radial-gradient(circle, rgba(28, 50, 127, 0.7) 5%, rgb(41, 95, 156, 0.5) 10%, rgba(118, 239, 251, 0.1) 20%, rgb(0, 0, 0, 0) 40%)",
-              filter: "blur(100px)",
+              opacity: isOn ? 0 : 1,
+              transition: "opacity 0.2s ease-in-out",
+              pointerEvents: "none",
             }}
-          />
-          <div style={{ mixBlendMode: "normal" }}>
-            <ReaperLamp />
-            {/* <LampOff /> */}
+          >
+            <div
+              className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(28, 50, 127, 0.7) 5%, rgb(41, 95, 156, 0.5) 10%, rgba(118, 239, 251, 0.1) 20%, rgb(0, 0, 0, 0) 40%)",
+                filter: "blur(100px)",
+              }}
+            />
+          </div>
+
+          <div
+            className="absolute inset-0"
+            style={{
+              opacity: isOn ? 1 : 0,
+              transition: "opacity 0.2s ease-in-out",
+              pointerEvents: "none",
+            }}
+          >
+            <div
+              className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(253, 218, 119, 0.8) 5%, rgb(242, 240, 183, 0.7) 10%, rgba(118, 239, 251, 0.15) 40%, rgb(0, 0, 0, 0) 70%)",
+                filter: "blur(100px)",
+              }}
+            />
           </div>
         </div>
 
-        {/* "On" State Wrapper */}
         <div
-          className="absolute inset-0"
           style={{
-            opacity: isOn ? 1 : 0,
-            transition: "opacity 0.2s ease-in-out",
+            mixBlendMode: "normal",
+            cursor: "pointer",
+            position: "absolute",
+            inset: 0,
           }}
+          onClick={toggleLamp}
         >
-          <div
-            className="absolute w-[100vh] h-screen left-[-13vh] top-[-12vh]"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(253, 218, 119, 0.8) 5%, rgb(242, 240, 183, 0.7) 10%, rgba(118, 239, 251, 0.15) 40%, rgb(0, 0, 0, 0) 70%)",
-              filter: "blur(100px)",
-            }}
-          />
-          <div style={{ mixBlendMode: "normal" }}>
-            <ReaperLamp />
-            {/* <LampOn /> */}
-          </div>
+          <ReaperLamp />
         </div>
-        
       </div>
     </div>
   );

@@ -63,12 +63,12 @@ export default function Home() {
   return (
     <div className="flex-1">
       <main>
-        <section className="sticky top-0 h-screen flex flex-col justify-center items-center overflow-hidden">
+        <section className="sticky top-0 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
           <div className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center">
-            <div className="absolute top-[-30px] md:top-[-50px] lg:top-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-black z-0 rotate-5" />
+            <div className="absolute top-[-30px] md:top-[-50px] lg:top-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
 
             <h1
-              className={`${bodoniModa.className} absolute font-extrabold text-black z-0 left-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
+              className={`${bodoniModa.className} absolute font-extrabold text-spotlight-content z-0 left-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
                 top-[clamp(15rem,35vh,23rem)] 
                 md:top-[clamp(15rem,25vh,22rem)]
                 lg:top-[clamp(7rem,14vh,10rem)]
@@ -77,7 +77,7 @@ export default function Home() {
               MATEUS
             </h1>
             <h1
-              className={`${bodoniModa.className} absolute font-extrabold text-black z-0 right-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
+              className={`${bodoniModa.className} absolute font-extrabold text-spotlight-content z-0 right-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
                 bottom-[clamp(15rem,35vh,23rem)]
                 md:bottom-[clamp(15rem,25vh,22rem)] 
                 lg:bottom-[clamp(7rem,14vh,10rem)]`}
@@ -85,7 +85,7 @@ export default function Home() {
               DIÁLIS
             </h1>
 
-            <div className="absolute bottom-[-30px] md:bottom-[-50px] lg:bottom-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-black z-0 rotate-5" />
+            <div className="absolute bottom-[-30px] md:bottom-[-50px] lg:bottom-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
 
             <div
               className="relative move-vertical top-[-25%]"
@@ -99,7 +99,7 @@ export default function Home() {
             </div>
 
             <div
-              className="relative move-vertical top-[-25%]"
+              className="relative move-vertical top-[-10%] left-[15%]"
               style={{
                 opacity: OpacityOnScroll,
                 mixBlendMode: "screen",
@@ -109,7 +109,7 @@ export default function Home() {
                 <div className="relative move-sway">
                   <div className="absolute move-vertical z-40">
                     <div className="relative">
-                      <Lamp size={reaperSize} />
+                      <Lamp size={reaperSize / 3.5} />
                     </div>
                   </div>
                 </div>
@@ -117,7 +117,7 @@ export default function Home() {
             </div>
           </div>
           <div
-            className="absolute inset-0 bg-black z-20 pointer-events-none"
+            className="absolute inset-0 bg-base-200 z-20 pointer-events-none"
             style={{ opacity: overlayOpacity }}
           />
         </section>

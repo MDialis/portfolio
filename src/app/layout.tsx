@@ -25,14 +25,14 @@ export default function RootLayout({
       >
         <div className="flex flex-col min-h-screen">
           <ThemeProvider>
-            <div className="absolute top-0 left-0 w-full z-50">
+            <div className="fixed top-0 left-0 w-full z-50">
               <Navbar />
             </div>
+
+            {children}
+
+            <Footer />
           </ThemeProvider>
-
-          {children}
-
-          <Footer />
         </div>
       </body>
     </html>
