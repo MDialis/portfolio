@@ -102,7 +102,6 @@ export default function Home() {
               className="relative move-vertical top-[-10%] left-[15%]"
               style={{
                 opacity: OpacityOnScroll,
-                mixBlendMode: "screen",
               }}
             >
               <div className="move-horizontal">
@@ -117,12 +116,12 @@ export default function Home() {
             </div>
           </div>
           <div
-            className="absolute inset-0 bg-base-200 z-20 pointer-events-none"
+            className="absolute inset-0 bg-blackwhite z-20 pointer-events-none"
             style={{ opacity: overlayOpacity }}
           />
         </section>
 
-        <div className="bg-base-200 relative py-20">
+        <div className="bg-base-200 relative py-20 pt-35">
           <section id="aboutMe" className="py-10">
             <div className="relative z-10 max-w-7xl mx-auto px-12">
               <div className="flex flex-col md:flex-row items-center md:gap-12">

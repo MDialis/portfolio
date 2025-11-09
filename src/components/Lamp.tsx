@@ -56,7 +56,6 @@ export default function Lamp({ size }: LampProps) {
         width: `${size}px`,
         height: `${size}px`,
         position: "relative",
-        mixBlendMode: "screen",
       }}
     >
       <div
@@ -74,13 +73,14 @@ export default function Lamp({ size }: LampProps) {
               opacity: isOn ? 0 : 1,
               transition: "opacity 0.2s ease-in-out",
               pointerEvents: "none",
+              mixBlendMode: "multiply",
             }}
           >
             <div
               className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(28, 50, 127, 0.7) 5%, rgb(41, 95, 156, 0.5) 10%, rgba(118, 239, 251, 0.1) 20%, rgb(0, 0, 0, 0) 40%)",
+                  "radial-gradient(circle, rgba(28, 50, 127, 0.7) 5%, rgb(41, 95, 156, 0.5) 10%, rgba(118, 239, 251, 0.3) 20%, rgb(0, 0, 0, 0) 40%)",
                 filter: "blur(100px)",
               }}
             />
@@ -92,13 +92,14 @@ export default function Lamp({ size }: LampProps) {
               opacity: isOn ? 1 : 0,
               transition: "opacity 0.2s ease-in-out",
               pointerEvents: "none",
+              mixBlendMode: "screen",
             }}
           >
             <div
               className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(253, 218, 119, 0.8) 5%, rgb(242, 240, 183, 0.7) 10%, rgba(118, 239, 251, 0.15) 40%, rgb(0, 0, 0, 0) 70%)",
+                  "radial-gradient(circle, rgba(253, 218, 119, 0.8) 5%, rgb(242, 240, 183, 0.5) 10%, rgba(118, 239, 251, 0.2) 40%, rgb(0, 0, 0, 0) 70%)",
                 filter: "blur(100px)",
               }}
             />
@@ -107,7 +108,6 @@ export default function Lamp({ size }: LampProps) {
 
         <div
           style={{
-            mixBlendMode: "normal",
             cursor: "pointer",
             position: "absolute",
             inset: 0,
