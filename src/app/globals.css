@@ -112,6 +112,7 @@ html::-webkit-scrollbar-thumb:hover {
 html {
   scrollbar-width: thin;
   scrollbar-color: #888 transparent;
+  scroll-behavior: smooth;
 }
 
 @keyframes float-vertical {
@@ -142,6 +143,40 @@ html {
   50% {
     transform: rotate(-1deg);
   }
+}
+
+@keyframes scroll-x {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes reverse-scroll-x {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll-x {
+  animation: scroll-x 40s linear infinite;
+}
+
+.animate-reverse-scroll-x {
+  animation: reverse-scroll-x 35s linear infinite;
+}
+
+.animate-scroll-x:hover {
+  animation-play-state: paused;
+}
+
+.animate-reverse-scroll-x:hover {
+  animation-play-state: paused;
 }
 
 .move-vertical {

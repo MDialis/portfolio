@@ -13,6 +13,36 @@ const BREAKPOINTS = {
   lg: 1024,
 };
 
+const skillsTop = [
+  { name: "Postgres", icon: "postgresql.svg" },
+  { name: "MySql", icon: "mysql.svg" },
+
+  { name: "GitHub", icon: "github.svg" },
+
+  { name: "SpringBoot", icon: "springboot.svg" },
+  { name: "Node.js", icon: "node.svg" },
+  { name: "WordPress", icon: "wordpress.svg" },
+
+  { name: "NextJS", icon: "nextjs.svg" },
+  { name: "React", icon: "react.svg" },
+  { name: "Tailwind", icon: "tailwind.svg" },
+];
+
+const skillsBottom = [
+  { name: "Python", icon: "python.svg" },
+  { name: "Java", icon: "java.svg" },
+  { name: "JavaScript", icon: "javascript.svg" },
+  { name: "TypeScript", icon: "typescript.svg" },
+
+  { name: "Docker", icon: "docker.svg" },
+  { name: "AWS", icon: "aws.svg" },
+
+  { name: "HTML", icon: "html.svg" },
+  { name: "CSS", icon: "css.svg" },
+
+  { name: "Figma", icon: "figma.svg" },
+];
+
 export default function Home() {
   const [reaperSize, setReaperSize] = useState(0);
   const [OpacityOnScroll, setOpacityOnScroll] = useState(1);
@@ -134,7 +164,7 @@ export default function Home() {
                 </div>
 
                 <div className="w-full md:w-2/3 flex flex-col">
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-primary text-left">
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-accent text-left">
                     About Me
                   </h2>
 
@@ -156,9 +186,88 @@ export default function Home() {
             </div>
           </section>
 
+          <section id="skills" className="py-10">
+            <div className="relative z-10 max-w-7xl mx-auto px-12">
+              <h2 className="text-3xl font-bold text-center text-accent mb-12">
+                My Skills
+              </h2>
+
+              <div className="overflow-hidden bg-base-100">
+                <div className="pointer-events-none absolute inset-y-0 left-12 z-10 w-48 bg-linear-to-r from-base-200 to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 right-12 z-10 w-48 bg-linear-to-l from-base-200 to-transparent" />
+
+                <div className="flex whitespace-nowrap py-6 pb-3 animate-scroll-x">
+                  <div className="flex min-w-full shrink-0 items-center justify-around">
+                    {skillsTop.map((skill) => (
+                      <div
+                        key={skill.name}
+                        className="flex flex-col items-center gap-3 transition-transform duration-300 hover:scale-110 shrink-0"
+                      >
+                        <img
+                          src={`/icons/${skill.icon}`}
+                          alt={`${skill.name} Logo`}
+                          className="h-12 w-12"
+                        />
+                        <p className="font-semibold text-md">{skill.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex min-w-full shrink-0 items-center justify-around">
+                    {skillsTop.map((skill) => (
+                      <div
+                        key={`${skill.name}-clone`}
+                        className="flex flex-col items-center gap-3 transition-transform duration-300 hover:scale-110 shrink-0"
+                      >
+                        <img
+                          src={`/icons/${skill.icon}`}
+                          alt={`${skill.name} Logo`}
+                          className="h-12 w-12"
+                        />
+                        <p className="font-semibold text-md">{skill.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex whitespace-nowrap py-6 pt-3 animate-reverse-scroll-x">
+                  <div className="flex min-w-full shrink-0 items-center justify-around">
+                    {skillsBottom.map((skill) => (
+                      <div
+                        key={skill.name}
+                        className="flex flex-col items-center gap-3 transition-transform duration-300 hover:scale-110 shrink-0"
+                      >
+                        <img
+                          src={`/icons/${skill.icon}`}
+                          alt={`${skill.name} Logo`}
+                          className="h-12 w-12"
+                        />
+                        <p className="font-semibold text-md">{skill.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex min-w-full shrink-0 items-center justify-around">
+                    {skillsBottom.map((skill) => (
+                      <div
+                        key={`${skill.name}-clone`}
+                        className="flex flex-col items-center gap-3 transition-transform duration-300 hover:scale-110 shrink-0"
+                      >
+                        <img
+                          src={`/icons/${skill.icon}`}
+                          alt={`${skill.name} Logo`}
+                          className="h-12 w-12"
+                        />
+                        <p className="font-semibold text-md">{skill.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <section id="projects" className="py-10">
             <div className="max-w-7xl mx-auto px-4">
-              <h3 className="text-4xl font-bold text-center mb-12 text-primary">
+              <h3 className="text-4xl font-bold text-center mb-12 text-accent">
                 Projects
               </h3>
 

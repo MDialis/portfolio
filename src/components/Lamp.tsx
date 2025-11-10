@@ -73,14 +73,14 @@ export default function Lamp({ size }: LampProps) {
               opacity: isOn ? 0 : 1,
               transition: "opacity 0.2s ease-in-out",
               pointerEvents: "none",
-              mixBlendMode: "multiply",
+              mixBlendMode: "screen",
             }}
           >
             <div
               className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(28, 50, 127, 0.7) 5%, rgb(41, 95, 156, 0.5) 10%, rgba(118, 239, 251, 0.3) 20%, rgb(0, 0, 0, 0) 40%)",
+                  "radial-gradient(circle, rgba(28, 50, 127, 0.7) 5%, rgb(41, 95, 156, 0.5) 10%, rgba(118, 239, 251, 0.2) 20%, rgb(0, 0, 0, 0) 40%)",
                 filter: "blur(100px)",
               }}
             />
@@ -99,22 +99,39 @@ export default function Lamp({ size }: LampProps) {
               className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(253, 218, 119, 0.8) 5%, rgb(242, 240, 183, 0.5) 10%, rgba(118, 239, 251, 0.2) 40%, rgb(0, 0, 0, 0) 70%)",
+                  "radial-gradient(circle, rgba(253, 218, 119, 0.8) 5%, rgb(242, 240, 183, 0.5) 10%, rgba(118, 239, 251, 0.2) 20%, rgb(0, 0, 0, 0) 70%)",
                 filter: "blur(100px)",
               }}
             />
           </div>
-        </div>
-
-        <div
-          style={{
-            cursor: "pointer",
-            position: "absolute",
-            inset: 0,
-          }}
-          onClick={toggleLamp}
-        >
-          <ReaperLamp />
+          <div
+            style={{
+              cursor: "pointer",
+              position: "absolute",
+              inset: 0,
+            }}
+            onClick={toggleLamp}
+          >
+            <ReaperLamp />
+            <div
+              className="absolute inset-0"
+              style={{
+                opacity: isOn ? 1 : 0,
+                transition: "opacity 0.2s ease-in-out",
+                pointerEvents: "none",
+                mixBlendMode: "screen",
+              }}
+            >
+              <div
+                className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(253, 218, 119, 1) 1%, rgb(242, 240, 183, 0.9) 5%, rgba(118, 239, 251, 0.8) 10%, rgb(0, 0, 0, 0) 15%)",
+                  filter: "blur(100px)",
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

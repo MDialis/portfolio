@@ -15,9 +15,12 @@ export default function Footer() {
   };
 
   return (
-    <footer className="flex flex-col w-full h-screen bg-secondary text-secondary-content">
+    <footer
+      id="contact"
+      className="flex flex-col w-full h-screen bg-secondary text-secondary-content"
+    >
       <div className="container grow max-w-7xl mx-auto px-12 py-15">
-        <h1 className="text-5xl font-bold text-center py-15">
+        <h1 className="text-5xl font-bold text-center py-30">
           Let's keep in touch!
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -25,35 +28,57 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-3xl font-bold">Contacts</h3>
             <div className="space-y-2 text-lg">
-              <p>(00) 9 9999-9999</p>
-              <p>myemail@mail.com</p>
+              <a
+                href="mailto:tteudialis@gmail.com"
+                className="hover:text-primary hover:opacity-80 hover:underline"
+              >
+                myemail@mail.com
+              </a>
             </div>
 
             {/* Socials */}
-            <div className="flex space-x-4 pt-4">
+            <div className="flex flex-col gap-4 space-x-4 pt-4">
+              <a
+                href="https://t.me/MDialis"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Link para o Telegram"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+              >
+                <img
+                  src="/icons/telegram.svg"
+                  alt="Telegram Logo"
+                  className="h-12 w-12"
+                />
+                <p className="font-semibold">Telegram</p>
+              </a>
               <a
                 href="https://github.com/MDialis"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Link to GitHub"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               >
                 <img
                   src="/icons/github.svg"
                   alt="GitHub Logo"
-                  className="h-8 w-8 hover:opacity-80 transition-opacity"
+                  className="h-12 w-12"
                 />
+                <p className="font-semibold">Github</p>
               </a>
               <a
                 href="https://linkedin.com/in/mateus-dialis"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Link para o LinkedIn"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               >
                 <img
                   src="/icons/linkedin.svg"
                   alt="LinkedIn Logo"
-                  className="h-8 w-8 hover:opacity-80 transition-opacity"
+                  className="h-12 w-12"
                 />
+                <p className="font-semibold">LinkedIn</p>
               </a>
             </div>
           </div>
@@ -131,11 +156,11 @@ export default function Footer() {
           </div>
         </div>
       </div>
-        <div className="border-t border-secondary-content py-4 mx-10 bottom-0">
-          <p className="text-center text-sm font-bold">
-            © {new Date().getFullYear()} Mateus Diális. All rights reserved.
-          </p>
-        </div>
+      <div className="border-t border-secondary-content py-4 mx-10 bottom-0">
+        <p className="text-center text-sm font-bold">
+          © {new Date().getFullYear()} Mateus Diális
+        </p>
+      </div>
     </footer>
   );
 }
