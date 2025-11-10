@@ -1,19 +1,4 @@
 export default function Footer() {
-  // Form submission handler
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted");
-  };
-
-  // Form clear handler
-  const handleClear = (e) => {
-    e.preventDefault();
-    const form = e.target.form;
-    if (form) {
-      form.reset();
-    }
-  };
-
   return (
     <footer
       id="contact"
