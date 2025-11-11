@@ -2,32 +2,37 @@ export default function Footer() {
   return (
     <footer
       id="contact"
-      className="flex flex-col w-full h-screen bg-secondary text-secondary-content"
+      className="flex flex-col w-full min-h-screen bg-secondary text-secondary-content"
     >
-      <div className="container grow max-w-7xl mx-auto px-12 py-15">
-        <h1 className="text-5xl font-bold text-center py-30">
+      <div className="container flex flex-col justify-center grow max-w-7xl mx-auto px-12 py-15">
+        <h1 className="text-5xl font-bold text-center pb-10 md:pb-30">
           Let's keep in touch!
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Contact Info Section */}
           <div className="space-y-4">
-            <h3 className="text-3xl font-bold">Contacts</h3>
-            <div className="space-y-2 text-lg">
-              <a
-                href="mailto:tteudialis@gmail.com"
-                className="hover:text-primary hover:opacity-80 hover:underline"
-              >
-                myemail@mail.com
-              </a>
-            </div>
-
+            <h3 className="text-3xl font-bold hidden md:block">Contacts</h3>
             {/* Socials */}
-            <div className="flex flex-col gap-4 space-x-4 pt-4">
+            <div className="grid grid-cols-2 md:grid-cols-1  gap-4 pt-4">
+              <a
+                href="mailto:dialis.dev@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Link to Gmail"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+              >
+                <img
+                  src="/icons/gmail.svg"
+                  alt="Telegram Logo"
+                  className="h-12 w-12"
+                />
+                <p className="font-semibold">My E-mail</p>
+              </a>
               <a
                 href="https://t.me/MDialis"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Link para o Telegram"
+                aria-label="Link to Telegram"
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               >
                 <img
@@ -122,19 +127,13 @@ export default function Footer() {
                 ></textarea>
               </div>
 
-              {/* Form Buttons */}
+              {/* Form Button */}
               <div className="flex space-x-4">
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-6 py-2 bg-primary hover:opacity-80 text-primary-content w-full font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   Submit
-                </button>
-                <button
-                  type="button"
-                  className="px-6 py-2 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
-                >
-                  Clear
                 </button>
               </div>
             </form>
