@@ -9,11 +9,13 @@ import { useEffect, useState } from "react";
 
 const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
 
+// Define responsive breakpoints for use in JavaScript logic
 const BREAKPOINTS = {
   md: 768,
   lg: 1024,
 };
 
+// Array of objects defining the skills for the top scrolling bar
 const skillsTop = [
   { name: "Postgres", icon: "postgresql.svg" },
   { name: "MySql", icon: "mysql.svg" },
@@ -29,6 +31,7 @@ const skillsTop = [
   { name: "Tailwind", icon: "tailwind.svg" },
 ];
 
+// Array of objects defining the skills for the bottom scrolling bar
 const skillsBottom = [
   { name: "Python", icon: "python.svg" },
   { name: "Java", icon: "java.svg" },
@@ -44,6 +47,7 @@ const skillsBottom = [
   { name: "Figma", icon: "figma.svg" },
 ];
 
+// Array of objects defining the projects to be displayed
 const projects = [
   {
     title: "Project Title 1",
@@ -67,6 +71,7 @@ export default function Home() {
   const [OpacityOnScroll, setOpacityOnScroll] = useState(1);
   const [overlayOpacity, setOverlayOpacity] = useState(0);
 
+  // Calculates the dynamic size for the Reaper component based on the window's inner width.
   const getDynamicReaperSize = () => {
     const screenWidth = window.innerWidth;
 
@@ -79,6 +84,7 @@ export default function Home() {
     return screenWidth / 1;
   };
 
+  // Set and update the reaper size on window resize
   useEffect(() => {
     const handleResize = () => {
       setReaperSize(getDynamicReaperSize());
@@ -93,6 +99,7 @@ export default function Home() {
     };
   }, []);
 
+  // Handle scroll animations (opacity changes)
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -112,8 +119,10 @@ export default function Home() {
   return (
     <div className="flex-1">
       <main>
+        {/* Hero Section: Full-screen, spotlight background */}
         <section className="relative top-0 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
           <div className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center">
+            {/* Background decorative elements (rotated divs and text) */}
             <div className="absolute top-[-30px] md:top-[-50px] lg:top-[-70px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
 
             <h1
@@ -136,6 +145,7 @@ export default function Home() {
 
             <div className="absolute bottom-[-30px] md:bottom-[-50px] lg:bottom-[-70px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
 
+            {/* Reaper Animation Container */}
             <div
               className="relative move-vertical h-1/2"
               style={{ opacity: OpacityOnScroll }}
@@ -147,8 +157,9 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Lamp Animation Container */}
             <div
-              className="relative move-vertical top-[-10%] left-[15%]"
+              className="relative move-vertical"
               style={{
                 opacity: OpacityOnScroll,
               }}
@@ -164,15 +175,19 @@ export default function Home() {
               </div>
             </div>
           </div>
+          {/* Overlay that fades in on scroll */}
           <div
             className="absolute inset-0 bg-blackwhite z-20 pointer-events-none"
             style={{ opacity: overlayOpacity }}
           />
         </section>
 
+        {/* Main Content Area */}
         <div className="bg-base-200 relative py-20 pt-35">
+          {/* About Me Section */}
           <section id="aboutMe" className="py-10">
             <div className="relative z-10 max-w-7xl mx-auto">
+              {/* FlipSection component for interactive "About Me" */}
               <FlipSection
                 imgLink="mateus.jpeg"
                 imgAlt="Image of Mateus"
@@ -187,13 +202,15 @@ export default function Home() {
                 buttonLink="#contact"
                 buttonText="Contact Me!"
               >
+                {/* Content for the "back" of the FlipSection card */}
                 <div
                   className="
                   flex items-center justify-center w-full h-full 
                   relative overflow-hidden
-                  bg-linear-to-b from-primary/50 to-transparent
+                  bg-linear-to-b from-primary/60 to-transparent
                 "
                 >
+                  {/* Background mist gradient effect */}
                   <div
                     className="
                       absolute -left-50 -right-50
@@ -203,8 +220,8 @@ export default function Home() {
                       pointer-events-none
                       "
                   />
-                  <div className="absolute inset-0 bg-base-dark/30 z-10 pointer-events-none" />
 
+                  {/* Reaper in front of mist */}
                   <div className="relative z-10 h-75 move-vertical">
                     <div className="move-horizontal">
                       <div className="relative">
@@ -212,6 +229,8 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Foreground mist gradient effect */}
                   <div
                     aria-hidden="true"
                     className="
@@ -222,7 +241,6 @@ export default function Home() {
                       pointer-events-none
                     "
                   />
-
                   <div
                     aria-hidden="true"
                     className="
@@ -238,6 +256,7 @@ export default function Home() {
             </div>
           </section>
 
+          {/* Skills Section */}
           <section id="skills" className="py-10">
             <div className="relative z-10 max-w-7xl mx-auto">
               <h2 className="text-3xl font-bold text-center text-accent mb-12">
@@ -245,11 +264,15 @@ export default function Home() {
               </h2>
             </div>
 
+            {/* Skills Scroller Container */}
             <div className="relative overflow-hidden bg-base-100 lg:mx-25">
+              {/* Fading gradients on the left and right edges */}
               <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 md:w-72 lg:w-96 bg-linear-to-r from-base-200 to-transparent" />
               <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 md:w-48 bg-linear-to-l from-base-200 to-transparent" />
 
+              {/* Top Skills Row: Infinitely scrolls left-to-right */}
               <div className="flex whitespace-nowrap py-6 pb-3 animate-scroll-x">
+                {/* Render skillsTop list */}
                 <div className="flex min-w-full shrink-0 items-center justify-around">
                   {skillsTop.map((skill) => (
                     <div
@@ -265,6 +288,8 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+
+                {/* Duplicate skillsTop list for seamless scrolling */}
                 <div className="flex min-w-full shrink-0 items-center justify-around">
                   {skillsTop.map((skill) => (
                     <div
@@ -282,7 +307,9 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* Bottom Skills Row: Infinitely scrolls right-to-left */}
               <div className="flex whitespace-nowrap py-6 pt-3 animate-reverse-scroll-x">
+                {/* Render skillsBottom list */}
                 <div className="flex min-w-full shrink-0 items-center justify-around">
                   {skillsBottom.map((skill) => (
                     <div
@@ -298,6 +325,8 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+
+                {/* Duplicate skillsBottom list for seamless scrolling */}
                 <div className="flex min-w-full shrink-0 items-center justify-around">
                   {skillsBottom.map((skill) => (
                     <div
@@ -317,14 +346,16 @@ export default function Home() {
             </div>
           </section>
 
+          {/* Projects Section */}
           <section id="projects" className="py-10">
             <div className="max-w-7xl mx-auto">
               <h3 className="text-4xl font-bold text-center mb-12 text-accent">
                 Projects
               </h3>
 
-              {/* Card Grid */}
+              {/* Grid layout for project cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Map over the projects array to create a Card for each project */}
                 {projects.map((project) => (
                   <Card
                     key={project.link}

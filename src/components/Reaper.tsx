@@ -13,9 +13,10 @@ import FrontCape from "../assets/reaper/FrontCape.svg";
 import BackCape from "../assets/reaper/BackCape.svg";
 import { followMove, updatePartPosition } from "@/hooks/followMove";
 
+// --- Animation Constants ---
 const BASE_SIZE = 350;
 
-// --- Physics Constants (Tweak these values) ---
+// Skull
 const SKULL_SMOOTHING = 0.3;
 const SKULL_MOVE_FACTOR = 9;
 const SKULL_MAX_MOVE_RATIO = 70 / BASE_SIZE;

@@ -3,12 +3,13 @@
 import { useRef, useCallback, useMemo } from "react";
 import { followMove, updatePartPosition } from "@/hooks/followMove";
 import { useTheme } from "@/components/ThemeProvider";
-import styles from './Reaper.module.css';
+import styles from "./Reaper.module.css";
 
 import ReaperLamp from "@/assets/lamp/Lamp.svg";
 // import LampOff from "@/assets/lamp/LampOff.svg";
 // import LampOn from "@/assets/lamp/LampOn.svg";
 
+// --- Animation Constants ---
 const BASE_SIZE = 100;
 
 const BODY_SMOOTHING = 0.2;
@@ -22,18 +23,24 @@ interface LampProps {
 export default function Lamp({ size }: LampProps) {
   //  const [isOn, setIsOn] = useState(false);
 
+  // Get theme state and setter from the ThemeProvider context
   const { theme, setTheme } = useTheme();
   const isOn = theme === "light";
 
+  // Refs for DOM elements and animation state
   const containerRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
 
+  // Ref to store the interpolated (smoothed) position
   const bodyPos = useRef({ x: 0, y: 0 });
 
+  // Calculate the maximum pixels the body can move based on the component's size
   const maxMoveBody = useMemo(() => size * BODY_MAX_MOVE_RATIO, [size]);
-  
+
+  // Animation callback, this function is called on each animation frame by the `followMove` hook.
   const handleAnimate = useCallback(
     (baseTargetX: number, baseTargetY: number) => {
+      // Update the visual position of the lamp body using the animation utility
       updatePartPosition(
         baseTargetX,
         baseTargetY,
@@ -47,13 +54,16 @@ export default function Lamp({ size }: LampProps) {
     [maxMoveBody]
   );
 
+  // Attach the mouse-follow animation logic to the container ref
   followMove(containerRef, handleAnimate);
 
+  // Toggles the application theme between "light" and "dark".
   const toggleLamp = useCallback(() => {
     setTheme(theme === "light" ? "dark" : "light");
   }, [theme, setTheme]);
 
   return (
+    // Main container: Establishes the size and the reference for mouse tracking
     <div
       ref={containerRef}
       className={styles.reaperContainer}
@@ -63,6 +73,7 @@ export default function Lamp({ size }: LampProps) {
         position: "relative",
       }}
     >
+      {/* Animated Body: This div moves around based on the animation logic */}
       <div
         ref={bodyRef}
         className={styles.reaperAssembly}
@@ -72,6 +83,7 @@ export default function Lamp({ size }: LampProps) {
         }}
       >
         <div>
+          {/* "Off" Glow Effect (Blue-ish): Visible when theme is 'dark' (isOn = false) */}
           <div
             className="absolute inset-0"
             style={{
@@ -81,6 +93,7 @@ export default function Lamp({ size }: LampProps) {
               mixBlendMode: "screen",
             }}
           >
+            {/* The glow is a large, blurred radial gradient */}
             <div
               className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
@@ -91,6 +104,7 @@ export default function Lamp({ size }: LampProps) {
             />
           </div>
 
+          {/* "On" Glow Effect (Yellow-ish): Visible when theme is 'light' (isOn = true) */}
           <div
             className="absolute inset-0"
             style={{
@@ -100,6 +114,7 @@ export default function Lamp({ size }: LampProps) {
               mixBlendMode: "screen",
             }}
           >
+            {/* The glow is a large, blurred radial gradient */}
             <div
               className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
@@ -109,6 +124,8 @@ export default function Lamp({ size }: LampProps) {
               }}
             />
           </div>
+
+          {/* Lamp SVG */}
           <div
             style={{
               cursor: "pointer",
@@ -117,7 +134,10 @@ export default function Lamp({ size }: LampProps) {
             }}
             onClick={toggleLamp}
           >
+            {/* Actual lamp svg */}
             <ReaperLamp />
+
+            {/* "On" Inner Glow: A more intense, concentrated glow for the 'on' state */}
             <div
               className="absolute inset-0"
               style={{

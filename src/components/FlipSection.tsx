@@ -3,6 +3,8 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 
+// --- Front Content ---
+// Props for the FrontContent component
 interface FrontContentProps {
   onToggleClick: () => void;
   title: string;
@@ -13,6 +15,7 @@ interface FrontContentProps {
   buttonLink?: string;
 }
 
+// Renders the "front" side of the flip section
 const FrontContent = ({
   onToggleClick,
   title,
@@ -27,6 +30,7 @@ const FrontContent = ({
       {title}
     </h2>
     <div className="flex flex-col md:flex-row items-stretch md:gap-12">
+      {/* Clickable Image */}
       <div className="w-full md:w-1/3 mb-8 md:mb-0">
         <img
           src={imgLink}
@@ -39,8 +43,11 @@ const FrontContent = ({
         />
       </div>
 
+      {/*Text Content */}
       <div className="w-full md:w-2/3 flex flex-col justify-between">
         <p className="mt-4 text-xl text-base-content text-left">{text}</p>
+
+        {/* Optional Button */}
         {buttonText && buttonLink && (
           <div className="mt-10 flex justify-end p-5">
             <a
@@ -56,6 +63,8 @@ const FrontContent = ({
   </div>
 );
 
+// --- Back Content ---
+// Props for the BackContent component
 interface BackContentProps {
   onToggleClick: () => void;
   children: ReactNode;
@@ -65,6 +74,7 @@ interface BackContentProps {
   buttonLink?: string;
 }
 
+// Renders the "back" side of the flip section
 const BackContent = ({
   onToggleClick,
   title,
@@ -78,6 +88,7 @@ const BackContent = ({
       {title}
     </h2>
     <div className="flex flex-col md:flex-row items-stretch md:gap-12">
+      {/* Clickable Children container (replaces the image) */}
       <div className="w-full md:w-1/3 mb-8 md:mb-0">
         <div
           onClick={onToggleClick}
@@ -89,13 +100,17 @@ const BackContent = ({
             transition-transform duration-300 hover:opacity-90 
             cursor-pointer flex items-center justify-center overflow-hidden bg-base-dark
             shadow-[inset_0_2px_0_0_var(--color-accent)]
-        ">
+        "
+        >
           {children}
         </div>
       </div>
 
+      {/* Alternative Text Content */}
       <div className="w-full md:w-2/3 flex flex-col justify-between">
         <p className="mt-4 text-xl text-base-content text-left">{textAlt}</p>
+
+        {/* Optional Button */}
         {buttonText && buttonLink && (
           <div className="mt-10 flex justify-end p-5">
             <a
@@ -111,6 +126,11 @@ const BackContent = ({
   </div>
 );
 
+// --- Main Flip Section ---
+/**
+ * Props for the main FlipSection component.
+ * Combines props from both Front and Back content, plus the children for the back.
+ */
 interface FlipSectionProps {
   children: ReactNode;
   textAlt: string;
@@ -123,6 +143,7 @@ interface FlipSectionProps {
   buttonLink?: string;
 }
 
+// Component that displays content and "flips" when clicked.
 export default function FlipSection({
   children,
   textAlt,
@@ -136,22 +157,22 @@ export default function FlipSection({
 }: FlipSectionProps) {
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // Toggles the `isFlipped` state.
   const handleToggle = () => {
     setIsFlipped(!isFlipped);
   };
 
+  // Common transition classes for the fade effect
   const transitionClasses = "transition-all duration-700 ease-in-out";
 
   return (
-    <div className="relative z-10 max-w-7xl mx-auto min-h-[400px]"> 
+    // Container to establish positioning context
+    <div className="relative z-10 max-w-7xl mx-auto min-h-[400px]">
+      {/* Front Content Wrapper */}
       <div
         className={`
             ${transitionClasses}
-            ${
-              isFlipped
-                ? "opacity-0 pointer-events-none"
-                : "opacity-100"
-            }
+            ${isFlipped ? "opacity-0 pointer-events-none" : "opacity-100"}
           `}
       >
         <FrontContent
@@ -165,15 +186,12 @@ export default function FlipSection({
         />
       </div>
 
+      {/* Back Content Wrapper */}
       <div
         className={`
             absolute top-0 left-0 w-full
             ${transitionClasses}
-            ${
-              isFlipped
-                ? "opacity-100"
-                : "opacity-0 pointer-events-none"
-            }
+            ${isFlipped ? "opacity-100" : "opacity-0 pointer-events-none"}
           `}
       >
         <BackContent
