@@ -1,6 +1,7 @@
 "use client";
 
 import Card from "@/components/Card";
+import FlipSection from "@/components/FlipSection";
 import Lamp from "@/components/Lamp";
 import Reaper from "@/components/Reaper";
 import { Bodoni_Moda } from "next/font/google";
@@ -97,7 +98,7 @@ export default function Home() {
       const scrollY = window.scrollY;
       const heroHeight = window.innerHeight;
 
-      const progress = Math.min(scrollY / (heroHeight * 0.8), 1);
+      const progress = Math.min(scrollY / (heroHeight * 0.7), 1);
 
       setOpacityOnScroll(1 - progress * 1.6);
 
@@ -113,7 +114,7 @@ export default function Home() {
       <main>
         <section className="relative top-0 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
           <div className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center">
-            <div className="absolute top-[-30px] md:top-[-50px] lg:top-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
+            <div className="absolute top-[-30px] md:top-[-50px] lg:top-[-70px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
 
             <h1
               className={`${bodoniModa.className} absolute font-extrabold text-spotlight-content z-0 left-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
@@ -133,10 +134,10 @@ export default function Home() {
               DIÁLIS
             </h1>
 
-            <div className="absolute bottom-[-30px] md:bottom-[-50px] lg:bottom-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
+            <div className="absolute bottom-[-30px] md:bottom-[-50px] lg:bottom-[-70px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
 
             <div
-              className="relative move-vertical top-[-25%]"
+              className="relative move-vertical h-1/2"
               style={{ opacity: OpacityOnScroll }}
             >
               <div className="move-horizontal">
@@ -172,35 +173,68 @@ export default function Home() {
         <div className="bg-base-200 relative py-20 pt-35">
           <section id="aboutMe" className="py-10">
             <div className="relative z-10 max-w-7xl mx-auto">
-              <div className="flex flex-col md:flex-row items-center md:gap-12">
-                <div className="w-full md:w-1/3 mb-8 md:mb-0">
-                  <img
-                    src="/mateus.jpeg"
-                    alt="Mateus Diális"
-                    className="rounded-4xl shadow-lg w-full h-auto object-cover"
+              <FlipSection
+                imgLink="mateus.jpeg"
+                imgAlt="Image of Mateus"
+                title="About Me"
+                text="
+                  A passionate front-end developer dedicated to crafting beautiful, intuitive, and highly functional web experiences.
+                  I specialize in turning complex challenges into elegant, user-centric solutions. Welcome to my portfolio."
+                textAlt="
+                  You found me! This portfolio was a passion project, and this section was a particularly fun challenge.
+                  I believe that building great software involves both technical skill and a touch of personality!
+                  Like the little animated detail you've discovered here."
+                buttonLink="#contact"
+                buttonText="Contact Me!"
+              >
+                <div
+                  className="
+                  flex items-center justify-center w-full h-full 
+                  relative overflow-hidden
+                  bg-linear-to-b from-primary/50 to-transparent
+                "
+                >
+                  <div
+                    className="
+                      absolute -left-50 -right-50
+                      0 h-2/3 -bottom-10 z-0
+                      bg-[radial-gradient(ellipse_at_bottom,white_30%,transparent_70%)]
+                      opacity-20 blur-xl
+                      pointer-events-none
+                      "
+                  />
+                  <div className="absolute inset-0 bg-base-dark/30 z-10 pointer-events-none" />
+
+                  <div className="relative z-10 h-75 move-vertical">
+                    <div className="move-horizontal">
+                      <div className="relative">
+                        <Reaper size={reaperSize / 1.75} />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    className="
+                      absolute -bottom-15 -left-10 z-20
+                      w-2/3 h-1/2
+                      bg-[radial-gradient(ellipse_at_bottom_left,white_30%,transparent_70%)]
+                      opacity-20 blur-xl move-vertical
+                      pointer-events-none
+                    "
+                  />
+
+                  <div
+                    aria-hidden="true"
+                    className="
+                      absolute -bottom-15 -right-10 z-20
+                      w-2/3 h-1/2
+                      bg-[radial-gradient(ellipse_at_bottom_right,white_30%,transparent_70%)]
+                      opacity-20 blur-xl move-vertical
+                      pointer-events-none
+                    "
                   />
                 </div>
-
-                <div className="w-full md:w-2/3 flex flex-col">
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-accent text-left">
-                    About Me
-                  </h2>
-
-                  <p className="mt-4 text-xl text-base-content text-left">
-                    A front-end developer passionate about crafting beautiful
-                    and functional web experiences. Welcome to my portfolio!
-                  </p>
-
-                  <div className="mt-10 flex justify-start md:justify-end">
-                    <a
-                      href="#contact"
-                      className="px-6 py-3 rounded-lg font-semibold text-primary-content bg-primary shadow-lg hover:opacity-80 transition-colors"
-                    >
-                      Contact me!
-                    </a>
-                  </div>
-                </div>
-              </div>
+              </FlipSection>
             </div>
           </section>
 

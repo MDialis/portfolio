@@ -38,12 +38,15 @@ export function followMove(
       if (isCursorActive.current && containerRef.current) {
         // Find the center of the container
         const rect = containerRef.current.getBoundingClientRect();
-        const containerCenterX = rect.left + rect.width / 2;
-        const containerCenterY = rect.top + rect.height / 2;
+        
+        if (rect.width > 0 || rect.height > 0) {
+          const containerCenterX = rect.left + rect.width / 2;
+          const containerCenterY = rect.top + rect.height / 2;
 
-        // Calculate the raw distance from cursor to center
-        baseTargetX = cursorPos.current.x - containerCenterX;
-        baseTargetY = cursorPos.current.y - containerCenterY;
+          // Calculate the raw distance from cursor to center
+          baseTargetX = cursorPos.current.x - containerCenterX;
+          baseTargetY = cursorPos.current.y - containerCenterY;
+        }
       }
       onAnimate(baseTargetX, baseTargetY);
       // If cursor is not active, baseTargetX/Y remain 0,

@@ -1,16 +1,19 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useMemo } from "react";
 import { followMove, updatePartPosition } from "@/hooks/followMove";
 import { useTheme } from "@/components/ThemeProvider";
+import styles from './Reaper.module.css';
 
 import ReaperLamp from "@/assets/lamp/Lamp.svg";
 // import LampOff from "@/assets/lamp/LampOff.svg";
 // import LampOn from "@/assets/lamp/LampOn.svg";
 
+const BASE_SIZE = 100;
+
 const BODY_SMOOTHING = 0.2;
 const BODY_MOVE_FACTOR = 12;
-const BODY_MAX_MOVE_PX = 60;
+const BODY_MAX_MOVE_RATIO = 60 / BASE_SIZE;
 
 interface LampProps {
   size: number;
@@ -27,6 +30,8 @@ export default function Lamp({ size }: LampProps) {
 
   const bodyPos = useRef({ x: 0, y: 0 });
 
+  const maxMoveBody = useMemo(() => size * BODY_MAX_MOVE_RATIO, [size]);
+  
   const handleAnimate = useCallback(
     (baseTargetX: number, baseTargetY: number) => {
       updatePartPosition(
@@ -35,11 +40,11 @@ export default function Lamp({ size }: LampProps) {
         bodyRef,
         bodyPos,
         BODY_MOVE_FACTOR,
-        BODY_MAX_MOVE_PX,
+        maxMoveBody,
         BODY_SMOOTHING
       );
     },
-    []
+    [maxMoveBody]
   );
 
   followMove(containerRef, handleAnimate);
@@ -51,7 +56,7 @@ export default function Lamp({ size }: LampProps) {
   return (
     <div
       ref={containerRef}
-      className="ghost-container"
+      className={styles.reaperContainer}
       style={{
         width: `${size}px`,
         height: `${size}px`,
@@ -60,7 +65,7 @@ export default function Lamp({ size }: LampProps) {
     >
       <div
         ref={bodyRef}
-        className="ghost-assembly"
+        className={styles.reaperAssembly}
         style={{
           position: "absolute",
           inset: 0,

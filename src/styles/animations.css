@@ -1,0 +1,76 @@
+@keyframes float-vertical {
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes float-horizontal {
+  0%,
+  100% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes float-sway {
+  0%,
+  100% {
+    transform: rotate(1deg);
+  }
+  50% {
+    transform: rotate(-1deg);
+  }
+}
+
+@keyframes scroll-x {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes reverse-scroll-x {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll-x {
+  animation: scroll-x 40s linear infinite;
+}
+
+.animate-reverse-scroll-x {
+  animation: reverse-scroll-x 35s linear infinite;
+}
+
+.animate-scroll-x:hover {
+  animation-play-state: paused;
+}
+
+.animate-reverse-scroll-x:hover {
+  animation-play-state: paused;
+}
+
+.move-vertical {
+  animation: float-vertical 2s ease-in-out 0.5s infinite backwards;
+}
+
+.move-horizontal {
+  animation: float-horizontal 4s ease-in-out infinite;
+}
+
+.move-sway {
+  animation: float-sway 4s ease-in-out 1s infinite backwards;
+  transform-origin: top center;
+}

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, RefObject, useCallback } from "react";
+import { useRef, useCallback, useMemo } from "react";
+import styles from "./Reaper.module.css";
 
 // --- SVG Imports ---
 import FrontHoodie from "../assets/reaper/FrontHoodie.svg";
@@ -12,35 +13,37 @@ import FrontCape from "../assets/reaper/FrontCape.svg";
 import BackCape from "../assets/reaper/BackCape.svg";
 import { followMove, updatePartPosition } from "@/hooks/followMove";
 
+const BASE_SIZE = 350;
+
 // --- Physics Constants (Tweak these values) ---
 const SKULL_SMOOTHING = 0.3;
 const SKULL_MOVE_FACTOR = 9;
-const SKULL_MAX_MOVE_PX = 70;
+const SKULL_MAX_MOVE_RATIO = 70 / BASE_SIZE;
 
 // Eyes (Moves slightly more than the skull)
 const EYES_SMOOTHING = 0.35;
 const EYES_MOVE_FACTOR = 8;
-const EYES_MAX_MOVE_PX = 75;
+const EYES_MAX_MOVE_RATIO = 75 / BASE_SIZE;
 
 // Front Hoodie
 const FRONT_HOODIE_SMOOTHING = 0.25;
 const FRONT_HOODIE_MOVE_FACTOR = 10;
-const FRONT_HOODIE_MAX_MOVE_PX = 65;
+const FRONT_HOODIE_MAX_MOVE_RATIO = 65 / BASE_SIZE;
 
 // Back Hoodie
 const BACK_HOODIE_SMOOTHING = 0.25;
 const BACK_HOODIE_MOVE_FACTOR = 10;
-const BACK_HOODIE_MAX_MOVE_PX = 65;
+const BACK_HOODIE_MAX_MOVE_RATIO = 65 / BASE_SIZE;
 
 // Front Cape
 const FRONT_CAPE_SMOOTHING = 0.2;
 const FRONT_CAPE_MOVE_FACTOR = 13;
-const FRONT_CAPE_MAX_MOVE_PX = 55;
+const FRONT_CAPE_MAX_MOVE_RATIO = 55 / BASE_SIZE;
 
 // Back Cape
-const BACK_CAPE_SMOOTHING = 0.2;
+const BACK_CAPE_SMOOTHING = 0.15;
 const BACK_CAPE_MOVE_FACTOR = 15;
-const BACK_CAPE_MAX_MOVE_PX = 55;
+const BACK_CAPE_MAX_MOVE_RATIO = 55 / BASE_SIZE;
 
 interface ReaperProps {
   size: number;
@@ -66,6 +69,18 @@ export default function Reaper({ size }: ReaperProps) {
   const frontCapePos = useRef({ x: 0, y: 0 });
   const backCapePos = useRef({ x: 0, y: 0 });
 
+  const maxMoveValues = useMemo(
+    () => ({
+      skull: size * SKULL_MAX_MOVE_RATIO,
+      eyes: size * EYES_MAX_MOVE_RATIO,
+      frontHoodie: size * FRONT_HOODIE_MAX_MOVE_RATIO,
+      backHoodie: size * BACK_HOODIE_MAX_MOVE_RATIO,
+      frontCape: size * FRONT_CAPE_MAX_MOVE_RATIO,
+      backCape: size * BACK_CAPE_MAX_MOVE_RATIO,
+    }),
+    [size]
+  );
+
   // Animation handlers For each part of the body
   const handleAnimate = useCallback(
     (baseTargetX: number, baseTargetY: number) => {
@@ -75,7 +90,16 @@ export default function Reaper({ size }: ReaperProps) {
         backCapeRef,
         backCapePos,
         BACK_CAPE_MOVE_FACTOR,
-        BACK_CAPE_MAX_MOVE_PX,
+        maxMoveValues.backCape,
+        BACK_CAPE_SMOOTHING
+      );
+      updatePartPosition(
+        baseTargetX,
+        baseTargetY,
+        backCapeRef,
+        backCapePos,
+        BACK_CAPE_MOVE_FACTOR,
+        maxMoveValues.backCape,
         BACK_CAPE_SMOOTHING
       );
 
@@ -85,7 +109,7 @@ export default function Reaper({ size }: ReaperProps) {
         backHoodieRef,
         backHoodiePos,
         BACK_HOODIE_MOVE_FACTOR,
-        BACK_HOODIE_MAX_MOVE_PX,
+        maxMoveValues.backHoodie,
         BACK_HOODIE_SMOOTHING
       );
 
@@ -95,7 +119,7 @@ export default function Reaper({ size }: ReaperProps) {
         skullGroupRef,
         skullGroupPos,
         SKULL_MOVE_FACTOR,
-        SKULL_MAX_MOVE_PX,
+        maxMoveValues.skull,
         SKULL_SMOOTHING
       );
 
@@ -105,7 +129,7 @@ export default function Reaper({ size }: ReaperProps) {
         eyesRef,
         eyesPos,
         EYES_MOVE_FACTOR,
-        EYES_MAX_MOVE_PX,
+        maxMoveValues.eyes,
         EYES_SMOOTHING
       );
 
@@ -115,7 +139,7 @@ export default function Reaper({ size }: ReaperProps) {
         frontHoodieRef,
         frontHoodiePos,
         FRONT_HOODIE_MOVE_FACTOR,
-        FRONT_HOODIE_MAX_MOVE_PX,
+        maxMoveValues.frontHoodie,
         FRONT_HOODIE_SMOOTHING
       );
 
@@ -125,11 +149,11 @@ export default function Reaper({ size }: ReaperProps) {
         frontCapeRef,
         frontCapePos,
         FRONT_CAPE_MOVE_FACTOR,
-        FRONT_CAPE_MAX_MOVE_PX,
+        maxMoveValues.frontCape,
         FRONT_CAPE_SMOOTHING
       );
     },
-    []
+    [maxMoveValues]
   );
 
   // Start the follow-move animation loop
@@ -138,34 +162,35 @@ export default function Reaper({ size }: ReaperProps) {
   return (
     <div
       ref={containerRef}
-      className="ghost-container"
+      className={styles.reaperContainer}
       style={{
         width: `${size}px`,
         height: `${size}px`,
+        position: "relative",
       }}
     >
-      <div ref={backCapeRef} className="ghost-assembly">
+      <div ref={backCapeRef} className={styles.reaperAssembly}>
         <BackCape id="back-cape" />
       </div>
 
-      <div ref={frontCapeRef} className="ghost-assembly">
+      <div ref={frontCapeRef} className={styles.reaperAssembly}>
         <FrontCape id="front-cape" />
       </div>
 
-      <div ref={backHoodieRef} className="ghost-assembly">
+      <div ref={backHoodieRef} className={styles.reaperAssembly}>
         <BackHoodie id="back-hoodie" />
       </div>
 
-      <div ref={skullGroupRef} className="ghost-assembly">
+      <div ref={skullGroupRef} className={styles.reaperAssembly}>
         <Skull id="skull" />
         <Nose id="nose" />
       </div>
 
-      <div ref={eyesRef} className="ghost-assembly">
+      <div ref={eyesRef} className={styles.reaperAssembly}>
         <Eyes id="eyes" />
       </div>
 
-      <div ref={frontHoodieRef} className="ghost-assembly">
+      <div ref={frontHoodieRef} className={styles.reaperAssembly}>
         <FrontHoodie id="front-hoodie" />
       </div>
     </div>
