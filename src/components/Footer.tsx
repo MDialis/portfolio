@@ -4,7 +4,7 @@ export default function Footer() {
       id="contact"
       className="flex flex-col w-full min-h-screen bg-secondary text-secondary-content"
     >
-      <div className="container flex flex-col justify-center grow max-w-7xl mx-auto px-12 py-15">
+      <div className="container flex flex-col justify-center grow max-w-7xl mx-auto py-30">
         <h1 className="text-5xl font-bold text-center pb-10 md:pb-30">
           Let's keep in touch!
         </h1>
@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-3xl font-bold hidden md:block">Contacts</h3>
             {/* Socials */}
-            <div className="grid grid-cols-2 md:grid-cols-1  gap-4 pt-4">
+            <div className="grid grid-cols-2 md:grid-cols-1 gap-4 pt-4">
               <a
                 href="mailto:dialis.dev@gmail.com"
                 target="_blank"
@@ -23,7 +23,7 @@ export default function Footer() {
               >
                 <img
                   src="/icons/gmail.svg"
-                  alt="Telegram Logo"
+                  alt="Gmail Logo"
                   className="h-12 w-12"
                 />
                 <p className="font-semibold">My E-mail</p>
@@ -89,7 +89,7 @@ export default function Footer() {
                   id="name"
                   name="name"
                   required
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-secondary-content focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-base-content border border-base-300 rounded-xl text-secondary-content focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -106,7 +106,7 @@ export default function Footer() {
                   id="email"
                   name="email"
                   required
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-secondary-content focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-base-content border border-base-300 rounded-xl text-secondary-content focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -121,9 +121,9 @@ export default function Footer() {
                 <textarea
                   id="message"
                   name="message"
-                  rows={4}
+                  rows={6}
                   required
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-secondary-content focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-base-content border border-base-300 rounded-xl text-secondary-content focus:outline-none focus:ring-2 focus:ring-blue-500"
                 ></textarea>
               </div>
 
