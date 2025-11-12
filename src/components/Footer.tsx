@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer
       id="contact"
-      className="flex flex-col w-full min-h-screen bg-secondary text-secondary-content"
+      className="flex flex-col w-full min-h-screen bg-neutral-variant text-neutral-variant-content"
     >
       <div className="container flex flex-col justify-center grow max-w-7xl mx-auto py-30">
         <h1 className="text-5xl font-bold text-center pb-10 md:pb-30">
@@ -80,7 +80,7 @@ export default function Footer() {
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium mb-1 text-secondary-content"
+                  className="block text-sm font-medium mb-1"
                 >
                   Name
                 </label>
@@ -89,7 +89,7 @@ export default function Footer() {
                   id="name"
                   name="name"
                   required
-                  className="w-full px-3 py-2 bg-base-content border border-base-300 rounded-xl text-secondary-content focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-200 border border-base-300 rounded-xl  focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -97,7 +97,7 @@ export default function Footer() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium mb-1 text-secondary-content"
+                  className="block text-sm font-medium mb-1"
                 >
                   Email
                 </label>
@@ -106,7 +106,7 @@ export default function Footer() {
                   id="email"
                   name="email"
                   required
-                  className="w-full px-3 py-2 bg-base-content border border-base-300 rounded-xl text-secondary-content focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-200 border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -114,7 +114,7 @@ export default function Footer() {
               <div>
                 <label
                   htmlFor="message"
-                  className="block text-sm font-medium mb-1 text-secondary-content"
+                  className="block text-sm font-medium mb-1"
                 >
                   Message
                 </label>
@@ -123,7 +123,7 @@ export default function Footer() {
                   name="message"
                   rows={6}
                   required
-                  className="w-full px-3 py-2 bg-base-content border border-base-300 rounded-xl text-secondary-content focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-200 border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 ></textarea>
               </div>
 
@@ -131,7 +131,7 @@ export default function Footer() {
               <div className="flex space-x-4">
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-primary hover:opacity-80 text-primary-content w-full font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-6 py-2 bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content w-full font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   Submit
                 </button>

@@ -56,6 +56,9 @@ const projects = [
     link: "https://github.com/MDialis/S.A.A.I",
     imageUrl: "/SAAI.jpg",
   },
+  // Conversores de Arquivos
+  // WebGame
+  // Netflix Clone
 ];
 
 export default function Home() {
@@ -108,7 +111,7 @@ export default function Home() {
   return (
     <div className="flex-1">
       <main>
-        <section className="sticky top-0 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
+        <section className="relative top-0 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
           <div className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center">
             <div className="absolute top-[-30px] md:top-[-50px] lg:top-[-80px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
 
