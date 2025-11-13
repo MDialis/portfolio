@@ -26,7 +26,7 @@ const FrontContent = ({
   buttonLink,
 }: FrontContentProps) => (
   <div className="flex flex-col">
-    <h2 className="text-2xl md:text-3xl font-extrabold text-accent text-center mb-6 md:mb-8">
+    <h2 className="text-2xl md:text-3xl font-extrabold text-base-content text-center mb-6 md:mb-8">
       {title}
     </h2>
     <div className="flex flex-col md:flex-row items-stretch md:gap-12">
@@ -84,7 +84,7 @@ const BackContent = ({
   buttonLink,
 }: BackContentProps) => (
   <div className="flex flex-col">
-    <h2 className="text-2xl md:text-3xl font-extrabold text-accent text-center mb-6 md:mb-8">
+    <h2 className="text-2xl md:text-3xl font-extrabold text-base-content text-center mb-6 md:mb-8">
       {title}
     </h2>
     <div className="flex flex-col md:flex-row items-stretch md:gap-12">
@@ -99,7 +99,7 @@ const BackContent = ({
             rounded-4xl w-full aspect-square 
             transition-transform duration-300 hover:opacity-90 
             cursor-pointer flex items-center justify-center overflow-hidden bg-base-dark
-            shadow-[inset_0_2px_0_0_var(--color-accent)]
+            shadow-[inset_0_3px_0_0_var(--color-accent)]
         "
         >
           {children}

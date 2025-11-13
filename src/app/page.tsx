@@ -60,6 +60,9 @@ const projects = [
     text: "An AI-powered nutritional analysis system built with a Python and FastAPI backend. It allows a user to upload a meal photo daily and receive a feedback about what to improve in their diet based on what he ate in the last week (or more). The data gets analyzed both by the system and a nutritionists user, saving its time when making a professional report and improving precision when giving feedback (also avoids AI hallucinations to get too far).",
     link: "https://github.com/MDialis/S.A.A.I",
     imageUrl: "/SAAI.jpg",
+    techIcons: [
+      { src: "/icons/python.svg", alt: "Python" },
+    ]
   },
   // Conversores de Arquivos
   // WebGame
@@ -123,13 +126,13 @@ export default function Home() {
         <section className="relative top-0 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
           <div className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center">
             {/* Background decorative elements (rotated divs and text) */}
-            <div className="absolute top-[-30px] md:top-[-50px] lg:top-[-70px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
+            <div className="absolute top-0 md:top-[-20px] lg:top-[-40px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
 
             <h1
               className={`${bodoniModa.className} absolute font-extrabold text-spotlight-content z-0 left-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
-                top-[clamp(15rem,35vh,23rem)] 
+                top-[clamp(14rem,100vh,15rem)] 
                 md:top-[clamp(15rem,25vh,22rem)]
-                lg:top-[clamp(7rem,14vh,10rem)]
+                lg:top-[clamp(6rem,16vh,9rem)]
               `}
             >
               MATEUS
@@ -138,12 +141,12 @@ export default function Home() {
               className={`${bodoniModa.className} absolute font-extrabold text-spotlight-content z-0 right-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
                 bottom-[clamp(15rem,35vh,23rem)]
                 md:bottom-[clamp(15rem,25vh,22rem)] 
-                lg:bottom-[clamp(7rem,14vh,10rem)]`}
+                lg:bottom-[clamp(2rem,8vh,5rem)]`}
             >
               DIÁLIS
             </h1>
 
-            <div className="absolute bottom-[-30px] md:bottom-[-50px] lg:bottom-[-70px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
+            <div className="absolute bottom-[-60px] md:bottom-[-80px] lg:bottom-[-100px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
 
             {/* Reaper Animation Container */}
             <div
@@ -259,7 +262,7 @@ export default function Home() {
           {/* Skills Section */}
           <section id="skills" className="py-10">
             <div className="relative z-10 max-w-7xl mx-auto">
-              <h2 className="text-3xl font-bold text-center text-accent mb-12">
+              <h2 className="text-3xl font-bold text-center text-base-content mb-12">
                 My Skills
               </h2>
             </div>
@@ -349,9 +352,9 @@ export default function Home() {
           {/* Projects Section */}
           <section id="projects" className="py-10">
             <div className="max-w-7xl mx-auto">
-              <h3 className="text-4xl font-bold text-center mb-12 text-accent">
+              <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
                 Projects
-              </h3>
+              </h2>
 
               {/* Grid layout for project cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -363,6 +366,7 @@ export default function Home() {
                     text={project.text}
                     link={project.link}
                     imageUrl={project.imageUrl}
+                    techIcons={project.techIcons}
                   />
                 ))}
               </div>
