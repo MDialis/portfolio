@@ -96,7 +96,7 @@ export default async function Home() {
         <HeroSection bodoniModa={bodoniModa} />
 
         {/* Main Content Area */}
-        <div className="bg-base-200 relative py-20 pt-35">
+        <div className="bg-base-200 relative py-20 pt-35 px-3">
           {/* About Me Section */}
           <section id="aboutMe" className="py-10">
             <div className="relative z-10 max-w-7xl mx-auto">
@@ -199,16 +199,14 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* Projects Section */}
+          {/* Projects Section 
           <section id="projects" className="py-10">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
                 Projects
               </h2>
 
-              {/* Grid layout for project cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Map over the projects array to create a Card for each project */}
                 {mockedProjects.map((project) => (
                   <Card
                     key={project.link}
@@ -220,6 +218,58 @@ export default async function Home() {
                   />
                 ))}
               </div>
+            </div>
+          </section>
+          */}
+
+          {/* Projects Section */}
+          <section id="projects" className="py-10">
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
+                Projects
+              </h2>
+
+              {projects.length === 0 ? (
+                <div className="text-center">
+                  <h3 className="text-xl">
+                    Oops! Looks like there's no projects ready for show or the
+                    system failed to connect to the CMS.
+                  </h3>
+                  <p className="text-lg py-3">Try Again Later!</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {projects.map((project) => {
+                    const { title, slug, summary, cardImage, tech } =
+                      project.fields;
+
+                    const imageUrl = cardImage
+                      ? `https:${cardImage.fields.file.url}`
+                      : undefined;
+
+                    const formattedTechIcons: TechIcon[] = (tech || []).map(
+                      (techName) => {
+                        return {
+                          src: techName
+                            ? `/icons/${techName}.svg`
+                            : "/icons/default.svg",
+                          alt: techName,
+                        };
+                      }
+                    );
+                    return (
+                      <Card
+                        key={project.sys.id}
+                        title={title}
+                        text={summary}
+                        link={`/projetos/${slug}`}
+                        imageUrl={imageUrl}
+                        techIcons={formattedTechIcons}
+                      />
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </section>
         </div>
