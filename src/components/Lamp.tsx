@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useMemo } from "react";
+import { useRef, useCallback, useMemo, useState, useEffect } from "react";
 import { followMove, updatePartPosition } from "@/hooks/followMove";
 import { useTheme } from "@/components/ThemeProvider";
 import styles from "./Reaper.module.css";
@@ -16,11 +16,18 @@ const BODY_SMOOTHING = 0.2;
 const BODY_MOVE_FACTOR = 12;
 const BODY_MAX_MOVE_RATIO = 60 / BASE_SIZE;
 
+// Define responsive breakpoints for use in JavaScript logic
+const BREAKPOINTS = {
+  md: 768,
+  lg: 1024,
+};
+
 interface LampProps {
-  size: number;
+  sizeMultiplier?: number;
 }
 
-export default function Lamp({ size }: LampProps) {
+export default function Lamp({ sizeMultiplier = 1 }: LampProps) {
+  const [defaultSize, setdefaultSize] = useState(150);
   //  const [isOn, setIsOn] = useState(false);
 
   // Get theme state and setter from the ThemeProvider context
@@ -34,8 +41,38 @@ export default function Lamp({ size }: LampProps) {
   // Ref to store the interpolated (smoothed) position
   const bodyPos = useRef({ x: 0, y: 0 });
 
+  // Calculates the dynamic size for the Reaper component based on the window's inner width.
+  const getDynamicReaperSize = () => {
+    const screenWidth = window.innerWidth;
+
+    if (screenWidth >= BREAKPOINTS.lg) {
+      return screenWidth / 8.75;
+    }
+    if (screenWidth >= BREAKPOINTS.md) {
+      return screenWidth / 4.9;
+    }
+    return screenWidth / 3.5;
+  };
+
+  // Set and update the reaper size on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setdefaultSize(getDynamicReaperSize());
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const effectiveSize = defaultSize * sizeMultiplier;
+
   // Calculate the maximum pixels the body can move based on the component's size
-  const maxMoveBody = useMemo(() => size * BODY_MAX_MOVE_RATIO, [size]);
+  const maxMoveBody = useMemo(() => effectiveSize * BODY_MAX_MOVE_RATIO, [effectiveSize]);
 
   // Animation callback, this function is called on each animation frame by the `followMove` hook.
   const handleAnimate = useCallback(
@@ -68,8 +105,8 @@ export default function Lamp({ size }: LampProps) {
       ref={containerRef}
       className={styles.reaperContainer}
       style={{
-        width: `${size}px`,
-        height: `${size}px`,
+        width: `${effectiveSize}px`,
+        height: `${effectiveSize}px`,
         position: "relative",
       }}
     >

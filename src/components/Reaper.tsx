@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useMemo } from "react";
+import { useRef, useCallback, useMemo, useEffect, useState } from "react";
 import styles from "./Reaper.module.css";
 
 // --- SVG Imports ---
@@ -46,11 +46,19 @@ const BACK_CAPE_SMOOTHING = 0.15;
 const BACK_CAPE_MOVE_FACTOR = 15;
 const BACK_CAPE_MAX_MOVE_RATIO = 55 / BASE_SIZE;
 
+// Define responsive breakpoints for use in JavaScript logic
+const BREAKPOINTS = {
+  md: 768,
+  lg: 1024,
+};
+
 interface ReaperProps {
-  size: number;
+  sizeMultiplier?: number;
 }
 
-export default function Reaper({ size }: ReaperProps) {
+export default function Reaper({ sizeMultiplier = 1 }: ReaperProps) {
+  const [defaultSize, setdefaultSize] = useState(150);
+
   // --- DOM Refs ---
   const containerRef = useRef<HTMLDivElement>(null); // A ref to the main container, used to find its center
 
@@ -70,16 +78,46 @@ export default function Reaper({ size }: ReaperProps) {
   const frontCapePos = useRef({ x: 0, y: 0 });
   const backCapePos = useRef({ x: 0, y: 0 });
 
+  // Calculates the dynamic size for the Reaper component based on the window's inner width.
+  const getDynamicReaperSize = () => {
+    const screenWidth = window.innerWidth;
+
+    if (screenWidth >= BREAKPOINTS.lg) {
+      return screenWidth / 2.5;
+    }
+    if (screenWidth >= BREAKPOINTS.md) {
+      return screenWidth / 1.4;
+    }
+    return screenWidth / 1;
+  };
+
+  // Set and update the reaper size on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setdefaultSize(getDynamicReaperSize());
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const effectiveSize = defaultSize * sizeMultiplier;
+
   const maxMoveValues = useMemo(
     () => ({
-      skull: size * SKULL_MAX_MOVE_RATIO,
-      eyes: size * EYES_MAX_MOVE_RATIO,
-      frontHoodie: size * FRONT_HOODIE_MAX_MOVE_RATIO,
-      backHoodie: size * BACK_HOODIE_MAX_MOVE_RATIO,
-      frontCape: size * FRONT_CAPE_MAX_MOVE_RATIO,
-      backCape: size * BACK_CAPE_MAX_MOVE_RATIO,
+      skull: effectiveSize * SKULL_MAX_MOVE_RATIO,
+      eyes: effectiveSize * EYES_MAX_MOVE_RATIO,
+      frontHoodie: effectiveSize * FRONT_HOODIE_MAX_MOVE_RATIO,
+      backHoodie: effectiveSize * BACK_HOODIE_MAX_MOVE_RATIO,
+      frontCape: effectiveSize * FRONT_CAPE_MAX_MOVE_RATIO,
+      backCape: effectiveSize * BACK_CAPE_MAX_MOVE_RATIO,
     }),
-    [size]
+    [effectiveSize]
   );
 
   // Animation handlers For each part of the body
@@ -165,8 +203,8 @@ export default function Reaper({ size }: ReaperProps) {
       ref={containerRef}
       className={styles.reaperContainer}
       style={{
-        width: `${size}px`,
-        height: `${size}px`,
+        width: `${effectiveSize}px`,
+        height: `${effectiveSize}px`,
         position: "relative",
       }}
     >
