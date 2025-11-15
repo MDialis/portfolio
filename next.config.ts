@@ -28,6 +28,18 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.ctfassets.net',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+
   reactCompiler: true,
 };
 

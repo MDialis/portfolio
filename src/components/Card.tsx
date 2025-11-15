@@ -33,7 +33,7 @@ export default function Card({
 
         <div className="mt-auto flex justify-between items-end pt-4">
           {techIcons && techIcons.length > 0 ? (
-            <div className="flex flex-wrap gap-2 p-1 bg-base-300/20 rounded-2xl">
+            <div className="flex flex-wrap gap-2 p-1 bg-neutral/30 rounded-2xl">
               {techIcons.map((icon) => (
                 <img
                   key={icon.alt}

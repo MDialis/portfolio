@@ -7,8 +7,7 @@ import InfiniteIconScroller from "@/components/InfiniteIconScroller";
 import HeroSection from "@/components/HeroSection";
 
 import { contentfulClient } from "@/lib/contentfulClient";
-import { IProjectEntry } from "@/lib/types";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { IExperienceEntry, IProjectEntry } from "@/lib/types";
 
 const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
 
@@ -49,37 +48,32 @@ const skillsBottom = [
   { name: "Figma", icon: "figma.svg" },
 ];
 
-// Array of objects defining the projects to be displayed
-const mockedProjects = [
-  {
-    title: "Project Title 1",
-    text: "Project Description",
-    link: "#",
-    imageUrl: "/project-1.jpg",
-  },
-  {
-    title: "S.A.A.I",
-    text: "An AI-powered nutritional analysis system built with a Python and FastAPI backend. It allows a user to upload a meal photo daily and receive a feedback about what to improve in their diet based on what he ate in the last week (or more). The data gets analyzed both by the system and a nutritionists user, saving its time when making a professional report and improving precision when giving feedback (also avoids AI hallucinations to get too far).",
-    link: "https://github.com/MDialis/S.A.A.I",
-    imageUrl: "/SAAI.jpg",
-    techIcons: [{ src: "/icons/python.svg", alt: "Python" }],
-  },
-  // Conversores de Arquivos
-  // WebGame
-  // Netflix Clone
-];
-
 async function getProjects(): Promise<IProjectEntry[]> {
   try {
     const res = await contentfulClient.getEntries({
       content_type: "project",
       order: ["-fields.date"],
+      "fields.featured": true,
     });
 
-    // 2. USE um "double cast" (as unknown as ...) no retorno.
-    // Isso diz ao TypeScript: "Eu sei o que estou fazendo,
-    // confie que 'res.items' corresponde ao tipo IProjectEntry[]".
+    // "double cast" so TypeScript stop 'res.items' type error
     return res.items as unknown as IProjectEntry[];
+  } catch (error) {
+    console.error("Error fetching Contentful data:", error);
+    return [];
+  }
+}
+
+async function getExperiences(): Promise<IExperienceEntry[]> {
+  try {
+    const res = await contentfulClient.getEntries({
+      content_type: "experience",
+      order: ["-fields.date"],
+      "fields.featured": true,
+    });
+
+    // "double cast" so TypeScript stop 'res.items' type error
+    return res.items as unknown as IExperienceEntry[];
   } catch (error) {
     console.error("Error fetching Contentful data:", error);
     return [];
@@ -88,6 +82,7 @@ async function getProjects(): Promise<IProjectEntry[]> {
 
 export default async function Home() {
   const projects = await getProjects();
+  const experiences = await getExperiences();
 
   return (
     <div className="flex-1">
@@ -199,34 +194,11 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* Projects Section 
-          <section id="projects" className="py-10">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
-                Projects
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {mockedProjects.map((project) => (
-                  <Card
-                    key={project.link}
-                    title={project.title}
-                    text={project.text}
-                    link={project.link}
-                    imageUrl={project.imageUrl}
-                    techIcons={project.techIcons}
-                  />
-                ))}
-              </div>
-            </div>
-          </section>
-          */}
-
           {/* Projects Section */}
           <section id="projects" className="py-10">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
-                Projects
+                My Projects
               </h2>
 
               {projects.length === 0 ? (
@@ -262,7 +234,58 @@ export default async function Home() {
                         key={project.sys.id}
                         title={title}
                         text={summary}
-                        link={`/projetos/${slug}`}
+                        link={`/works/${slug}`}
+                        imageUrl={imageUrl}
+                        techIcons={formattedTechIcons}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* Projects Section */}
+          <section id="experiences" className="py-10">
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
+                My Experiences
+              </h2>
+
+              {experiences.length === 0 ? (
+                <div className="text-center">
+                  <h3 className="text-xl">
+                    Oops! Looks like there's no work ready for show or the
+                    system failed to connect to the CMS.
+                  </h3>
+                  <p className="text-lg py-3">Try Again Later!</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {experiences.map((experience) => {
+                    const { title, systemLink, summary, image, tech } =
+                      experience.fields;
+
+                    const imageUrl = image
+                      ? `https:${image.fields.file.url}`
+                      : undefined;
+
+                    const formattedTechIcons: TechIcon[] = (tech || []).map(
+                      (techName) => {
+                        return {
+                          src: techName
+                            ? `/icons/${techName}.svg`
+                            : "/icons/default.svg",
+                          alt: techName,
+                        };
+                      }
+                    );
+                    return (
+                      <Card
+                        key={experience.sys.id}
+                        title={title}
+                        text={summary}
+                        link={`${systemLink}`}
                         imageUrl={imageUrl}
                         techIcons={formattedTechIcons}
                       />
