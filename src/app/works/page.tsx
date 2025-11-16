@@ -1,36 +1,6 @@
 import Card from "@/components/Card";
-import { contentfulClient } from "@/lib/contentfulService";
-import { IExperienceEntry, IProjectEntry, TechIcon } from "@/lib/types";
-
-async function getProjects(): Promise<IProjectEntry[]> {
-  try {
-    const res = await contentfulClient.getEntries({
-      content_type: "project",
-      order: ["-fields.date"],
-    });
-
-    // "double cast" so TypeScript stop 'res.items' type error
-    return res.items as unknown as IProjectEntry[];
-  } catch (error) {
-    console.error("Error fetching Contentful data:", error);
-    return [];
-  }
-}
-
-async function getExperiences(): Promise<IExperienceEntry[]> {
-  try {
-    const res = await contentfulClient.getEntries({
-      content_type: "experience",
-      order: ["-fields.date"],
-    });
-
-    // "double cast" so TypeScript stop 'res.items' type error
-    return res.items as unknown as IExperienceEntry[];
-  } catch (error) {
-    console.error("Error fetching Contentful data:", error);
-    return [];
-  }
-}
+import { getProjects, getExperiences } from "@/lib/contentfulService";
+import { TechIcon } from "@/lib/types";
 
 export default async function Home() {
   const projects = await getProjects();

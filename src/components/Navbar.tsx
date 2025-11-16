@@ -6,9 +6,11 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 w-full bg-base-dark">
       <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-accent">MDialis</h1>
+        <a href="/" className="hover:opacity-85 px-2 py-1 rounded-lg">
+          <h1 className="text-xl font-bold text-accent">MDialis</h1>
+        </a>
 
-        <ThemeSwitcher className="text-accent" />
+        <ThemeSwitcher className="text-accent hover:bg-primary/30 hover:opacity-90" />
       </div>
     </nav>
   );

@@ -55,7 +55,7 @@ export default async function Home() {
         <HeroSection bodoniModa={bodoniModa} />
 
         {/* Main Content Area */}
-        <div className="bg-base-200 relative px-5 text-sm">
+        <div className="relative px-5 text-sm">
           {/* About Me Section */}
           <section id="aboutMe" className="py-10">
             <div className="relative z-10 max-w-5xl mx-auto">

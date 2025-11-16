@@ -11,9 +11,9 @@ import Link from "next/link";
 export default async function ProjectPage({
   params,
 }: {
-  params: { slug: string };
+  params: { project: string };
 }) {
-  const res = await getProjectBySlug(params.slug);
+  const res = await getProjectBySlug(params.project);
 
   if (!res) {
     notFound();
@@ -113,21 +113,74 @@ export default async function ProjectPage({
     <main className="py-20">
       <div className="max-w-4xl mx-auto px-4">
         <h1 className="text-5xl font-bold text-center mb-10 text-base-content">
-          {title}
+          Title: {title}
         </h1>
-
-        {imageUrl && (
-          <div className="mb-10">
+        <p>repositoryLink: {repositoryLink}</p>
+        <p>systemLink: {systemLink}</p>
+        <p>slug: {slug}</p>
+        <p>tech: {tech}</p>
+        <div className="flex flex-wrap justify-center gap-3">
+          {formattedTechIcons.map((icon) => (
+            <div
+              key={icon.alt}
+              className="tooltip"
+              data-tip={icon.alt.toUpperCase()}
+            >
+              <Image
+                src={icon.src}
+                alt={icon.alt}
+                width={32}
+                height={32}
+                className="h-8 w-8"
+              />
+            </div>
+          ))}
+        </div>
+        <p>date: {date}</p>
+        <p>summary: {summary}</p>
+        <p>
+          description:
+          <article className="prose prose-lg max-w-none prose-invert">
+            {documentToReactComponents(description as Document, options)}
+          </article>
+        </p>
+        <p>
+          cardImage:
+          {cardImage && cardImage.fields.file.details.image && (
             <Image
-              src={imageUrl}
-              alt={`Imagem principal do projeto ${title}`}
-              width={1920}
-              height={1080}
+              src={`https:${cardImage.fields.file.url}`}
+              alt={cardImage.fields.title || `Card Image of ${title}`}
+              width={cardImage.fields.file.details.image.width}
+              height={cardImage.fields.file.details.image.height}
+              className="w-full h-auto rounded-lg shadow-2xl"
+            />
+          )}
+        </p>
+        <p>
+          mobileImage:
+          {mobileImage && mobileImage.fields.file.details.image && (
+            <Image
+              src={`https:${mobileImage.fields.file.url}`}
+              alt={mobileImage.fields.title || `Card Image of ${title}`}
+              width={mobileImage.fields.file.details.image.width}
+              height={mobileImage.fields.file.details.image.height}
+              className="w-full h-auto rounded-lg shadow-2xl"
+            />
+          )}
+        </p>
+        <p>
+          fullImage:
+          {fullImage && fullImage.fields.file.details.image && (
+            <Image
+              src={`https:${fullImage.fields.file.url}`}
+              alt={fullImage.fields.title || `Card Image of ${title}`}
+              width={fullImage.fields.file.details.image.width}
+              height={fullImage.fields.file.details.image.height}
               className="w-full h-auto rounded-lg shadow-2xl"
               priority
             />
-          </div>
-        )}
+          )}
+        </p>
 
         <div>
           <details className="bg-base-300 rounded-lg">
@@ -152,53 +205,6 @@ export default async function ProjectPage({
             </div>
           </details>
         </div>
-
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 p-6 bg-base-200 rounded-lg">
-          <div className="flex gap-4">
-            {systemLink && (
-              <Link
-                href={systemLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary"
-              >
-                See System
-              </Link>
-            )}
-            {repositoryLink && (
-              <Link
-                href={repositoryLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-outline"
-              >
-                Repository
-              </Link>
-            )}
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3">
-            {formattedTechIcons.map((icon) => (
-              <div
-                key={icon.alt}
-                className="tooltip"
-                data-tip={icon.alt.toUpperCase()}
-              >
-                <Image
-                  src={icon.src}
-                  alt={icon.alt}
-                  width={32}
-                  height={32}
-                  className="h-8 w-8"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <article className="prose prose-lg max-w-none prose-invert">
-          {documentToReactComponents(description as Document, options)}
-        </article>
       </div>
     </main>
   );

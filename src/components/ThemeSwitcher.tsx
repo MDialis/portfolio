@@ -16,7 +16,7 @@ export const ThemeSwitcher = ({ className }: ThemeSwitcherProps) => {
   };
 
   const renderIcon = () => {
-    const iconClass = twMerge("h-5 w-5 text-base-content", className);
+    const iconClass = twMerge("h-6 w-6");
 
     return theme === "dark" ? (
       <Moon className={iconClass} />
@@ -29,7 +29,7 @@ export const ThemeSwitcher = ({ className }: ThemeSwitcherProps) => {
     <button
       aria-label="Cycle Theme"
       onClick={cycleTheme}
-      className="rounded-full p-2 transition-colors hover:bg-secondary"
+      className={`rounded-full p-1 transition-colors ${className}`}
     >
       {renderIcon()}
     </button>
