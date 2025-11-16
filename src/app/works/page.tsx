@@ -1,11 +1,6 @@
 import Card from "@/components/Card";
-import { contentfulClient } from "@/lib/contentfulClient";
-import { IExperienceEntry, IProjectEntry } from "@/lib/types";
-
-interface TechIcon {
-  src: string;
-  alt: string;
-}
+import { contentfulClient } from "@/lib/contentfulService";
+import { IExperienceEntry, IProjectEntry, TechIcon } from "@/lib/types";
 
 async function getProjects(): Promise<IProjectEntry[]> {
   try {

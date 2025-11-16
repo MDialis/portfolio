@@ -6,16 +6,11 @@ import { Bodoni_Moda } from "next/font/google";
 import InfiniteIconScroller from "@/components/InfiniteIconScroller";
 import HeroSection from "@/components/HeroSection";
 
-import { contentfulClient } from "@/lib/contentfulClient";
-import { IExperienceEntry, IProjectEntry } from "@/lib/types";
+import { getFeaturedProjects, getFeaturedExperiences } from "@/lib/contentfulService";
+import { IExperienceEntry, IProjectEntry, TechIcon } from "@/lib/types";
 import Contacts from "@/components/Contacts";
 
 const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
-
-interface TechIcon {
-  src: string;
-  alt: string;
-}
 
 // Array of objects defining the skills for the top scrolling bar
 const skillsTop = [
@@ -49,41 +44,9 @@ const skillsBottom = [
   { name: "Figma", icon: "figma.svg" },
 ];
 
-async function getProjects(): Promise<IProjectEntry[]> {
-  try {
-    const res = await contentfulClient.getEntries({
-      content_type: "project",
-      order: ["-fields.date"],
-      "fields.featured": true,
-    });
-
-    // "double cast" so TypeScript stop 'res.items' type error
-    return res.items as unknown as IProjectEntry[];
-  } catch (error) {
-    console.error("Error fetching Contentful data:", error);
-    return [];
-  }
-}
-
-async function getExperiences(): Promise<IExperienceEntry[]> {
-  try {
-    const res = await contentfulClient.getEntries({
-      content_type: "experience",
-      order: ["-fields.date"],
-      "fields.featured": true,
-    });
-
-    // "double cast" so TypeScript stop 'res.items' type error
-    return res.items as unknown as IExperienceEntry[];
-  } catch (error) {
-    console.error("Error fetching Contentful data:", error);
-    return [];
-  }
-}
-
 export default async function Home() {
-  const projects = await getProjects();
-  const experiences = await getExperiences();
+  const projects = await getFeaturedProjects();
+  const experiences = await getFeaturedExperiences();
 
   return (
     <div className="flex-1">

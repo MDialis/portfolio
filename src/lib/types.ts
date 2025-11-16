@@ -1,11 +1,20 @@
 import { Document } from '@contentful/rich-text-types';
-interface IContentfulAsset {
+
+export interface TechIcon {
+  src: string;
+  alt: string;
+}
+
+export interface IContentfulAsset {
+  sys: {
+    id: string;
+  };
   fields: {
     title: string;
     file: {
       url: string;
       details: {
-        image: {
+        image?: {
           width: number;
           height: number;
         };

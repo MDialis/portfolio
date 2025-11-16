@@ -1,80 +1,12 @@
-import { contentfulClient } from "@/lib/contentfulClient";
-import { IProjectEntry } from "@/lib/types";
+import { getProjectBySlug } from "@/lib/contentfulService";
+import { IProjectEntry, IContentfulAsset, TechIcon } from "@/lib/types";
+
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { BLOCKS } from "@contentful/rich-text-types";
+import { BLOCKS, Document } from "@contentful/rich-text-types";
 import { notFound } from "next/navigation";
 
-interface TechIcon {
-  src: string;
-  alt: string;
-}
-
-// ++ ADICIONE ESTA INTERFACE ++
-// Define exatamente o que esperamos de um Asset que vem do Rich Text
-interface IResolvedAsset {
-  sys: { id: string };
-  fields: {
-    title: string;
-    file: {
-      url: string;
-      details: {
-        // 'image' é opcional, pois o asset pode ser um PDF
-        image?: {
-          width: number;
-          height: number;
-        };
-      };
-    };
-  };
-}
-
-export async function generateStaticParams() {
-  try {
-    const res = await contentfulClient.getEntries({
-      content_type: "project",
-      select: ["fields.slug"],
-    });
-
-    const projects = res.items as unknown as IProjectEntry[];
-    return projects.map((project) => ({
-      slug: project.fields.slug,
-    }));
-  } catch (error) {
-    console.error("Error fetching slugs for static params:", error);
-    return [];
-  }
-}
-
-async function getProjects(): Promise<IProjectEntry[]> {
-  try {
-    const res = await contentfulClient.getEntries({
-      content_type: "project",
-      order: ["-fields.date"],
-    });
-
-    // "double cast" so TypeScript stop 'res.items' type error
-    return res.items as unknown as IProjectEntry[];
-  } catch (error) {
-    console.error("Error fetching Contentful data:", error);
-    return [];
-  }
-}
-
-async function getProjectBySlug(slug: string) {
-  try {
-    const res = await contentfulClient.getEntries({
-      content_type: "project",
-      "fields.slug": slug,
-      limit: 1,
-      include: 10,
-    });
-
-    return res.items.length > 0 ? res : null;
-  } catch (error) {
-    console.error("Error fetching single project by slug:", error);
-    return null;
-  }
-}
+import Image from "next/image";
+import Link from "next/link";
 
 export default async function ProjectPage({
   params,
@@ -114,31 +46,14 @@ export default async function ProjectPage({
   });
 
   const assets = new Map(
-    linkedAssets?.map((asset: ContentfulAsset) => [asset.sys.id, asset]) || []
+    (linkedAssets as IContentfulAsset[])?.map((asset) => [
+      asset.sys.id,
+      asset,
+    ]) || []
   );
 
   const options = {
     renderNode: {
-      [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
-        const asset = assets.get(node.data.target.sys.id);
-
-        // Verificações de segurança
-        if (!asset || !asset.fields.file) {
-          return null;
-        }
-        return (
-          <div className="my-6">
-            <img
-              src={`https:${asset.fields.file.url}`}
-              width={asset.fields.file.details.image.width}
-              height={asset.fields.file.details.image.height}
-              alt={asset.fields.title || "Imagem do projeto"}
-              className="rounded-lg shadow-lg mx-auto"
-            />
-          </div>
-        );
-      },
-      // Adicione estilos para outros nós (Tailwind Typography)
       [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
         <p className="my-4 text-lg leading-relaxed">{children}</p>
       ),
@@ -154,57 +69,114 @@ export default async function ProjectPage({
       [BLOCKS.OL_LIST]: (node: any, children: React.ReactNode) => (
         <ol className="list-decimal list-inside my-4 pl-4">{children}</ol>
       ),
+      [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
+        const asset = assets.get(node.data.target.sys.id);
+
+        if (!asset || !asset.fields.file) {
+          return null;
+        }
+
+        const { file, title } = asset.fields;
+        const url = `https:${file.url}`;
+
+        if (file.details.image) {
+          return (
+            <div className="my-6">
+              <Image
+                src={url}
+                width={file.details.image.width}
+                height={file.details.image.height}
+                alt={title || "Project Image"}
+                className="rounded-lg shadow-lg mx-auto"
+              />
+            </div>
+          );
+        }
+
+        return (
+          <div className="my-6">
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link link-primary"
+            >
+              {title || file.url}
+            </a>
+          </div>
+        );
+      },
     },
   };
 
   return (
     <main className="py-20">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Título */}
         <h1 className="text-5xl font-bold text-center mb-10 text-base-content">
           {title}
         </h1>
 
-        {/* Imagem Principal */}
         {imageUrl && (
           <div className="mb-10">
-            <img
+            <Image
               src={imageUrl}
               alt={`Imagem principal do projeto ${title}`}
               width={1920}
               height={1080}
               className="w-full h-auto rounded-lg shadow-2xl"
+              priority
             />
           </div>
         )}
 
-        {/* Links e Tecnologias */}
+        <div>
+          <details className="bg-base-300 rounded-lg">
+            <summary className="collapse-title text-xl font-medium cursor-pointer">
+              Ver Dados Brutos da Entry (project)
+            </summary>
+            <div className="collapse-content">
+              <pre className="p-4 text-xs overflow-x-auto bg-base-100 rounded-lg">
+                {JSON.stringify(project, null, 2)}
+              </pre>
+            </div>
+          </details>
+
+          <details className="bg-base-300 rounded-lg">
+            <summary className="collapse-title text-xl font-medium cursor-pointer">
+              Ver Dados Brutos dos Assets (res.includes.Asset)
+            </summary>
+            <div className="collapse-content">
+              <pre className="p-4 text-xs overflow-x-auto bg-base-100 rounded-lg">
+                {JSON.stringify(linkedAssets, null, 2)}
+              </pre>
+            </div>
+          </details>
+        </div>
+
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 p-6 bg-base-200 rounded-lg">
-          {/* Links */}
           <div className="flex gap-4">
             {systemLink && (
-              <a
+              <Link
                 href={systemLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-primary"
               >
                 See System
-              </a>
+              </Link>
             )}
             {repositoryLink && (
-              <a
+              <Link
                 href={repositoryLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline"
               >
                 Repository
-              </a>
+              </Link>
             )}
           </div>
 
-          {/* Tecnologias */}
           <div className="flex flex-wrap justify-center gap-3">
             {formattedTechIcons.map((icon) => (
               <div
@@ -212,7 +184,7 @@ export default async function ProjectPage({
                 className="tooltip"
                 data-tip={icon.alt.toUpperCase()}
               >
-                <img
+                <Image
                   src={icon.src}
                   alt={icon.alt}
                   width={32}
@@ -224,7 +196,6 @@ export default async function ProjectPage({
           </div>
         </div>
 
-        {/* Descrição (Rich Text) */}
         <article className="prose prose-lg max-w-none prose-invert">
           {documentToReactComponents(description as Document, options)}
         </article>

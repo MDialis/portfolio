@@ -1,9 +1,5 @@
+import { TechIcon } from "@/lib/types";
 import Image from "next/image";
-
-interface TechIcon {
-  src: string;
-  alt: string;
-}
 
 interface CardProps {
   title: string;
