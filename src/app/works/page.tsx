@@ -23,13 +23,17 @@ export default async function Home() {
               <p className="text-lg py-3">Try Again Later!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="w-full flex flex-col">
               {projects.map((project) => {
-                const { title, slug, summary, cardImage, tech } =
+                const { title, slug, summary, cardImage, mobileImage, tech } =
                   project.fields;
 
-                const imageUrl = cardImage
+                const cardImageUrl = cardImage
                   ? `https:${cardImage.fields.file.url}`
+                  : undefined;
+
+                const mobileImageUrl = mobileImage
+                  ? `https:${mobileImage.fields.file.url}`
                   : undefined;
 
                 const formattedTechIcons: TechIcon[] = (tech || []).map(
@@ -43,14 +47,55 @@ export default async function Home() {
                   }
                 );
                 return (
-                  <Card
-                    key={project.sys.id}
-                    title={title}
-                    text={summary}
-                    link={`/works/${slug}`}
-                    imageUrl={imageUrl}
-                    techIcons={formattedTechIcons}
-                  />
+                  <a
+                    key={slug}
+                    href={`/works/${slug}`}
+                    className="group flex flex-col gap-2 border-t border-secondary-content w-full py-4 transition-all duration-200 hover:bg-base-200/50 px-2"
+                  >
+                    <div className="flex justify-between items-start gap-4">
+                      <h3 className="text-2xl font-semibold">{title}</h3>
+                      {formattedTechIcons && formattedTechIcons.length > 0 ? (
+                        <div className="flex flex-wrap gap-4 p-1 bg-neutral/30 rounded-2xl self-start">
+                          {formattedTechIcons.map((icon) => (
+                            <img
+                              key={icon.alt}
+                              src={icon.src}
+                              alt={icon.alt}
+                              title={icon.alt}
+                              className="h-10 w-10"
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div />
+                      )}
+                    </div>
+
+                    <p className="pl-6 text-sm line-clamp-2 text-ellipsis">
+                      {summary}
+                    </p>
+
+                    {/* Images for Card and Mobile (Still doesnt work) */}
+                    {(cardImageUrl || mobileImageUrl) && (
+                      <div className="absolute bg-base-100 w-full h-56 mt-4 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {mobileImageUrl && (
+                          <img
+                            src={mobileImageUrl}
+                            alt={title}
+                            className="w-full h-full object-cover rounded-lg shadow-2xl md:hidden"
+                          />
+                        )}
+
+                        {cardImageUrl && (
+                          <img
+                            src={cardImageUrl}
+                            alt={title}
+                            className="w-full h-full object-cover rounded-lg shadow-2xl hidden md:block"
+                          />
+                        )}
+                      </div>
+                    )}
+                  </a>
                 );
               })}
             </div>
