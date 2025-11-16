@@ -30,7 +30,7 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
   }, []);
 
   return (
-    <section className="relative top-0 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
+    <section className="relative -top-10 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
       <div className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center">
         {/* Background decorative elements (rotated divs and text) */}
         <div className="absolute top-0 md:-top-5 lg:-top-10 w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
@@ -46,7 +46,7 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
         </h1>
         <h1
           className={`${bodoniModa.className} absolute font-extrabold text-spotlight-content z-0 right-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
-                bottom-[clamp(15rem,35vh,23rem)]
+                bottom-[clamp(5rem,100vh,11rem)]
                 md:bottom-[clamp(15rem,25vh,22rem)] 
                 lg:bottom-[clamp(2rem,8vh,5rem)]`}
         >

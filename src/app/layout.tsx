@@ -12,10 +12,8 @@ export const metadata: Metadata = {
   title: "Mateus Diális",
   description: "Criado com Next.js e Tailwind v4",
   icons: {
-    icon: [
-      { url: "/icon.png", sizes: "128x128", type: "image/png" }
-    ],
-  }
+    icon: [{ url: "/icon.png", sizes: "128x128", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({
@@ -34,7 +32,7 @@ export default function RootLayout({
               <Navbar />
             </div>
 
-            {children}
+            <div className="pt-10">{children}</div>
 
             <Footer />
           </ThemeProvider>

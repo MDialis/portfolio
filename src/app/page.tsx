@@ -8,6 +8,7 @@ import HeroSection from "@/components/HeroSection";
 
 import { contentfulClient } from "@/lib/contentfulClient";
 import { IExperienceEntry, IProjectEntry } from "@/lib/types";
+import Contacts from "@/components/Contacts";
 
 const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
 
@@ -91,10 +92,10 @@ export default async function Home() {
         <HeroSection bodoniModa={bodoniModa} />
 
         {/* Main Content Area */}
-        <div className="bg-base-200 relative py-20 pt-35 px-3">
+        <div className="bg-base-200 relative px-5 text-sm">
           {/* About Me Section */}
           <section id="aboutMe" className="py-10">
-            <div className="relative z-10 max-w-7xl mx-auto">
+            <div className="relative z-10 max-w-5xl mx-auto">
               {/* FlipSection component for interactive "About Me" */}
               <FlipSection
                 imgLink="mateus.jpeg"
@@ -170,33 +171,33 @@ export default async function Home() {
               <h2 className="text-3xl font-bold text-center text-base-content mb-12">
                 My Skills
               </h2>
-            </div>
 
-            {/* Skills Scroller Container */}
-            <div className="relative overflow-hidden bg-base-100 lg:mx-25">
-              {/* Fading gradients on the left and right edges */}
-              <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 md:w-72 lg:w-96 bg-linear-to-r from-base-200 to-transparent" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 md:w-48 bg-linear-to-l from-base-200 to-transparent" />
+              {/* Skills Scroller Container */}
+              <div className="relative overflow-hidden bg-base-100 lg:mx-25">
+                {/* Fading gradients on the left and right edges */}
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 md:w-72 lg:w-96 bg-linear-to-r from-base-200 to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 md:w-48 bg-linear-to-l from-base-200 to-transparent" />
 
-              {/* Top Row: Right to Left Movement */}
-              <InfiniteIconScroller
-                skills={skillsTop}
-                direction="left"
-                className="py-6 pb-3"
-              />
+                {/* Top Row: Right to Left Movement */}
+                <InfiniteIconScroller
+                  skills={skillsTop}
+                  direction="left"
+                  className="py-6 pb-3"
+                />
 
-              {/* Top Row: Left to Right Movement */}
-              <InfiniteIconScroller
-                skills={skillsBottom}
-                direction="right"
-                className="py-6 pt-3"
-              />
+                {/* Top Row: Left to Right Movement */}
+                <InfiniteIconScroller
+                  skills={skillsBottom}
+                  direction="right"
+                  className="py-6 pt-3"
+                />
+              </div>
             </div>
           </section>
 
           {/* Projects Section */}
           <section id="projects" className="py-10">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
                 My Projects
               </h2>
@@ -245,9 +246,9 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* Projects Section */}
+          {/* Experiences Section */}
           <section id="experiences" className="py-10">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
                 My Experiences
               </h2>
@@ -296,6 +297,8 @@ export default async function Home() {
             </div>
           </section>
         </div>
+
+        <Contacts />
       </main>
     </div>
   );

@@ -31,9 +31,9 @@ export default function Card({
         <h4 className="text-2xl font-bold mb-3">{title}</h4>
         <p className="mb-4">{text}</p>
 
-        <div className="mt-auto flex justify-between items-end pt-4">
+        <div className="mt-auto flex flex-col sm:flex-row gap-4 sm:justify-between items-end pt-4">
           {techIcons && techIcons.length > 0 ? (
-            <div className="flex flex-wrap gap-2 p-1 bg-neutral/30 rounded-2xl">
+            <div className="flex flex-wrap gap-4 p-1 bg-neutral/30 rounded-2xl self-center">
               {techIcons.map((icon) => (
                 <img
                   key={icon.alt}

@@ -39,7 +39,10 @@ const FrontContent = ({
           role="button"
           tabIndex={0}
           aria-label="Click?"
-          className="rounded-4xl shadow-xl w-full aspect-square object-cover cursor-pointer transition-transform duration-300 hover:opacity-90"
+          className="
+            rounded-4xl shadow-xl w-full aspect-4/3 md:aspect-square
+            object-cover cursor-pointer transition-transform duration-300
+            hover:opacity-90"
         />
       </div>
 
@@ -96,7 +99,7 @@ const BackContent = ({
           tabIndex={0}
           aria-label="Unflip"
           className="
-            rounded-4xl w-full aspect-square 
+            rounded-4xl w-full aspect-4/3 md:aspect-square 
             transition-transform duration-300 hover:opacity-90 
             cursor-pointer flex items-center justify-center overflow-hidden bg-base-dark
             shadow-[inset_0_3px_0_0_var(--color-accent)]
@@ -167,7 +170,7 @@ export default function FlipSection({
 
   return (
     // Container to establish positioning context
-    <div className="relative z-10 max-w-7xl mx-auto min-h-[400px]">
+    <div className="relative z-10 max-w-7xl mx-auto">
       {/* Front Content Wrapper */}
       <div
         className={`

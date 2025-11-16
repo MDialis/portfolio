@@ -29,7 +29,7 @@ const InfiniteIconScroller: React.FC<InfiniteIconScrollerProps> = ({
         {skills.map((skill) => (
           <div
             key={skill.name}
-            className="flex flex-col items-center gap-3 transition-transform duration-300 hover:scale-110 shrink-0"
+            className="flex flex-col items-center gap-3 px-2 md:px-0 transition-transform duration-300 hover:scale-110 shrink-0"
           >
             <img
               src={`/icons/${skill.icon}`}
