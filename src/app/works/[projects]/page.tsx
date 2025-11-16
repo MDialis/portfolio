@@ -9,6 +9,25 @@ interface TechIcon {
   alt: string;
 }
 
+// ++ ADICIONE ESTA INTERFACE ++
+// Define exatamente o que esperamos de um Asset que vem do Rich Text
+interface IResolvedAsset {
+  sys: { id: string };
+  fields: {
+    title: string;
+    file: {
+      url: string;
+      details: {
+        // 'image' é opcional, pois o asset pode ser um PDF
+        image?: {
+          width: number;
+          height: number;
+        };
+      };
+    };
+  };
+}
+
 export async function generateStaticParams() {
   try {
     const res = await contentfulClient.getEntries({
@@ -87,7 +106,6 @@ export default async function ProjectPage({
 
   const imageUrl = fullImage ? `https:${fullImage.fields.file.url}` : undefined;
 
-  // Formata os ícones de tecnologia
   const formattedTechIcons: TechIcon[] = (tech || []).map((techName) => {
     return {
       src: techName ? `/icons/${techName}.svg` : "/icons/default.svg",
@@ -103,7 +121,9 @@ export default async function ProjectPage({
     renderNode: {
       [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
         const asset = assets.get(node.data.target.sys.id);
-        if (!asset) {
+
+        // Verificações de segurança
+        if (!asset || !asset.fields.file) {
           return null;
         }
         return (
