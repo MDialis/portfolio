@@ -6,9 +6,13 @@ import { Bodoni_Moda } from "next/font/google";
 import InfiniteIconScroller from "@/components/InfiniteIconScroller";
 import HeroSection from "@/components/HeroSection";
 
-import { getFeaturedProjects, getFeaturedExperiences } from "@/lib/contentfulService";
+import {
+  getFeaturedProjects,
+  getFeaturedExperiences,
+} from "@/lib/contentfulService";
 import { TechIcon } from "@/lib/types";
 import Contacts from "@/components/Contacts";
+import Button from "@/components/Button";
 
 const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
 
@@ -162,7 +166,9 @@ export default async function Home() {
           <section id="projects" className="py-10">
             <div className="max-w-5xl mx-auto">
               <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
-                My Projects
+                <a href="/works" className="px-2">
+                  My Projects
+                </a>
               </h2>
 
               {projects.length === 0 ? (
@@ -213,7 +219,9 @@ export default async function Home() {
           <section id="experiences" className="py-10">
             <div className="max-w-5xl mx-auto">
               <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
-                My Experiences
+                <a href="/works" className="px-2">
+                  My Experiences
+                </a>
               </h2>
 
               {experiences.length === 0 ? (
@@ -259,6 +267,10 @@ export default async function Home() {
               )}
             </div>
           </section>
+
+          <div className="max-w-6xl mx-auto my-10">
+            <Button link="/works" text="Explore Full Portfolio" />
+          </div>
         </div>
 
         <Contacts />
