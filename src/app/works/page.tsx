@@ -50,7 +50,7 @@ export default async function Home() {
                   <a
                     key={slug}
                     href={`/works/${slug}`}
-                    className="group relative flex flex-col gap-2 border-t border-secondary-content w-full py-4 transition-all duration-200 hover:bg-base-200/50 px-2"
+                    className="group relative flex flex-col gap-2 border-t border-secondary-content w-full py-4 transition-all duration-200 hover:bg-accent/20 px-2"
                   >
                     <div className="flex justify-between items-start gap-4">
                       <h3 className="text-2xl font-semibold">{title}</h3>
