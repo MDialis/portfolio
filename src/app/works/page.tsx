@@ -50,7 +50,7 @@ export default async function Home() {
                   <a
                     key={slug}
                     href={`/works/${slug}`}
-                    className="group flex flex-col gap-2 border-t border-secondary-content w-full py-4 transition-all duration-200 hover:bg-base-200/50 px-2"
+                    className="group relative flex flex-col gap-2 border-t border-secondary-content w-full py-4 transition-all duration-200 hover:bg-base-200/50 px-2"
                   >
                     <div className="flex justify-between items-start gap-4">
                       <h3 className="text-2xl font-semibold">{title}</h3>
@@ -75,14 +75,21 @@ export default async function Home() {
                       {summary}
                     </p>
 
-                    {/* Images for Card and Mobile (Still doesnt work) */}
+                    {/* Images for Card and Mobile */}
                     {(cardImageUrl || mobileImageUrl) && (
-                      <div className="absolute bg-base-100 w-full h-56 mt-4 hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div
+                        className="
+                          absolute mt-4 h-56 -right-20
+                          hidden opacity-0
+                          group-hover:block group-hover:opacity-100 
+                          transition duration-500
+                      "
+                      >
                         {mobileImageUrl && (
                           <img
                             src={mobileImageUrl}
                             alt={title}
-                            className="w-full h-full object-cover rounded-lg shadow-2xl md:hidden"
+                            className="aspect-4/6 h-full object-cover rounded-lg shadow-2xl md:hidden"
                           />
                         )}
 
@@ -90,7 +97,7 @@ export default async function Home() {
                           <img
                             src={cardImageUrl}
                             alt={title}
-                            className="w-full h-full object-cover rounded-lg shadow-2xl hidden md:block"
+                            className="aspect-video h-full object-cover rounded-lg shadow-2xl hidden md:block"
                           />
                         )}
                       </div>
