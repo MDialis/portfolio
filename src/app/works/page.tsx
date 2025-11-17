@@ -50,19 +50,32 @@ export default async function Home() {
                   <a
                     key={slug}
                     href={`/works/${slug}`}
-                    className="group relative flex flex-col gap-2 border-t border-secondary-content w-full py-4 transition-all duration-200 hover:bg-accent/20 px-2"
+                    className="
+                      group relative flex flex-col
+                      border-t border-secondary-content
+                      w-full py-3 px-2 gap-1
+                      hover:text-accent hover:pl-6
+                      transition-all duration-200
+                    "
                   >
-                    <div className="flex justify-between items-start gap-4">
-                      <h3 className="text-2xl font-semibold">{title}</h3>
+                    <div className="flex justify-between items-center gap-2">
+                      <h3 className="text-3xl font-semibold min-w-0 truncate">{title} aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h3>
                       {formattedTechIcons && formattedTechIcons.length > 0 ? (
-                        <div className="flex flex-wrap gap-4 p-2 bg-neutral/30 rounded-2xl self-start">
+                        <div 
+                          className="
+                            flex flex-wrap self-start
+                            p-1 px-2 gap-4 shrink-0
+                            rounded-2xl bg-neutral/50 
+                            group-hover:bg-accent/10 group-hover:gap-5
+                            duration-300
+                          ">
                           {formattedTechIcons.map((icon) => (
                             <img
                               key={icon.alt}
                               src={icon.src}
                               alt={icon.alt}
                               title={icon.alt}
-                              className="h-10 w-10"
+                              className="h-8 w-8"
                             />
                           ))}
                         </div>
@@ -71,7 +84,7 @@ export default async function Home() {
                       )}
                     </div>
 
-                    <p className="pl-6 text-sm line-clamp-2 text-ellipsis">
+                    <p className="px-4 text-md line-clamp-2 text-ellipsis group-hover:pl-8 duration-400">
                       {summary}
                     </p>
 
