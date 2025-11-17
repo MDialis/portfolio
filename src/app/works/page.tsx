@@ -55,7 +55,7 @@ export default async function Home() {
                     <div className="flex justify-between items-start gap-4">
                       <h3 className="text-2xl font-semibold">{title}</h3>
                       {formattedTechIcons && formattedTechIcons.length > 0 ? (
-                        <div className="flex flex-wrap gap-4 p-1 bg-neutral/30 rounded-2xl self-start">
+                        <div className="flex flex-wrap gap-4 p-2 bg-neutral/30 rounded-2xl self-start">
                           {formattedTechIcons.map((icon) => (
                             <img
                               key={icon.alt}
