@@ -7,7 +7,7 @@ import InfiniteIconScroller from "@/components/InfiniteIconScroller";
 import HeroSection from "@/components/HeroSection";
 
 import { getFeaturedProjects, getFeaturedExperiences } from "@/lib/contentfulService";
-import { IExperienceEntry, IProjectEntry, TechIcon } from "@/lib/types";
+import { TechIcon } from "@/lib/types";
 import Contacts from "@/components/Contacts";
 
 const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400" });

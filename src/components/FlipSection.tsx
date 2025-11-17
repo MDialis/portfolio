@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ReactNode } from "react";
+import Button from "./Button";
 
 // --- Front Content ---
 // Props for the FrontContent component
@@ -52,14 +53,7 @@ const FrontContent = ({
 
         {/* Optional Button */}
         {buttonText && buttonLink && (
-          <div className="mt-10 flex justify-end p-5">
-            <a
-              href={buttonLink}
-              className="px-6 py-3 rounded-lg font-semibold text-primary-content bg-primary shadow-lg hover:opacity-80 transition-colors"
-            >
-              {buttonText}
-            </a>
-          </div>
+          <Button link={buttonLink} text={buttonText} />
         )}
       </div>
     </div>
@@ -115,14 +109,7 @@ const BackContent = ({
 
         {/* Optional Button */}
         {buttonText && buttonLink && (
-          <div className="mt-10 flex justify-end p-5">
-            <a
-              href={buttonLink}
-              className="px-6 py-3 rounded-lg font-semibold text-primary-content bg-primary shadow-lg hover:opacity-80 transition-colors"
-            >
-              {buttonText}
-            </a>
-          </div>
+          <Button link={buttonLink} text={buttonText} />
         )}
       </div>
     </div>
