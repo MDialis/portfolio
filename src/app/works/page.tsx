@@ -80,9 +80,9 @@ export default async function Home() {
                       <div
                         className="
                           absolute mt-4 h-56 -right-20
-                          hidden opacity-0
-                          group-hover:block group-hover:opacity-100 
-                          transition duration-500
+                          pointer-events-none opacity-0
+                          group-hover:pointer-events-auto group-hover:opacity-100 
+                          transition duration-300
                       "
                       >
                         {mobileImageUrl && (
