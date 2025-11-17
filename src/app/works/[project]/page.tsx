@@ -8,11 +8,15 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function ProjectPage({
-  params,
-}: {
-  params: { project: string };
-}) {
+export type ProjectPageProps = {
+  params: Promise<{ project: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+export default async function ProjectPage(props: ProjectPageProps) {
+  const { params: awaitedParams } = props;
+    const params = await awaitedParams;
+
   const res = await getProjectBySlug(params.project);
 
   if (!res) {
@@ -52,7 +56,7 @@ export default async function ProjectPage({
     ]) || []
   );
 
-  const options = {
+  const options: Parameters<typeof documentToReactComponents>[1] = {
     renderNode: {
       [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
         <p className="my-4 text-lg leading-relaxed">{children}</p>
