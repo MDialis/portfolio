@@ -6,7 +6,7 @@ export default async function Home() {
   const projects = await getProjects();
   const experiences = await getExperiences();
   return (
-    <main className="flex flex-col gap-20">
+    <main className="flex flex-col gap-20 px-5">
       {/* Projects Section */}
       <section id="projects" className="py-10">
         <div className="max-w-5xl mx-auto">
@@ -52,14 +52,14 @@ export default async function Home() {
                     href={`/works/${slug}`}
                     className="
                       group relative flex flex-col
-                      border-t border-secondary-content
+                      border-t border-base-content/40
                       w-full py-3 px-2 gap-1
-                      hover:text-accent hover:pl-6
+                      hover:text-accent hover:border-accent/40 hover:pl-6
                       transition-all duration-200
                     "
                   >
                     <div className="flex justify-between items-center gap-2">
-                      <h3 className="text-3xl font-semibold min-w-0 truncate">{title} aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h3>
+                      <h3 className="text-3xl font-semibold min-w-0 truncate">{title}</h3>
                       {formattedTechIcons && formattedTechIcons.length > 0 ? (
                         <div 
                           className="
@@ -80,7 +80,7 @@ export default async function Home() {
                           ))}
                         </div>
                       ) : (
-                        <div />
+                        <></>
                       )}
                     </div>
 
