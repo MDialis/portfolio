@@ -92,7 +92,8 @@ export default async function Home() {
                     {(cardImageUrl || mobileImageUrl) && (
                       <div
                         className="
-                          absolute mt-4 h-56 -right-20
+                          absolute mt-4 h-64 p-5 rounded-xl
+                          right-0 lg:-right-15 -top-1/2
                           pointer-events-none opacity-0
                           group-hover:pointer-events-auto group-hover:opacity-100 
                           transition duration-300
