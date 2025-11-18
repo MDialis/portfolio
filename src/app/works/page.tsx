@@ -54,7 +54,8 @@ export default async function Home() {
                       group relative flex flex-col
                       border-t border-base-content/40
                       w-full py-3 px-2 gap-1
-                      hover:text-accent hover:border-accent/40 hover:pl-6
+                      hover:text-accent hover:border-accent/40
+                      hover:pl-4 md:hover:pl-5 lg:hover:pl-6
                       transition-all duration-200
                     "
                   >
@@ -84,7 +85,7 @@ export default async function Home() {
                       )}
                     </div>
 
-                    <p className="px-4 text-md line-clamp-2 text-ellipsis group-hover:pl-8 duration-400">
+                    <p className="px-4 text-md line-clamp-2 text-ellipsis group-hover:pl-5 md:group-hover:pl-7 lg:group-hover:pl-8 duration-400">
                       {summary}
                     </p>
 
