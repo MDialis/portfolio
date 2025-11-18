@@ -53,23 +53,26 @@ export default async function Home() {
                     className="
                       group relative flex flex-col
                       border-t border-base-content/40
-                      w-full py-3 px-2 gap-1
+                      w-full py-3 px-2 md:gap-1
                       hover:text-accent hover:border-accent/40
                       hover:pl-4 md:hover:pl-5 lg:hover:pl-6
                       transition-all duration-200
                     "
                   >
-                    <div className="flex justify-between items-center gap-2">
-                      <h3 className="text-3xl font-semibold min-w-0 truncate">{title}</h3>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-2xl md:text-3xl font-semibold min-w-0 truncate">
+                        {title}
+                      </h3>
                       {formattedTechIcons && formattedTechIcons.length > 0 ? (
-                        <div 
+                        <div
                           className="
                             flex flex-wrap self-start
-                            p-1 px-2 gap-4 shrink-0
-                            rounded-2xl bg-neutral/50 
-                            group-hover:bg-accent/10 group-hover:gap-5
+                            p-1 px-2 shrink-0 rounded-2xl 
+                            bg-neutral/50 group-hover:bg-accent/10 
+                            gap-2 md:gap-4 group-hover:gap-3 md:group-hover:gap-5
                             duration-300
-                          ">
+                          "
+                        >
                           {formattedTechIcons.map((icon) => (
                             <img
                               key={icon.alt}
@@ -85,7 +88,7 @@ export default async function Home() {
                       )}
                     </div>
 
-                    <p className="px-4 text-md line-clamp-2 text-ellipsis group-hover:pl-5 md:group-hover:pl-7 lg:group-hover:pl-8 duration-400">
+                    <p className="px-4 text-sm md:text-md line-clamp-2 text-ellipsis group-hover:pl-5 md:group-hover:pl-7 lg:group-hover:pl-8 duration-400">
                       {summary}
                     </p>
 
