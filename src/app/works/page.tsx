@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import ListItem from "@/components/ListItem";
 import { getProjects, getExperiences } from "@/lib/contentfulService";
 import { TechIcon } from "@/lib/types";
 
@@ -47,80 +48,15 @@ export default async function Home() {
                   }
                 );
                 return (
-                  <a
-                    key={slug}
-                    href={`/works/${slug}`}
-                    className="
-                      group relative flex flex-col
-                      border-t border-base-content/40
-                      w-full py-3 px-2 md:gap-1
-                      hover:text-accent hover:border-accent/40
-                      hover:pl-4 md:hover:pl-5 lg:hover:pl-6
-                      transition-all duration-200
-                    "
-                  >
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-2xl md:text-3xl font-semibold min-w-0 truncate">
-                        {title}
-                      </h3>
-                      {formattedTechIcons && formattedTechIcons.length > 0 ? (
-                        <div
-                          className="
-                            flex flex-wrap self-start
-                            p-1 px-2 shrink-0 rounded-2xl 
-                            bg-neutral/50 group-hover:bg-accent/10 
-                            gap-2 md:gap-4 group-hover:gap-3 md:group-hover:gap-5
-                            duration-300
-                          "
-                        >
-                          {formattedTechIcons.map((icon) => (
-                            <img
-                              key={icon.alt}
-                              src={icon.src}
-                              alt={icon.alt}
-                              title={icon.alt}
-                              className="h-6 w-6 md:h-8 md:w-8"
-                            />
-                          ))}
-                        </div>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-
-                    <p className="px-4 text-sm md:text-md line-clamp-2 text-ellipsis group-hover:pl-5 md:group-hover:pl-7 lg:group-hover:pl-8 duration-400">
-                      {summary}
-                    </p>
-
-                    {/* Images for Card and Mobile */}
-                    {(cardImageUrl || mobileImageUrl) && (
-                      <div
-                        className="
-                          absolute mt-4 h-64 p-5 rounded-xl
-                          right-0 lg:-right-15 -top-1/2
-                          pointer-events-none opacity-0
-                          group-hover:pointer-events-auto group-hover:opacity-100 
-                          transition duration-300
-                      "
-                      >
-                        {mobileImageUrl && (
-                          <img
-                            src={mobileImageUrl}
-                            alt={title}
-                            className="aspect-4/6 h-full object-cover rounded-lg shadow-2xl md:hidden"
-                          />
-                        )}
-
-                        {cardImageUrl && (
-                          <img
-                            src={cardImageUrl}
-                            alt={title}
-                            className="aspect-video h-full object-cover rounded-lg shadow-2xl hidden md:block"
-                          />
-                        )}
-                      </div>
-                    )}
-                  </a>
+                  <ListItem 
+                    key={project.sys.id}
+                    title={title}
+                    slug={slug}
+                    summary={summary}
+                    cardImageUrl={cardImageUrl}
+                    mobileImageUrl={mobileImageUrl}
+                    formattedTechIcons={formattedTechIcons}
+                  />
                 );
               })}
             </div>
