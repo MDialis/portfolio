@@ -76,7 +76,7 @@ export default async function Home() {
                               src={icon.src}
                               alt={icon.alt}
                               title={icon.alt}
-                              className="h-8 w-8"
+                              className="h-6 w-6 md:h-8 md:w-8"
                             />
                           ))}
                         </div>
