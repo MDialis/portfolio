@@ -142,12 +142,12 @@ export default async function ProjectPage(props: ProjectPageProps) {
         </div>
         <p>date: {date}</p>
         <p>summary: {summary}</p>
-        <p>
+        <div>
           description:
           <article className="prose prose-lg max-w-none prose-invert">
             {documentToReactComponents(description as Document, options)}
           </article>
-        </p>
+        </div>
         <p>
           cardImage:
           {cardImage && cardImage.fields.file.details.image && (
