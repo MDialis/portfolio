@@ -15,7 +15,7 @@ export type ProjectPageProps = {
 
 export default async function ProjectPage(props: ProjectPageProps) {
   const { params: awaitedParams } = props;
-    const params = await awaitedParams;
+  const params = await awaitedParams;
 
   const res = await getProjectBySlug(params.project);
 
@@ -115,6 +115,101 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
   return (
     <main className="py-20">
+      {fullImage ? (
+        <section className="relative w-full h-[70vh] min-h-[500px] flex items-end justify-start overflow-hidden bg-base-300">
+          {/* Background Full Image */}
+          <Image
+            src={`https:${fullImage.fields.file.url}`}
+            alt={fullImage.fields.title || `Card Image of ${title}`}
+            fill
+            className="object-cover"
+            priority
+          />
+
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
+
+          {/* Hero Content */}
+          <div className="
+            relative z-10 h-full
+            w-full px-4 md:w-11/12 md:px-0 lg:w-10/12
+            mx-auto text-white 
+            flex flex-col justify-end">
+            <Link
+              href="/works"
+              className="absolute top-0 left-0 bg-white/10 backdrop-blur-md rounded-full text-sm font-medium hover:bg-white/20 transition flex items-center gap-2"
+            >
+              Back
+            </Link>
+
+            <div className="flex flex-col gap-6">
+              {/* Tech Icons */}
+              <div className="flex flex-wrap gap-2">
+                {formattedTechIcons.map((icon) => (
+                  <div
+                    key={icon.alt}
+                    className="badge badge-neutral gap-2 p-2 text-white border-white/20 bg-black/40 backdrop-blur-md rounded-xl"
+                  >
+                    <Image
+                      src={icon.src}
+                      alt={icon.alt}
+                      width={16}
+                      height={16}
+                      className="w-4 h-4 invert"
+                    />
+                    {icon.alt}
+                  </div>
+                ))}
+              </div>
+
+              {/* Title */}
+              <div>
+                <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight drop-shadow-md">
+                  {title}
+                </h1>
+                <p className="mt-2 text-white/80 font-medium">
+                  {date ? new Date(date).getFullYear() : ""}
+                </p>
+              </div>
+
+              {/* Summary */}
+              <p className="text-xl md:text-2xl text-white/90 max-w-2xl font-light leading-relaxed drop-shadow-sm">
+                {summary}
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-4 mt-2">
+                {systemLink && (
+                  <a
+                    href={systemLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary btn-md md:btn-lg gap-2 shadow-lg hover:scale-105 transition-transform"
+                  >
+                    Visitar Site
+                  </a>
+                )}
+                {repositoryLink && (
+                  <a
+                    href={repositoryLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary btn-md md:btn-lg gap-2 shadow-lg hover:scale-105 transition-transform"
+                  >
+                    Repository
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (cardImage && cardImage.fields.file.details.image) ||
+        (mobileImage && mobileImage.fields.file.details.image) ? (
+        <></>
+      ) : (
+        <></>
+      )}
+
       <div className="max-w-4xl mx-auto px-4">
         <h1 className="text-5xl font-bold text-center mb-10 text-base-content">
           Title: {title}
