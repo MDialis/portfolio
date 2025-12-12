@@ -40,8 +40,6 @@ export default async function ProjectPage(props: ProjectPageProps) {
     fullImage,
   } = project.fields;
 
-  const imageUrl = fullImage ? `https:${fullImage.fields.file.url}` : undefined;
-
   const formattedTechIcons: TechIcon[] = (tech || []).map((techName) => {
     return {
       src: techName ? `/icons/${techName}.svg` : "/icons/default.svg",
@@ -116,7 +114,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
   return (
     <main className="py-20">
       {fullImage ? (
-        <section className="relative w-full h-[70vh] min-h-[500px] flex items-end justify-start overflow-hidden bg-base-300">
+        <section className="relative w-full h-[55vh] min-h-[500px] flex items-end justify-start overflow-hidden bg-base-300">
           {/* Background Full Image */}
           <Image
             src={`https:${fullImage.fields.file.url}`}
@@ -130,11 +128,13 @@ export default async function ProjectPage(props: ProjectPageProps) {
           <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
 
           {/* Hero Content */}
-          <div className="
+          <div
+            className="
             relative z-10 h-full
             w-full px-4 md:w-11/12 md:px-0 lg:w-10/12
             mx-auto text-white 
-            flex flex-col justify-end">
+            flex flex-col justify-end"
+          >
             <Link
               href="/works"
               className="absolute top-0 left-0 bg-white/10 backdrop-blur-md rounded-full text-sm font-medium hover:bg-white/20 transition flex items-center gap-2"
@@ -211,13 +211,8 @@ export default async function ProjectPage(props: ProjectPageProps) {
       )}
 
       <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-5xl font-bold text-center mb-10 text-base-content">
-          Title: {title}
-        </h1>
-        <p>repositoryLink: {repositoryLink}</p>
-        <p>systemLink: {systemLink}</p>
         <p>slug: {slug}</p>
-        <p>tech: {tech}</p>
+        <p>tech: </p>
         <div className="flex flex-wrap justify-center gap-3">
           {formattedTechIcons.map((icon) => (
             <div
@@ -264,19 +259,6 @@ export default async function ProjectPage(props: ProjectPageProps) {
               width={mobileImage.fields.file.details.image.width}
               height={mobileImage.fields.file.details.image.height}
               className="w-full h-auto rounded-lg shadow-2xl"
-            />
-          )}
-        </p>
-        <p>
-          fullImage:
-          {fullImage && fullImage.fields.file.details.image && (
-            <Image
-              src={`https:${fullImage.fields.file.url}`}
-              alt={fullImage.fields.title || `Card Image of ${title}`}
-              width={fullImage.fields.file.details.image.width}
-              height={fullImage.fields.file.details.image.height}
-              className="w-full h-auto rounded-lg shadow-2xl"
-              priority
             />
           )}
         </p>
