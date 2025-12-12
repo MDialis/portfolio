@@ -1,5 +1,6 @@
 import { TechIcon } from "@/lib/types";
 import Image from "next/image";
+import { TechIconList } from "./TechIconList";
 
 interface CardProps {
   title: string;
@@ -29,21 +30,7 @@ export default function Card({
           <p className="mb-4">{text}</p>
 
           <div className="mt-auto flex flex-col sm:flex-row gap-4 sm:justify-between items-end pt-4">
-            {techIcons && techIcons.length > 0 ? (
-              <div className="flex flex-wrap gap-4 p-2 bg-neutral/30 rounded-2xl self-center">
-                {techIcons.map((icon) => (
-                  <img
-                    key={icon.alt}
-                    src={icon.src}
-                    alt={icon.alt}
-                    title={icon.alt}
-                    className="h-10 w-10"
-                  />
-                ))}
-              </div>
-            ) : (
-              <div />
-            )}
+            <TechIconList icons={techIcons} />
           </div>
         </div>
       </div>
