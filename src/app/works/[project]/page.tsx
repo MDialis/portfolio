@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 
 import Image from "next/image";
 import Link from "next/link";
+import { TechIconList } from "@/components/TechIconList";
 
 export type ProjectPageProps = {
   params: Promise<{ project: string }>;
@@ -210,92 +211,85 @@ export default async function ProjectPage(props: ProjectPageProps) {
         <></>
       )}
 
-        <div className="grid grid-cols-1 md:grid-cols">
-          <div className="md:col-span-1">
-            <div className="">
-              <p>slug: {slug}</p>
-              <p>tech: </p>
-              <div className="flex flex-wrap justify-center gap-3">
-                {formattedTechIcons.map((icon) => (
-                  <div
-                    key={icon.alt}
-                    className="tooltip"
-                    data-tip={icon.alt.toUpperCase()}
-                  >
-                    <Image
-                      src={icon.src}
-                      alt={icon.alt}
-                      width={32}
-                      height={32}
-                      className="h-8 w-8"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="md:col-span-3">
-            <div className="space-y-4 mx-auto max-w-5xl">
-              <p>date: {date}</p>
-              <p>summary: {summary}</p>
-              <div>
-                description:
-                <article className="prose prose-lg max-w-none prose-invert">
-                  {documentToReactComponents(description as Document, options)}
-                </article>
-              </div>
-              <p>
-                cardImage:
-                {cardImage && cardImage.fields.file.details.image && (
-                  <Image
-                    src={`https:${cardImage.fields.file.url}`}
-                    alt={cardImage.fields.title || `Card Image of ${title}`}
-                    width={cardImage.fields.file.details.image.width}
-                    height={cardImage.fields.file.details.image.height}
-                    className="w-full h-auto rounded-lg shadow-2xl"
-                  />
-                )}
-              </p>
-              <p>
-                mobileImage:
-                {mobileImage && mobileImage.fields.file.details.image && (
-                  <Image
-                    src={`https:${mobileImage.fields.file.url}`}
-                    alt={mobileImage.fields.title || `Card Image of ${title}`}
-                    width={mobileImage.fields.file.details.image.width}
-                    height={mobileImage.fields.file.details.image.height}
-                    className="w-full h-auto rounded-lg shadow-2xl"
-                  />
-                )}
-              </p>
-
-              <div>
-                <details className="bg-base-300 rounded-lg">
-                  <summary className="collapse-title text-xl font-medium cursor-pointer">
-                    Ver Dados Brutos da Entry (project)
-                  </summary>
-                  <div className="collapse-content">
-                    <pre className="p-4 text-xs overflow-x-auto bg-base-100 rounded-lg">
-                      {JSON.stringify(project, null, 2)}
-                    </pre>
-                  </div>
-                </details>
-
-                <details className="bg-base-300 rounded-lg">
-                  <summary className="collapse-title text-xl font-medium cursor-pointer">
-                    Ver Dados Brutos dos Assets (res.includes.Asset)
-                  </summary>
-                  <div className="collapse-content">
-                    <pre className="p-4 text-xs overflow-x-auto bg-base-100 rounded-lg">
-                      {JSON.stringify(linkedAssets, null, 2)}
-                    </pre>
-                  </div>
-                </details>
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-4">
+        <div className="md:col-span-1">
+          <div className="">
+            {/* <p>slug: {slug}</p> */}
+            <div className="flex flex-wrap justify-center gap-3">
+              <TechIconList
+                icons={formattedTechIcons}
+                iconClass="hover:mx-1 duration-300"
+                className="
+                  bg-neutral/50
+                  self-start p-1 px-2 shrink-0
+                  gap-2 md:gap-4 duration-300
+                  hover:bg-accent/10 hover:gap-3 md:hover:gap-5"
+              />
             </div>
           </div>
         </div>
+
+        <div className="md:col-span-3">
+          <div className="space-y-4 mx-auto max-w-5xl">
+            <p>date: {date}</p>
+            <p>summary: {summary}</p>
+            <div>
+              description:
+              <article className="prose prose-lg max-w-none prose-invert">
+                {documentToReactComponents(description as Document, options)}
+              </article>
+            </div>
+            <p>
+              cardImage:
+              {cardImage && cardImage.fields.file.details.image && (
+                <Image
+                  src={`https:${cardImage.fields.file.url}`}
+                  alt={cardImage.fields.title || `Card Image of ${title}`}
+                  width={cardImage.fields.file.details.image.width}
+                  height={cardImage.fields.file.details.image.height}
+                  className="w-full h-auto rounded-lg shadow-2xl"
+                />
+              )}
+            </p>
+            <p>
+              mobileImage:
+              {mobileImage && mobileImage.fields.file.details.image && (
+                <Image
+                  src={`https:${mobileImage.fields.file.url}`}
+                  alt={mobileImage.fields.title || `Card Image of ${title}`}
+                  width={mobileImage.fields.file.details.image.width}
+                  height={mobileImage.fields.file.details.image.height}
+                  className="w-full h-auto rounded-lg shadow-2xl"
+                />
+              )}
+            </p>
+
+            <div>
+              <details className="bg-base-300 rounded-lg">
+                <summary className="collapse-title text-xl font-medium cursor-pointer">
+                  Ver Dados Brutos da Entry (project)
+                </summary>
+                <div className="collapse-content">
+                  <pre className="p-4 text-xs overflow-x-auto bg-base-100 rounded-lg">
+                    {JSON.stringify(project, null, 2)}
+                  </pre>
+                </div>
+              </details>
+
+              <details className="bg-base-300 rounded-lg">
+                <summary className="collapse-title text-xl font-medium cursor-pointer">
+                  Ver Dados Brutos dos Assets (res.includes.Asset)
+                </summary>
+                <div className="collapse-content">
+                  <pre className="p-4 text-xs overflow-x-auto bg-base-100 rounded-lg">
+                    {JSON.stringify(linkedAssets, null, 2)}
+                  </pre>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

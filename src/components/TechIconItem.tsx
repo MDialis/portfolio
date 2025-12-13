@@ -3,9 +3,10 @@ import Image from "next/image";
 
 interface TechIconItemProps {
   icon: TechIcon;
+  className?: string;
 }
 
-export function TechIconItem({ icon }: TechIconItemProps) {
+export function TechIconItem({ icon, className }: TechIconItemProps) {
   return (
     <Image
       src={icon.src}
@@ -13,7 +14,7 @@ export function TechIconItem({ icon }: TechIconItemProps) {
       title={icon.alt}
       height={100}
       width={100}
-      className="h-10 w-10"
+      className={`h-10 w-10 ${className}`}
     />
   );
 }

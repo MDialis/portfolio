@@ -1,7 +1,7 @@
 import { TechIcon } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
-
+import { TechIconList } from "./TechIconList";
 
 interface ListItemProps {
   title: string;
@@ -38,25 +38,15 @@ export default function ListItem({
           {title}
         </h3>
         {formattedTechIcons && formattedTechIcons.length > 0 ? (
-          <div
+          <TechIconList
+            icons={formattedTechIcons}
+            iconClass="h-6 w-6 md:h-8 md:w-8"
             className="
-              flex flex-wrap self-start
-              p-1 px-2 shrink-0 rounded-2xl 
-              bg-neutral/50 group-hover:bg-accent/10 
-              gap-2 md:gap-4 group-hover:gap-3 md:group-hover:gap-5
-              duration-300
-            "
-          >
-            {formattedTechIcons.map((icon) => (
-              <img
-                key={icon.alt}
-                src={icon.src}
-                alt={icon.alt}
-                title={icon.alt}
-                className="h-6 w-6 md:h-8 md:w-8"
-              />
-            ))}
-          </div>
+              bg-neutral/50
+              self-start p-1 px-2 shrink-0
+              gap-2 md:gap-4 duration-300
+              group-hover:bg-accent/10 group-hover:gap-3 md:group-hover:gap-5"
+          />
         ) : (
           <></>
         )}
