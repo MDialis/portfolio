@@ -1,5 +1,5 @@
 import { createClient } from 'contentful';
-import { IExperienceEntry, IProjectEntry } from './types.ts';
+import { IExperienceEntry, IProjectEntry } from './types';
 
 if (!process.env.CONTENTFUL_SPACE_ID) {
   throw new Error('CONTENTFUL_SPACE_ID não definido no .env.local');
