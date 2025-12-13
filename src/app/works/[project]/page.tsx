@@ -143,43 +143,19 @@ export default async function ProjectPage(props: ProjectPageProps) {
               Back
             </Link>
 
-            <div className="flex flex-col gap-6">
-              {/* Tech Icons */}
-              <div className="flex flex-wrap gap-2">
-                {formattedTechIcons.map((icon) => (
-                  <div
-                    key={icon.alt}
-                    className="badge badge-neutral gap-2 p-2 text-white border-white/20 bg-black/40 backdrop-blur-md rounded-xl"
-                  >
-                    <Image
-                      src={icon.src}
-                      alt={icon.alt}
-                      width={16}
-                      height={16}
-                      className="w-4 h-4 invert"
-                    />
-                    {icon.alt}
-                  </div>
-                ))}
-              </div>
-
+            <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 py-4">
               {/* Title */}
               <div>
                 <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight drop-shadow-md">
                   {title}
                 </h1>
-                <p className="mt-2 text-white/80 font-medium">
+                <p className="mt-1 text-white/80 font-medium">
                   {date ? new Date(date).getFullYear() : ""}
                 </p>
               </div>
 
-              {/* Summary */}
-              <p className="text-xl md:text-2xl text-white/90 max-w-2xl font-light leading-relaxed drop-shadow-sm">
-                {summary}
-              </p>
-
               {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4 mt-2">
+              <div className="flex flex-wrap gap-4 my-auto">
                 {systemLink && (
                   <a
                     href={systemLink}
