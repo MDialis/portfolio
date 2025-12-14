@@ -122,7 +122,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
             src={`https:${fullImage.fields.file.url}`}
             alt={fullImage.fields.title || `Card Image of ${title}`}
             fill
-            className="object-cover"
+            className="object-cover object-top"
             priority
           />
 
@@ -193,7 +193,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-7">
         <div className="md:col-span-2">
-          <div className="px-12 py-12 space-y-4">
+          <div className="p-12 space-y-4">
             <h3 className="text-lg font-bold">Details</h3>
             {/* <p>slug: {slug}</p> */}
             <div className="flex flex-wrap justify-center gap-3">
@@ -211,36 +211,12 @@ export default async function ProjectPage(props: ProjectPageProps) {
         </div>
 
         <div className="md:col-span-5">
-          <div className="space-y-4 mx-auto max-w-5xl">
+          <div className="p-12 mx-auto max-w-5xl">
             <div>
               <article className="prose prose-lg max-w-none prose-invert">
                 {documentToReactComponents(description as Document, options)}
               </article>
             </div>
-            <p>
-              cardImage:
-              {cardImage && cardImage.fields.file.details.image && (
-                <Image
-                  src={`https:${cardImage.fields.file.url}`}
-                  alt={cardImage.fields.title || `Card Image of ${title}`}
-                  width={cardImage.fields.file.details.image.width}
-                  height={cardImage.fields.file.details.image.height}
-                  className="w-full h-auto rounded-lg shadow-2xl"
-                />
-              )}
-            </p>
-            <p>
-              mobileImage:
-              {mobileImage && mobileImage.fields.file.details.image && (
-                <Image
-                  src={`https:${mobileImage.fields.file.url}`}
-                  alt={mobileImage.fields.title || `Card Image of ${title}`}
-                  width={mobileImage.fields.file.details.image.width}
-                  height={mobileImage.fields.file.details.image.height}
-                  className="w-full h-auto rounded-lg shadow-2xl"
-                />
-              )}
-            </p>
 
             <div>
               <details className="bg-base-300 rounded-lg">
