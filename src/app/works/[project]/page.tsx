@@ -187,9 +187,12 @@ export default async function ProjectPage(props: ProjectPageProps) {
         <></>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-4">
-        <div className="md:col-span-1">
-          <div className="">
+      <div className="grid grid-cols-1 md:grid-cols-7">
+        <div className="md:col-span-2">
+          <div className="px-12 py-12 space-y-4">
+            <h3 className="text-lg font-bold">
+            Details
+            </h3>
             {/* <p>slug: {slug}</p> */}
             <div className="flex flex-wrap justify-center gap-3">
               <TechIconList
@@ -205,12 +208,9 @@ export default async function ProjectPage(props: ProjectPageProps) {
           </div>
         </div>
 
-        <div className="md:col-span-3">
+        <div className="md:col-span-5">
           <div className="space-y-4 mx-auto max-w-5xl">
-            <p>date: {date}</p>
-            <p>summary: {summary}</p>
             <div>
-              description:
               <article className="prose prose-lg max-w-none prose-invert">
                 {documentToReactComponents(description as Document, options)}
               </article>
@@ -243,7 +243,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
             <div>
               <details className="bg-base-300 rounded-lg">
                 <summary className="collapse-title text-xl font-medium cursor-pointer">
-                  Ver Dados Brutos da Entry (project)
+                  Raw data (project)
                 </summary>
                 <div className="collapse-content">
                   <pre className="p-4 text-xs overflow-x-auto bg-base-100 rounded-lg">
@@ -254,7 +254,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
               <details className="bg-base-300 rounded-lg">
                 <summary className="collapse-title text-xl font-medium cursor-pointer">
-                  Ver Dados Brutos dos Assets (res.includes.Asset)
+                  Assets Raw Data (res.includes.Asset)
                 </summary>
                 <div className="collapse-content">
                   <pre className="p-4 text-xs overflow-x-auto bg-base-100 rounded-lg">
