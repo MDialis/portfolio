@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { TechIconList } from "@/components/TechIconList";
+import Button from "@/components/Button";
 
 export type ProjectPageProps = {
   params: Promise<{ project: string }>;
@@ -113,7 +114,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
   };
 
   return (
-    <main className="py-20">
+    <main>
       {fullImage ? (
         <section className="relative w-full h-[55vh] min-h-[500px] flex items-end justify-start overflow-hidden bg-base-300">
           {/* Background Full Image */}
@@ -121,7 +122,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
             src={`https:${fullImage.fields.file.url}`}
             alt={fullImage.fields.title || `Card Image of ${title}`}
             fill
-            className="object-cover"
+            className="object-cover object-top"
             priority
           />
 
@@ -133,14 +134,33 @@ export default async function ProjectPage(props: ProjectPageProps) {
             className="
             relative z-10 h-full
             w-full px-4 md:w-11/12 md:px-0 lg:w-10/12
-            mx-auto text-white 
+            mx-auto text-base-content 
             flex flex-col justify-end"
           >
             <Link
               href="/works"
-              className="absolute top-0 left-0 bg-white/10 backdrop-blur-md rounded-full text-sm font-medium hover:bg-white/20 transition flex items-center gap-2"
+              className="
+                absolute top-5 left-0
+                flex items-center px-3 p-2 gap-2 
+                bg-base-200/20 backdrop-blur-md rounded-full
+                hover:bg-base-200/40 transition-all duration-300"
             >
-              Back
+              {/* Left Top Arrow SVG */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 19.5l-15-15m0 0v11.25m0-11.25h11.25"
+                />
+              </svg>
+              Explore Projects
             </Link>
 
             <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 py-4">
@@ -149,32 +169,16 @@ export default async function ProjectPage(props: ProjectPageProps) {
                 <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight drop-shadow-md">
                   {title}
                 </h1>
-                <p className="mt-1 text-white/80 font-medium">
+                <p className="mt-1 text-base-content font-bold">
                   {date ? new Date(date).getFullYear() : ""}
                 </p>
               </div>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-4 my-auto">
-                {systemLink && (
-                  <a
-                    href={systemLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-primary btn-md md:btn-lg gap-2 shadow-lg hover:scale-105 transition-transform"
-                  >
-                    Visitar Site
-                  </a>
-                )}
+                {systemLink && <Button link={systemLink} text="Check out!" />}
                 {repositoryLink && (
-                  <a
-                    href={repositoryLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-primary btn-md md:btn-lg gap-2 shadow-lg hover:scale-105 transition-transform"
-                  >
-                    Repository
-                  </a>
+                  <Button link={repositoryLink} text="Repository" />
                 )}
               </div>
             </div>
@@ -187,9 +191,10 @@ export default async function ProjectPage(props: ProjectPageProps) {
         <></>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-4">
-        <div className="md:col-span-1">
-          <div className="">
+      <div className="grid grid-cols-1 md:grid-cols-7">
+        <div className="md:col-span-2">
+          <div className="p-12 space-y-4">
+            <h3 className="text-lg font-bold">Details</h3>
             {/* <p>slug: {slug}</p> */}
             <div className="flex flex-wrap justify-center gap-3">
               <TechIconList
@@ -205,45 +210,18 @@ export default async function ProjectPage(props: ProjectPageProps) {
           </div>
         </div>
 
-        <div className="md:col-span-3">
-          <div className="space-y-4 mx-auto max-w-5xl">
-            <p>date: {date}</p>
-            <p>summary: {summary}</p>
+        <div className="md:col-span-5">
+          <div className="p-12 mx-auto max-w-5xl">
             <div>
-              description:
               <article className="prose prose-lg max-w-none prose-invert">
                 {documentToReactComponents(description as Document, options)}
               </article>
             </div>
-            <p>
-              cardImage:
-              {cardImage && cardImage.fields.file.details.image && (
-                <Image
-                  src={`https:${cardImage.fields.file.url}`}
-                  alt={cardImage.fields.title || `Card Image of ${title}`}
-                  width={cardImage.fields.file.details.image.width}
-                  height={cardImage.fields.file.details.image.height}
-                  className="w-full h-auto rounded-lg shadow-2xl"
-                />
-              )}
-            </p>
-            <p>
-              mobileImage:
-              {mobileImage && mobileImage.fields.file.details.image && (
-                <Image
-                  src={`https:${mobileImage.fields.file.url}`}
-                  alt={mobileImage.fields.title || `Card Image of ${title}`}
-                  width={mobileImage.fields.file.details.image.width}
-                  height={mobileImage.fields.file.details.image.height}
-                  className="w-full h-auto rounded-lg shadow-2xl"
-                />
-              )}
-            </p>
 
             <div>
               <details className="bg-base-300 rounded-lg">
                 <summary className="collapse-title text-xl font-medium cursor-pointer">
-                  Ver Dados Brutos da Entry (project)
+                  Raw data (project)
                 </summary>
                 <div className="collapse-content">
                   <pre className="p-4 text-xs overflow-x-auto bg-base-100 rounded-lg">
@@ -254,7 +232,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
               <details className="bg-base-300 rounded-lg">
                 <summary className="collapse-title text-xl font-medium cursor-pointer">
-                  Ver Dados Brutos dos Assets (res.includes.Asset)
+                  Assets Raw Data (res.includes.Asset)
                 </summary>
                 <div className="collapse-content">
                   <pre className="p-4 text-xs overflow-x-auto bg-base-100 rounded-lg">
