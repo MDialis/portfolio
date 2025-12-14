@@ -116,74 +116,144 @@ export default async function ProjectPage(props: ProjectPageProps) {
   return (
     <main>
       {fullImage ? (
-        <section className="relative w-full h-[55vh] min-h-[500px] flex items-end justify-start overflow-hidden bg-base-300">
-          {/* Background Full Image */}
-          <Image
-            src={`https:${fullImage.fields.file.url}`}
-            alt={fullImage.fields.title || `Card Image of ${title}`}
-            fill
-            className="object-cover object-top"
-            priority
-          />
+        <div>
+          <section className="relative w-full h-[55vh] min-h-[500px] flex items-end justify-start overflow-hidden bg-base-300">
+            {/* Background Full Image */}
+            <Image
+              src={`https:${fullImage.fields.file.url}`}
+              alt={fullImage.fields.title || `Card Image of ${title}`}
+              fill
+              className="object-cover object-top"
+              priority
+            />
 
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
 
-          {/* Hero Content */}
-          <div
-            className="
-            relative z-10 h-full
-            w-full px-4 md:w-11/12 md:px-0 lg:w-10/12
-            mx-auto text-base-content 
-            flex flex-col justify-end"
-          >
-            <Link
-              href="/works"
+            {/* Hero Content */}
+            <div
               className="
+                relative z-10 h-full
+                w-full px-4 md:w-11/12 md:px-0 lg:w-10/12
+                mx-auto text-base-content 
+                flex flex-col justify-end"
+            >
+              {/* Back to projects button */}
+              <Link
+                href="/works"
+                className="
                 absolute top-5 left-0
                 flex items-center px-3 p-2 gap-2 
                 bg-base-200/20 backdrop-blur-md rounded-full
                 hover:bg-base-200/40 transition-all duration-300"
-            >
-              {/* Left Top Arrow SVG */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-                stroke="currentColor"
-                className="w-5 h-5"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19.5 19.5l-15-15m0 0v11.25m0-11.25h11.25"
-                />
-              </svg>
-              Explore Projects
-            </Link>
+                {/* Left Top Arrow SVG */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2.5}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 19.5l-15-15m0 0v11.25m0-11.25h11.25"
+                  />
+                </svg>
+                Explore Projects
+              </Link>
 
-            <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 py-4">
-              {/* Title */}
-              <div>
-                <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight drop-shadow-md">
-                  {title}
-                </h1>
-                <p className="mt-1 text-base-content font-bold">
-                  {date ? new Date(date).getFullYear() : ""}
-                </p>
+              <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 py-4">
+                {/* Title */}
+                <div>
+                  <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight drop-shadow-md">
+                    {title}
+                  </h1>
+                  <p className="mt-1 text-base-content font-bold">
+                    {date ? new Date(date).getFullYear() : ""}
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-4 my-auto">
+                  {systemLink && <Button link={systemLink} text="Check out!" />}
+                  {repositoryLink && <Button link={repositoryLink} text="Repository" />}
+                </div>
+              </div>
+            </div>
+          </section>
+          <section className="relative w-full h-[55vh] min-h-[500px] flex items-center py-12 md:py-0 bg-base-300">
+            <div className="w-full px-4 md:w-11/12 md:px-0 lg:w-10/12 mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center h-full">
+              {/* Content Column */}
+              <div className="
+                    relative z-10 h-full
+                    w-full px-4 md:w-11/12 md:px-0 lg:w-10/12
+                    mx-auto text-base-content
+                    flex flex-col justify-end 
+                    order-2 md:order-1 
+              ">
+                {/* Back to projects button */}
+                <Link
+                  href="/works"
+                  className="
+                    absolute top-5 left-0
+                    flex items-center px-3 p-2 gap-2 
+                    bg-base-200/20 backdrop-blur-md rounded-full
+                    hover:bg-base-200/40 transition-all duration-300"
+                >
+                  {/* Left Top Arrow SVG */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2.5}
+                    stroke="currentColor"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 19.5l-15-15m0 0v11.25m0-11.25h11.25"
+                    />
+                  </svg>
+                  Explore Projects
+                </Link>
+
+                <div className="flex flex-col gap-6 py-4">
+                  {/* Title */}
+                  <div>
+                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight drop-shadow-md">
+                      {title}
+                    </h1>
+                    <p className="mt-1 text-base-content font-bold">
+                      {date ? new Date(date).getFullYear() : ""}
+                    </p>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-wrap gap-4 my-auto">
+                    {systemLink && <Button link={systemLink} text="Check out!" />}
+                    {repositoryLink && <Button link={repositoryLink} text="Repository" />}
+                  </div>
+                </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4 my-auto">
-                {systemLink && <Button link={systemLink} text="Check out!" />}
-                {repositoryLink && (
-                  <Button link={repositoryLink} text="Repository" />
+              {/* Images Column */}
+              <div className="flex justify-center items-center order-1 md:order-2">
+                {cardImage && (
+                  /* --- NOTEBOOK MOCKUP --- */
+                  <></>
+                )}
+                {mobileImage && (
+                  /* --- SMARTPHONE MOCKUP --- */
+                  <></>
                 )}
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       ) : (cardImage && cardImage.fields.file.details.image) ||
         (mobileImage && mobileImage.fields.file.details.image) ? (
         <></>
