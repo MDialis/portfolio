@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { TechIconList } from "@/components/TechIconList";
 import Button from "@/components/Button";
+import PhoneFrame from "@/components/PhoneFrame";
 
 export type ProjectPageProps = {
   params: Promise<{ project: string }>;
@@ -165,7 +166,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
                 Explore Projects
               </Link>
 
-              <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 py-4">
+              <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 py-8">
                 {/* Title */}
                 <div>
                   <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight drop-shadow-md">
@@ -179,7 +180,9 @@ export default async function ProjectPage(props: ProjectPageProps) {
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-4 my-auto">
                   {systemLink && <Button link={systemLink} text="Check out!" />}
-                  {repositoryLink && <Button link={repositoryLink} text="Repository" />}
+                  {repositoryLink && (
+                    <Button link={repositoryLink} text="Repository" />
+                  )}
                 </div>
               </div>
             </div>
@@ -187,13 +190,15 @@ export default async function ProjectPage(props: ProjectPageProps) {
           <section className="relative w-full h-[55vh] min-h-[500px] flex items-center py-12 md:py-0 bg-base-300">
             <div className="w-full px-4 md:w-11/12 md:px-0 lg:w-10/12 mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center h-full">
               {/* Content Column */}
-              <div className="
+              <div
+                className="
                     relative z-10 h-full
                     w-full px-4 md:w-11/12 md:px-0 lg:w-10/12
                     mx-auto text-base-content
                     flex flex-col justify-end 
                     order-2 md:order-1 
-              ">
+              "
+              >
                 {/* Back to projects button */}
                 <Link
                   href="/works"
@@ -221,7 +226,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
                   Explore Projects
                 </Link>
 
-                <div className="flex flex-col gap-6 py-4">
+                <div className="flex flex-col gap-6 py-8">
                   {/* Title */}
                   <div>
                     <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight drop-shadow-md">
@@ -234,8 +239,12 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
                   {/* Action Buttons */}
                   <div className="flex flex-wrap gap-4 my-auto">
-                    {systemLink && <Button link={systemLink} text="Check out!" />}
-                    {repositoryLink && <Button link={repositoryLink} text="Repository" />}
+                    {systemLink && (
+                      <Button link={systemLink} text="Check out!" />
+                    )}
+                    {repositoryLink && (
+                      <Button link={repositoryLink} text="Repository" />
+                    )}
                   </div>
                 </div>
               </div>
@@ -247,8 +256,10 @@ export default async function ProjectPage(props: ProjectPageProps) {
                   <></>
                 )}
                 {mobileImage && (
-                  /* --- SMARTPHONE MOCKUP --- */
-                  <></>
+                  <PhoneFrame
+                    src={mobileImage.fields.file.url}
+                    width={200}
+                  />
                 )}
               </div>
             </div>
