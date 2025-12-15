@@ -260,7 +260,6 @@ export default async function ProjectPage(props: ProjectPageProps) {
                 {mobileImage && (
                   <PhoneFrame
                     src={mobileImage.fields.file.url}
-                    width={200}
                   />
                 )}
               </div>

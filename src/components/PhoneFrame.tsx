@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface PhoneFrameProps {
   src: string;
@@ -10,24 +13,48 @@ interface PhoneFrameProps {
 export default function PhoneFrame({
   src,
   alt = "Mobile Image",
-  width = 300,
+  width,
   className = "",
 }: PhoneFrameProps) {
-  const aspectRatio = 19.5 / 9;
-  const height = width * aspectRatio;
+  const [currentWidth, setCurrentWidth] = useState(width || 450);
 
-  const borderWidth = width / 22;
+  useEffect(() => {
+    if (width) {
+      setCurrentWidth(width);
+      return;
+    }
+
+    const handleResize = () => {
+      const newWidth =
+        window.innerWidth < 768
+          ? window.innerWidth / 6.5
+          : window.innerWidth / 10;
+
+      setCurrentWidth(newWidth);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [width]);
+
+  const aspectRatio = 19.5 / 9;
+  const height = currentWidth * aspectRatio;
+
+  const borderWidth = currentWidth / 22;
   const finalSrc = src.startsWith("//") ? `https:${src}` : src;
 
-  const islandWidth = width * 0.25;
-  const islandHeight = width * 0.06;
-  const islandTopMargin = width * 0.025;
+  const islandWidth = currentWidth * 0.25;
+  const islandHeight = currentWidth * 0.06;
+  const islandTopMargin = currentWidth * 0.025;
 
   return (
     <div
       className={`relative mx-auto shadow-xl bg-gray-800 border-gray-800 rounded-3xl ${className}`}
       style={{
-        width: `${width}px`,
+        width: `${currentWidth}px`,
         height: `${height}px`,
         borderWidth: `${borderWidth}px`,
       }}
