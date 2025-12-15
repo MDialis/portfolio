@@ -25,10 +25,15 @@ export default function PhoneFrame({
     }
 
     const handleResize = () => {
-      const newWidth = 
-        window.innerWidth < 768 
-            ? window.innerWidth / 2 
-            : window.innerWidth / 3.5;
+      let newWidth = window.innerWidth / 3;
+
+      if (window.innerWidth > 768) {
+        newWidth = window.innerWidth / 3.5;
+      } else if (window.innerWidth > 576) {
+        newWidth = window.innerWidth / 2.5;
+      } else {
+        newWidth = window.innerWidth / 2;
+      }
 
       setCurrentWidth(newWidth);
     };
