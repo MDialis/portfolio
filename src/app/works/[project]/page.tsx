@@ -254,8 +254,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
               <div className="flex justify-between items-center order-1 md:order-2 md:col-span-3">
                 {cardImage && (
                   <LaptopFrame
-                    src={cardImage.fields.file.url}
-                    width={400} 
+                    src={cardImage.fields.file.url} 
                   />
                 )}
                 {mobileImage && (

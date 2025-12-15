@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface PhoneFrameProps {
   src: string;
@@ -10,26 +13,42 @@ interface PhoneFrameProps {
 export default function PhoneFrame({
   src,
   alt = "Mobile Image",
-  width = 300,
+  width,
   className = "",
 }: PhoneFrameProps) {
-  const aspectRatio = 16 / 10;
-  const height = width / aspectRatio;
+  const [currentWidth, setCurrentWidth] = useState(width || 450);
 
-  const borderWidth = width / 30;
+  useEffect(() => {
+    if (width) {
+      setCurrentWidth(width);
+      return;
+    }
+
+    const handleResize = () => {
+      const newWidth = window.innerWidth < 768 ? window.innerWidth / 1.5 : window.innerWidth / 3.5;
+
+      setCurrentWidth(newWidth);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [width]);
+
+  const aspectRatio = 16 / 10;
+  const height = currentWidth / aspectRatio;
+
   const finalSrc = src.startsWith("//") ? `https:${src}` : src;
 
-  const bezelWidth = width * 0.03; // Borda da tela (~3%)
-  const baseHeight = width * 0.04; // Altura da base inferior (~4%)
-
-  const islandWidth = width * 0.25;
-  const islandHeight = width * 0.06;
-  const islandTopMargin = width * 0.025;
+  const bezelWidth = currentWidth * 0.02;
+  const baseHeight = currentWidth * 0.03;
 
   return (
     <div
       className={`relative mx-auto ${className}`}
-      style={{ width: `${width}px` }}
+      style={{ width: `${currentWidth}px` }}
     >
       {/* --- PARTE SUPERIOR (TELA + BORDA) --- */}
       <div
@@ -47,7 +66,7 @@ export default function PhoneFrame({
             style={{
               top: "0",
               height: `${bezelWidth * 0.8}px`,
-              width: `${width * 0.12}px`, // Notch simulado ou apenas a câmera
+              width: `${currentWidth * 0.12}px`, // Notch simulado ou apenas a câmera
             }}
           >
             {/* Lente da câmera */}
@@ -70,13 +89,13 @@ export default function PhoneFrame({
       {/* --- PARTE INFERIOR (BASE DO TECLADO) --- */}
       <div
         className="relative bg-gray-700 rounded-b-xl shadow-lg border-t border-gray-600 left-1/2 -translate-x-1/2"
-        style={{ height: `${baseHeight}px`, width: `${width * 1.15}px` }}
+        style={{ height: `${baseHeight}px`, width: `${currentWidth * 1.15}px` }}
       >
         {/* Detalhe do "Lip" (Abertura do notebook) */}
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 bg-gray-600 rounded-b-md"
           style={{
-            width: `${width * 0.15}px`,
+            width: `${currentWidth * 0.15}px`,
             height: `${baseHeight * 0.4}px`,
           }}
         />
