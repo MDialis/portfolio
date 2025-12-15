@@ -10,6 +10,7 @@ import Link from "next/link";
 import { TechIconList } from "@/components/TechIconList";
 import Button from "@/components/Button";
 import PhoneFrame from "@/components/PhoneFrame";
+import LaptopFrame from "@/components/LaptopFrame";
 
 export type ProjectPageProps = {
   params: Promise<{ project: string }>;
@@ -188,15 +189,15 @@ export default async function ProjectPage(props: ProjectPageProps) {
             </div>
           </section>
           <section className="relative w-full h-[55vh] min-h-[500px] flex items-center py-12 md:py-0 bg-base-300">
-            <div className="w-full px-4 md:w-11/12 md:px-0 lg:w-10/12 mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center h-full">
+            <div className="w-full md:w-11/12 lg:w-10/12 px-4 md:px-0 mx-auto grid grid-cols-1 md:grid-cols-5 h-full">
               {/* Content Column */}
               <div
                 className="
                     relative z-10 h-full
-                    w-full px-4 md:w-11/12 md:px-0 lg:w-10/12
+                    w-full md:col-span-2
                     mx-auto text-base-content
                     flex flex-col justify-end 
-                    order-2 md:order-1 
+                    order-2 md:order-1
               "
               >
                 {/* Back to projects button */}
@@ -250,10 +251,12 @@ export default async function ProjectPage(props: ProjectPageProps) {
               </div>
 
               {/* Images Column */}
-              <div className="flex justify-center items-center order-1 md:order-2">
+              <div className="flex justify-between items-center order-1 md:order-2 md:col-span-3">
                 {cardImage && (
-                  /* --- NOTEBOOK MOCKUP --- */
-                  <></>
+                  <LaptopFrame
+                    src={cardImage.fields.file.url}
+                    width={400} 
+                  />
                 )}
                 {mobileImage && (
                   <PhoneFrame
