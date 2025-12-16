@@ -256,7 +256,53 @@ export default async function ProjectPage(props: ProjectPageProps) {
           </div>
         </section>
       ) : (
-        <></>
+        <section className="relative w-full min-h-[40vh] flex flex-col items-center justify-center bg-base-300 py-20 text-center">
+          <Link
+            href="/works"
+            className="
+                absolute top-5 left-4 md:left-10
+                flex items-center px-3 p-2 gap-2 
+                bg-base-200/20 backdrop-blur-md rounded-full
+                hover:bg-base-200/40 transition-all duration-300"
+          >
+            {/* Left Top Arrow SVG */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2.5}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 19.5l-15-15m0 0v11.25m0-11.25h11.25"
+              />
+            </svg>
+            Explore Projects
+          </Link>
+
+          <div className="flex flex-col gap-6 py-8">
+            {/* Title */}
+            <div>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight drop-shadow-md">
+                {title}
+              </h1>
+              <p className="mt-1 text-base-content font-bold">
+                {date ? new Date(date).getFullYear() : ""}
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-4 mx-auto">
+              {systemLink && <Button link={systemLink} text="Check out!" />}
+              {repositoryLink && (
+                <Button link={repositoryLink} text="Repository" />
+              )}
+            </div>
+          </div>
+        </section>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-7">
