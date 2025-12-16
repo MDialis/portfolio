@@ -65,7 +65,7 @@ export default async function Home() {
             <div className="relative z-10 max-w-5xl mx-auto">
               {/* FlipSection component for interactive "About Me" */}
               <FlipSection
-                imgLink="mateus.jpeg"
+                imgLink="mateus.png"
                 imgAlt="Image of Mateus"
                 title="About Me"
                 text="
