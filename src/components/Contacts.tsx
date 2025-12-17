@@ -1,14 +1,79 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
+
+// --- CONFIGURATION ---
+const RATE_LIMIT = 1; // Max 5 submissions
+const TIME_WINDOW = 15 * 60 * 1000; // 15 minutes in milliseconds
 
 export default function Contacts() {
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(0); // Time remaining in seconds
+
+  // Check on mount if the user is already blocked from a previous session
+  useEffect(() => {
+    checkCooldown();
+  }, []);
+
+  // Helper: Checks history and updates cooldown state
+  const checkCooldown = () => {
+    const history = JSON.parse(localStorage.getItem("email_history") || "[]");
+    const now = Date.now();
+    // Filter out timestamps older than the TIME_WINDOW
+    const validHistory = history.filter(
+      (timestamp: number) => now - timestamp < TIME_WINDOW
+    );
+
+    // Update storage with cleaned up history
+    if (validHistory.length !== history.length) {
+      localStorage.setItem("email_history", JSON.stringify(validHistory));
+    }
+
+    // If we hit the limit, calculate how long until the oldest one expires
+    if (validHistory.length >= RATE_LIMIT) {
+      // The user must wait until the *oldest* message in the window expires
+      const oldestTimestamp = validHistory[0];
+      const timeUntilExpiry = oldestTimestamp + TIME_WINDOW - now;
+
+      if (timeUntilExpiry > 0) {
+        setCooldown(Math.ceil(timeUntilExpiry / 1000));
+        return true; // Is blocked
+      }
+    }
+
+    setCooldown(0);
+    return false; // Is not blocked
+  };
+
+  // Timer effect: Decrements the cooldown if active
+  useEffect(() => {
+    if (cooldown <= 0) return;
+
+    const timer = setInterval(() => {
+      setCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [cooldown]);
 
   const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Check Rate Limit immediately on click
+    if (checkCooldown()) {
+      alert(
+        `Limit reached. Please wait ${cooldown} seconds before sending again.`
+      );
+      return;
+    }
 
     const currentForm = formRef.current;
 
@@ -18,7 +83,7 @@ export default function Contacts() {
 
     const formData = new FormData(currentForm);
     const honeypotValue = formData.get("search_query");
-    
+
     if (honeypotValue) {
       console.log("Bot detected and blocked.");
       setLoading(false);
@@ -41,8 +106,19 @@ export default function Contacts() {
         () => {
           setLoading(false);
           alert("Message sent successfully!");
-          const messageField = currentForm.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
-          messageField.value = '';
+
+          // Record the successful submission
+          const history = JSON.parse(localStorage.getItem("email_history") || "[]");
+          history.push(Date.now());
+          localStorage.setItem("email_history", JSON.stringify(history));
+          
+          // Re-check logic to potentially trigger cooldown UI immediately
+          checkCooldown();
+
+          const messageField = currentForm.querySelector(
+            'textarea[name="message"]'
+          ) as HTMLTextAreaElement;
+          messageField.value = "";
         },
         (error) => {
           setLoading(false);
@@ -218,7 +294,11 @@ export default function Contacts() {
                           : "bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content"
                       }`}
                   >
-                    {loading ? "Sending..." : "Submit"}
+                    {loading 
+                      ? "Sending..." 
+                      : cooldown > 0 
+                        ? `Wait ${cooldown}s` 
+                        : "Submit"}
                   </button>
                 </div>
               </form>
