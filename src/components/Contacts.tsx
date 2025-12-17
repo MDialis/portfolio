@@ -41,7 +41,8 @@ export default function Contacts() {
         () => {
           setLoading(false);
           alert("Message sent successfully!");
-          currentForm.reset(); // Clears the form
+          const messageField = currentForm.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
+          messageField.value = '';
         },
         (error) => {
           setLoading(false);
