@@ -119,6 +119,14 @@ export default function Contacts() {
             {/* Contact Form Section */}
             <div className="space-y-4">
               <form ref={formRef} onSubmit={sendEmail} className="space-y-4">
+
+                {/* --- HIDDEN SUBJECT FIELD --- */}
+                <input 
+                  type="hidden" 
+                  name="subject" 
+                  value="[Portfolio Inquiry] New Dev Contact" 
+                />
+
                 {/* Name Input */}
                 <div>
                   <label
