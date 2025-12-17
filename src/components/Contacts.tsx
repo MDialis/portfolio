@@ -11,6 +11,29 @@ const formatTime = (totalSeconds: number) => {
     .padStart(2, "0")}`;
 };
 
+const SOCIAL_LINKS = [
+  {
+    name: "E-mail",
+    icon: "/icons/gmail.svg",
+    href: "mailto:dialis.dev@gmail.com",
+  },
+  {
+    name: "Telegram",
+    icon: "/icons/telegram.svg",
+    href: "https://t.me/MDialis",
+  },
+  {
+    name: "Github",
+    icon: "/icons/github.svg",
+    href: "https://github.com/MDialis",
+  },
+  {
+    name: "LinkedIn",
+    icon: "/icons/linkedin.svg",
+    href: "https://linkedin.com/in/mateus-dialis",
+  },
+];
+
 export default function Contacts() {
   const { formRef, loading, cooldown, handleSubmit } = useContactForm();
 
@@ -24,69 +47,30 @@ export default function Contacts() {
           <h1 className="text-5xl font-bold text-center pb-10 md:pb-30">
             Let's keep in touch!
           </h1>
-          
+
           {/* Contact Info Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="space-y-4">
               <h3 className="text-3xl font-bold hidden md:block">Contacts</h3>
               {/* Socials */}
               <div className="grid grid-cols-2 md:grid-cols-1 gap-4">
-                <a
-                  href="mailto:dialis.dev@gmail.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Link to Gmail"
-                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                >
-                  <img
-                    src="/icons/gmail.svg"
-                    alt="Gmail Logo"
-                    className="h-12 w-12"
-                  />
-                  <p className="font-semibold">My E-mail</p>
-                </a>
-                <a
-                  href="https://t.me/MDialis"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Link to Telegram"
-                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                >
-                  <img
-                    src="/icons/telegram.svg"
-                    alt="Telegram Logo"
-                    className="h-12 w-12"
-                  />
-                  <p className="font-semibold">Telegram</p>
-                </a>
-                <a
-                  href="https://github.com/MDialis"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Link to GitHub"
-                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                >
-                  <img
-                    src="/icons/github.svg"
-                    alt="GitHub Logo"
-                    className="h-12 w-12"
-                  />
-                  <p className="font-semibold">Github</p>
-                </a>
-                <a
-                  href="https://linkedin.com/in/mateus-dialis"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Link para o LinkedIn"
-                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                >
-                  <img
-                    src="/icons/linkedin.svg"
-                    alt="LinkedIn Logo"
-                    className="h-12 w-12"
-                  />
-                  <p className="font-semibold">LinkedIn</p>
-                </a>
+                {SOCIAL_LINKS.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Link to ${link.name}`}
+                    className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                  >
+                    <img
+                      src={link.icon}
+                      alt={link.name}
+                      className="h-12 w-12"
+                    />
+                    <p className="font-semibold">{link.name}</p>
+                  </a>
+                ))}
               </div>
             </div>
 
