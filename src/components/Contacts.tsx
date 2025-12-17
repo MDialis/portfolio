@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from 'react';
-import emailjs from '@emailjs/browser';
+import { useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
 
 export default function Contacts() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -16,12 +16,22 @@ export default function Contacts() {
     if (!formRef.current) return;
     if (!currentForm) return;
 
+    const formData = new FormData(currentForm);
+    const honeypotValue = formData.get("search_query");
+    
+    if (honeypotValue) {
+      console.log("Bot detected and blocked.");
+      setLoading(false);
+      alert("Message sent successfully!"); // Fake success
+      return;
+    }
+
     setLoading(true);
 
     emailjs
       .sendForm(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "",
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "",
         formRef.current,
         {
           publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
@@ -30,14 +40,14 @@ export default function Contacts() {
       .then(
         () => {
           setLoading(false);
-          alert('Message sent successfully!');
+          alert("Message sent successfully!");
           currentForm.reset(); // Clears the form
         },
         (error) => {
           setLoading(false);
-          console.error('FAILED...', error);
-          alert('Failed to send message. Please try again later.');
-        },
+          console.error("FAILED...", error);
+          alert("Failed to send message. Please try again later.");
+        }
       );
   };
 
@@ -119,13 +129,24 @@ export default function Contacts() {
             {/* Contact Form Section */}
             <div className="space-y-4">
               <form ref={formRef} onSubmit={sendEmail} className="space-y-4">
-
                 {/* --- HIDDEN SUBJECT FIELD --- */}
-                <input 
-                  type="hidden" 
-                  name="subject" 
-                  value="[Portfolio Inquiry] New Dev Contact" 
+                <input
+                  type="hidden"
+                  name="subject"
+                  value="[Portfolio Inquiry] New Dev Contact"
+                  tabIndex={-1}
                 />
+
+                {/* --- HONEYPOT FIELD (The Trap) --- */}
+                {/* We hide this div so Humans won't see it but Bots will. */}
+                <div className="opacity-0 absolute top-0 left-0 h-0 w-0 z-[-1] overflow-hidden">
+                  <input
+                    type="text"
+                    name="search_query"
+                    autoComplete="off"
+                    tabIndex={-1}
+                  />
+                </div>
 
                 {/* Name Input */}
                 <div>
@@ -161,6 +182,7 @@ export default function Contacts() {
                     autoComplete="email"
                     required
                     placeholder="example@email.com"
+                    pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
                     className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -191,11 +213,11 @@ export default function Contacts() {
                     className={`w-3/4 md:w-full mx-auto py-2 font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500
                       ${
                         loading
-                          ? 'bg-gray-500 cursor-not-allowed text-white'
-                          : 'bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content'
+                          ? "bg-gray-500 cursor-not-allowed text-white"
+                          : "bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content"
                       }`}
                   >
-                    {loading ? 'Sending...' : 'Submit'}
+                    {loading ? "Sending..." : "Submit"}
                   </button>
                 </div>
               </form>
