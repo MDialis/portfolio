@@ -7,6 +7,15 @@ import emailjs from "@emailjs/browser";
 const RATE_LIMIT = 1; // Max 5 submissions
 const TIME_WINDOW = 15 * 60 * 1000; // 15 minutes in milliseconds
 
+const formatTime = (totalSeconds: number) => {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  // PadStart ensures we get "01" instead of "1"
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
+};
+
 export default function Contacts() {
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
@@ -108,10 +117,12 @@ export default function Contacts() {
           alert("Message sent successfully!");
 
           // Record the successful submission
-          const history = JSON.parse(localStorage.getItem("email_history") || "[]");
+          const history = JSON.parse(
+            localStorage.getItem("email_history") || "[]"
+          );
           history.push(Date.now());
           localStorage.setItem("email_history", JSON.stringify(history));
-          
+
           // Re-check logic to potentially trigger cooldown UI immediately
           checkCooldown();
 
@@ -294,11 +305,31 @@ export default function Contacts() {
                           : "bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content"
                       }`}
                   >
-                    {loading 
-                      ? "Sending..." 
-                      : cooldown > 0 
-                        ? `Wait ${cooldown}s` 
-                        : "Submit"}
+                    {loading ? (
+                      "Sending..."
+                    ) : cooldown > 0 ? (
+                      <div className="flex justify-center items-center gap-2 animate-pulse">
+                        <span>Hold on</span>
+                        {/* Tiny Clock Icon */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="w-4 h-4" // animate-pulse makes it fade in/out slightly
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <span>{formatTime(cooldown)}</span>
+                      </div>
+                    ) : (
+                      "Submit"
+                    )}
                   </button>
                 </div>
               </form>
