@@ -1,4 +1,46 @@
+"use client";
+
+import { useRef, useState } from 'react';
+import emailjs from '@emailjs/browser';
+
 export default function Contacts() {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [loading, setLoading] = useState(false);
+
+  const sendEmail = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const currentForm = formRef.current;
+
+    // Safety check: ensure formRef.current exists before sending
+    if (!formRef.current) return;
+    if (!currentForm) return;
+
+    setLoading(true);
+
+    emailjs
+      .sendForm(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
+        formRef.current,
+        {
+          publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
+        }
+      )
+      .then(
+        () => {
+          setLoading(false);
+          alert('Message sent successfully!');
+          currentForm.reset(); // Clears the form
+        },
+        (error) => {
+          setLoading(false);
+          console.error('FAILED...', error);
+          alert('Failed to send message. Please try again later.');
+        },
+      );
+  };
+
   return (
     <section
       id="contact"
@@ -76,7 +118,7 @@ export default function Contacts() {
 
             {/* Contact Form Section */}
             <div className="space-y-4">
-              <form className="space-y-4">
+              <form ref={formRef} onSubmit={sendEmail} className="space-y-4">
                 {/* Name Input */}
                 <div>
                   <label
@@ -88,9 +130,11 @@ export default function Contacts() {
                   <input
                     type="text"
                     id="name"
-                    name="name"
+                    name="name" // Match {{name}} in EmailJS template
+                    autoComplete="name"
                     required
-                    className="w-full py-2 bg-white/65 text-black border border-base-300 rounded-xl  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Your name"
+                    className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -105,9 +149,11 @@ export default function Contacts() {
                   <input
                     type="email"
                     id="email"
-                    name="email"
+                    name="email" // Match {{email}} in EmailJS template
+                    autoComplete="email"
                     required
-                    className="w-full py-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="example@email.com"
+                    className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -121,10 +167,11 @@ export default function Contacts() {
                   </label>
                   <textarea
                     id="message"
-                    name="message"
+                    name="message" // Match {{message}} in EmailJS template
                     rows={4}
                     required
-                    className="w-full py-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Hi! I'd like to talk about..."
+                    className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                   ></textarea>
                 </div>
 
@@ -132,9 +179,15 @@ export default function Contacts() {
                 <div className="flex space-x-4">
                   <button
                     type="submit"
-                    className="w-3/4 md:w-full mx-auto py-2 bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    disabled={loading}
+                    className={`w-3/4 md:w-full mx-auto py-2 font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500
+                      ${
+                        loading
+                          ? 'bg-gray-500 cursor-not-allowed text-white'
+                          : 'bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content'
+                      }`}
                   >
-                    Submit
+                    {loading ? 'Sending...' : 'Submit'}
                   </button>
                 </div>
               </form>
