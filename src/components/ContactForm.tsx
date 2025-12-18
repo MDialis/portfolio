@@ -1,9 +1,9 @@
 "use client";
 
 import { useContactForm } from "../hooks/useContactForm";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import Button from "./Button";
-import Lottie from "lottie-react"
+import Lottie from "lottie-react";
 import successAnimation from "@/assets/SuccessSend.json";
 
 const formatTime = (totalSeconds: number) => {
@@ -15,10 +15,37 @@ const formatTime = (totalSeconds: number) => {
     .padStart(2, "0")}`;
 };
 
-const animationVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.90,
+    transition: {
+      staggerChildren: 0.05, 
+      staggerDirection: -1,
+      when: "afterChildren",
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 100 },
+  },
+  exit: {
+    y: -20,
+    opacity: 0,
+    transition: { duration: 0.2, ease: "easeIn" },
+  },
 };
 
 export default function ContactForm() {
@@ -41,11 +68,9 @@ export default function ContactForm() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            variants={animationVariants}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            variants={containerVariants}
             className="flex flex-col items-center justify-center h-full text-center space-y-4"
           >
-            {/* <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center space-y-6 animate-in fade-in zoom-in duration-500"> */}
             <div className="w-50 h-50 filter hue-rotate-20 brightness-80 saturate-200">
               <Lottie
                 animationData={successAnimation}
@@ -54,16 +79,17 @@ export default function ContactForm() {
               />
             </div>
 
-            <div>
+            <motion.div variants={itemVariants}>
               <h3 className="text-2xl font-bold">Message Sent!</h3>
               <p className="text-neutral-variant-content/70 mt-2 max-w-xs mx-auto">
                 Thanks for reaching out, <strong>friend</strong>. I'll get back
                 to you as soon as possible.
               </p>
-            </div>
+            </motion.div>
 
-            <Button text="Send another message" onClick={setSuccessFalse} />
-            {/* </div> */}
+            <motion.div variants={itemVariants}>
+              <Button text="Send another message" onClick={setSuccessFalse} />
+            </motion.div>
           </motion.div>
         ) : (
           /* --- FORM STATE --- */
@@ -77,8 +103,7 @@ export default function ContactForm() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            variants={animationVariants}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            variants={containerVariants}
             className="space-y-4"
           >
             {/* <form ref={formRef} onSubmit={setSuccessTrue} className="space-y-4"> */}
@@ -101,7 +126,7 @@ export default function ContactForm() {
             </div>
 
             {/* Name Input */}
-            <div>
+            <motion.div variants={itemVariants}>
               <label htmlFor="name" className="block text-sm font-medium mb-1">
                 Name
               </label>
@@ -114,10 +139,10 @@ export default function ContactForm() {
                 placeholder="Your name"
                 className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            </div>
+            </motion.div>
 
             {/* Email Input */}
-            <div>
+            <motion.div variants={itemVariants}>
               <label htmlFor="email" className="block text-sm font-medium mb-1">
                 Email
               </label>
@@ -131,10 +156,10 @@ export default function ContactForm() {
                 pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
                 className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            </div>
+            </motion.div>
 
             {/* Message Textarea */}
-            <div>
+            <motion.div variants={itemVariants}>
               <label
                 htmlFor="message"
                 className="block text-sm font-medium mb-1"
@@ -149,10 +174,10 @@ export default function ContactForm() {
                 placeholder="Hi! I'd like to talk about..."
                 className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               ></textarea>
-            </div>
+            </motion.div>
 
             {/* Form Button */}
-            <div className="flex space-x-4">
+            <motion.div variants={itemVariants} className="flex space-x-4">
               <button
                 type="submit"
                 disabled={loading}
@@ -189,7 +214,7 @@ export default function ContactForm() {
                   "Submit"
                 )}
               </button>
-            </div>
+            </motion.div>
             {/* </form> */}
           </motion.form>
         )}
