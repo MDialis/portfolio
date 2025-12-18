@@ -6,15 +6,6 @@ import Button from "./Button";
 import Lottie from "lottie-react";
 import successAnimation from "@/assets/SuccessSend.json";
 
-const formatTime = (totalSeconds: number) => {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  // PadStart ensures we get "01" instead of "1"
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
-};
-
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -25,9 +16,9 @@ const containerVariants: Variants = {
   },
   exit: {
     opacity: 0,
-    scale: 0.90,
+    scale: 0.9,
     transition: {
-      staggerChildren: 0.05, 
+      staggerChildren: 0.05,
       staggerDirection: -1,
       when: "afterChildren",
     },
@@ -48,6 +39,110 @@ const itemVariants: Variants = {
   },
 };
 
+const FormInput = ({ label, id, as = "input", ...props }: any) => (
+  <motion.div variants={itemVariants}>
+    <label htmlFor={id} className="block text-sm font-medium mb-1">
+      {label}
+    </label>
+    {as === "textarea" ? (
+      <textarea
+        id={id}
+        className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+        {...props}
+      />
+    ) : (
+      <input
+        id={id}
+        className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+        {...props}
+      />
+    )}
+  </motion.div>
+);
+
+const SubmitButton = ({
+  loading,
+  cooldown,
+}: {
+  loading: boolean;
+  cooldown: number;
+}) => {
+  const formatTime = (totalSeconds: number) => {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    // PadStart ensures we get "01" instead of "1"
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  return (
+    <motion.div variants={itemVariants} className="flex space-x-4">
+      <button
+        type="submit"
+        disabled={loading}
+        className={`w-3/4 md:w-full mx-auto py-2 font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500
+          ${
+            loading
+              ? "bg-gray-500 cursor-not-allowed text-white"
+              : "bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content"
+          }`}
+      >
+        {loading ? (
+          "Sending..."
+        ) : cooldown > 0 ? (
+          <div className="flex justify-center items-center gap-2 animate-pulse">
+            <span>Hold on</span>
+            {/* Tiny Clock Icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-4 h-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{formatTime(cooldown)}</span>
+          </div>
+        ) : (
+          "Submit"
+        )}
+      </button>
+    </motion.div>
+  );
+};
+
+const SuccessView = ({ onReset }: { onReset: () => void }) => (
+  <motion.div
+    key="success-message"
+    initial="hidden"
+    animate="visible"
+    exit="exit"
+    variants={containerVariants}
+    className="flex flex-col items-center justify-center h-full text-center space-y-4"
+  >
+    <div className="w-50 h-50 filter hue-rotate-20 brightness-80 saturate-200">
+      <Lottie animationData={successAnimation} loop={false} autoplay={true} />
+    </div>
+    <motion.div variants={itemVariants}>
+      <h3 className="text-2xl font-bold">Message Sent!</h3>
+      <p className="text-neutral-variant-content/70 mt-2 max-w-xs mx-auto">
+        Thanks for reaching out, <strong>friend</strong>. I'll get back to you
+        as soon as possible.
+      </p>
+    </motion.div>
+    <motion.div variants={itemVariants}>
+      <Button text="Send another message" onClick={onReset} />
+    </motion.div>
+  </motion.div>
+);
+
 export default function ContactForm() {
   const {
     formRef,
@@ -62,35 +157,7 @@ export default function ContactForm() {
     <div className="min-h-[40vh]">
       <AnimatePresence mode="wait" initial={false}>
         {success ? (
-          /* --- SUCCESS STATE --- */
-          <motion.div
-            key="success-message"
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={containerVariants}
-            className="flex flex-col items-center justify-center h-full text-center space-y-4"
-          >
-            <div className="w-50 h-50 filter hue-rotate-20 brightness-80 saturate-200">
-              <Lottie
-                animationData={successAnimation}
-                loop={false}
-                autoplay={true}
-              />
-            </div>
-
-            <motion.div variants={itemVariants}>
-              <h3 className="text-2xl font-bold">Message Sent!</h3>
-              <p className="text-neutral-variant-content/70 mt-2 max-w-xs mx-auto">
-                Thanks for reaching out, <strong>friend</strong>. I'll get back
-                to you as soon as possible.
-              </p>
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <Button text="Send another message" onClick={setSuccessFalse} />
-            </motion.div>
-          </motion.div>
+          <SuccessView onReset={setSuccessFalse} />
         ) : (
           /* --- FORM STATE --- */
           <motion.form
@@ -125,96 +192,38 @@ export default function ContactForm() {
               />
             </div>
 
-            {/* Name Input */}
-            <motion.div variants={itemVariants}>
-              <label htmlFor="name" className="block text-sm font-medium mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name" // Match {{name}} in EmailJS template
-                autoComplete="name"
-                required
-                placeholder="Your name"
-                className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </motion.div>
+            {/* Visible Fields */}
+            <FormInput
+              label="Name"
+              id="name"
+              name="name"
+              autoComplete="name"
+              required
+              placeholder="Your name"
+            />
 
-            {/* Email Input */}
-            <motion.div variants={itemVariants}>
-              <label htmlFor="email" className="block text-sm font-medium mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email" // Match {{email}} in EmailJS template
-                autoComplete="email"
-                required
-                placeholder="example@email.com"
-                pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
-                className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </motion.div>
+            <FormInput
+              label="Email"
+              id="email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              required
+              placeholder="example@email.com"
+              pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+            />
 
-            {/* Message Textarea */}
-            <motion.div variants={itemVariants}>
-              <label
-                htmlFor="message"
-                className="block text-sm font-medium mb-1"
-              >
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message" // Match {{message}} in EmailJS template
-                rows={4}
-                required
-                placeholder="Hi! I'd like to talk about..."
-                className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-              ></textarea>
-            </motion.div>
+            <FormInput
+              label="Message"
+              id="message"
+              name="message"
+              as="textarea"
+              rows={4}
+              required
+              placeholder="Hi! I'd like to talk about..."
+            />
 
-            {/* Form Button */}
-            <motion.div variants={itemVariants} className="flex space-x-4">
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-3/4 md:w-full mx-auto py-2 font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500
-            ${
-              loading
-                ? "bg-gray-500 cursor-not-allowed text-white"
-                : "bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content"
-            }`}
-              >
-                {loading ? (
-                  "Sending..."
-                ) : cooldown > 0 ? (
-                  <div className="flex justify-center items-center gap-2 animate-pulse">
-                    <span>Hold on</span>
-                    {/* Tiny Clock Icon */}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className="w-4 h-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <span>{formatTime(cooldown)}</span>
-                  </div>
-                ) : (
-                  "Submit"
-                )}
-              </button>
-            </motion.div>
+            <SubmitButton loading={loading} cooldown={cooldown} />
             {/* </form> */}
           </motion.form>
         )}
