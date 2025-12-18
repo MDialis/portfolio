@@ -163,17 +163,13 @@ export default function ContactForm() {
           <motion.form
             key="contact-form"
             ref={formRef}
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSuccessTrue();
-            }}
+            onSubmit={handleSubmit}
             initial="hidden"
             animate="visible"
             exit="exit"
             variants={containerVariants}
             className="space-y-4"
           >
-            {/* <form ref={formRef} onSubmit={setSuccessTrue} className="space-y-4"> */}
             {/* --- HIDDEN SUBJECT FIELD --- */}
             <input
               type="hidden"
