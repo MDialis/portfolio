@@ -7,8 +7,8 @@ export default function Contacts() {
       id="contact"
       className="px-5 bg-neutral-variant text-neutral-variant-content"
     >
-      <div className="flex flex-col w-full min-h-screen">
-        <div className="container flex flex-col justify-center grow max-w-5xl mx-auto py-20">
+      <div className="flex flex-col w-full min-h-[89vh]">
+        <div className="container flex flex-col justify-center grow max-w-5xl mx-auto">
           <h1 className="text-5xl font-bold text-center pb-10 md:pb-30">
             Let's keep in touch!
           </h1>
