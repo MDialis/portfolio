@@ -1,6 +1,7 @@
 "use client";
 
 import { useContactForm } from "../hooks/useContactForm";
+import Button from "./Button";
 
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
@@ -12,7 +13,51 @@ const formatTime = (totalSeconds: number) => {
 };
 
 export default function ContactForm() {
-  const { formRef, loading, cooldown, handleSubmit } = useContactForm();
+  const { formRef, loading, cooldown, success, handleSubmit, setSuccessTrue, setSuccessFalse } =
+    useContactForm();
+
+  if (success) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center space-y-6 animate-in fade-in zoom-in duration-500">
+        <div className="p-4 bg-success/20 rounded-full">
+          {/* Hero Icon: Check Badge */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="w-16 h-16 text-green-500"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-2xl font-bold">Message Sent!</h3>
+          <p className="text-neutral-variant-content/70 mt-2 max-w-xs mx-auto">
+            Thanks for reaching out, 
+            <span className="font-semibold">friend</span>. I'll get back to you
+            as soon as possible.
+          </p>
+        </div>
+        {/* Optional: Button to bring the form back if they really need to send another */}
+        <button
+          onClick={() => window.location.reload()}
+          className="text-sm text-blue-500 hover:underline"
+        >
+          Send another message
+        </button>
+        <Button
+          text="Send another message"
+          onClick={setSuccessFalse}
+        />
+      </div>
+    );
+  }
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
@@ -106,7 +151,7 @@ export default function ContactForm() {
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="w-4 h-4" // animate-pulse makes it fade in/out slightly
+                className="w-4 h-4"
               >
                 <path
                   strokeLinecap="round"

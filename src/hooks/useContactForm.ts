@@ -4,12 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import emailjs from "@emailjs/browser";
 
 // --- CONFIGURATION ---
-const RATE_LIMIT = 5; // Max 5 submissions
-const TIME_WINDOW = 15 * 60 * 1000; // 15 minutes in milliseconds
+const RATE_LIMIT = 3; // Max 3 submissions
+const TIME_WINDOW = 30 * 60 * 1000; // 30 minutes in milliseconds
 
 export const useContactForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [cooldown, setCooldown] = useState(0); // Time remaining in seconds
 
   // Checks history and updates cooldown state
@@ -106,7 +107,7 @@ export const useContactForm = () => {
       .then(
         () => {
           setLoading(false);
-          alert("Message sent successfully!");
+          setSuccess(true);
 
           // Record the successful submission
           const history = JSON.parse(
@@ -125,11 +126,19 @@ export const useContactForm = () => {
         },
         (error) => {
           setLoading(false);
-          console.error("FAILED...", error);
+          console.error(error);
           alert("Failed to send message. Please try again later.");
         }
       );
   };
 
-  return { formRef, loading, cooldown, handleSubmit };
+  const setSuccessTrue = () => {
+    setSuccess(true);
+  }
+
+  const setSuccessFalse = () => {
+    setSuccess(false);
+  }
+
+  return { formRef, loading, cooldown, success, handleSubmit, setSuccessTrue, setSuccessFalse };
 };
