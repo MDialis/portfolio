@@ -1,8 +1,10 @@
 "use client";
 
 import { useContactForm } from "../hooks/useContactForm";
-import Button from "./Button";
 import { motion, AnimatePresence } from "framer-motion";
+import Button from "./Button";
+import Lottie from "lottie-react"
+import successAnimation from "@/assets/SuccessSend.json";
 
 const formatTime = (totalSeconds: number) => {
   const minutes = Math.floor(totalSeconds / 60);
@@ -29,7 +31,6 @@ export default function ContactForm() {
     setSuccessTrue,
     setSuccessFalse,
   } = useContactForm();
-
   return (
     <div className="min-h-[40vh]">
       <AnimatePresence mode="wait" initial={false}>
@@ -42,34 +43,25 @@ export default function ContactForm() {
             exit="exit"
             variants={animationVariants}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="flex flex-col items-center justify-center h-full text-center space-y-6"
+            className="flex flex-col items-center justify-center h-full text-center space-y-4"
           >
             {/* <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center space-y-6 animate-in fade-in zoom-in duration-500"> */}
-            <div className="p-4 bg-success/20 rounded-full">
-              {/* Hero Icon: Check Badge */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-16 h-16 text-green-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+            <div className="w-50 h-50 filter hue-rotate-20 brightness-80 saturate-200">
+              <Lottie
+                animationData={successAnimation}
+                loop={false}
+                autoplay={true}
+              />
             </div>
 
             <div>
               <h3 className="text-2xl font-bold">Message Sent!</h3>
               <p className="text-neutral-variant-content/70 mt-2 max-w-xs mx-auto">
-                Thanks for reaching out, <strong>friend</strong>. I'll get back to you as soon as possible.
+                Thanks for reaching out, <strong>friend</strong>. I'll get back
+                to you as soon as possible.
               </p>
             </div>
-            
+
             <Button text="Send another message" onClick={setSuccessFalse} />
             {/* </div> */}
           </motion.div>
@@ -78,7 +70,10 @@ export default function ContactForm() {
           <motion.form
             key="contact-form"
             ref={formRef}
-            onSubmit={handleSubmit}
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSuccessTrue();
+            }}
             initial="hidden"
             animate="visible"
             exit="exit"
