@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Reaper from "@/components/Reaper";
 import Lamp from "@/components/Lamp";
+import BackgroundPattern from "./BackgroundPattern";
 
 type HeroSectionProps = {
   bodoniModa: { className: string };
@@ -33,7 +34,9 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
     <section className="relative -top-10 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
       <div className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center">
         {/* Background decorative elements (rotated divs and text) */}
-        <div className="absolute top-0 md:-top-5 lg:-top-10 w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
+        <div className="absolute top-0 md:-top-5 lg:-top-11 w-[300vw] h-[250px] md:h-[300px] lg:h-[275px] bg-spotlight-content z-0 rotate-5">
+          <BackgroundPattern invert />
+        </div>
 
         <h1
           className={`${bodoniModa.className} absolute font-extrabold text-spotlight-content z-0 left-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
@@ -53,7 +56,9 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
           DIÁLIS
         </h1>
 
-        <div className="absolute bottom-[-60px] md:-bottom-20 lg:bottom-[-100px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5" />
+        <div className="absolute bottom-[-60px] md:-bottom-20 lg:bottom-[-100px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5">
+          <BackgroundPattern invert />
+        </div>
 
         {/* Reaper Animation Container */}
         <div
@@ -92,4 +97,4 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
       />
     </section>
   );
-};
+}
