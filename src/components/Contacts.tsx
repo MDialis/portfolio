@@ -17,9 +17,12 @@ const BackgroundPattern = () => {
         const iconSrc = i % 2 === 0 ? iconPaths[0] : iconPaths[1];
 
         const top = (i * 19) % 100; 
-        const left = (i * 11.2) % 100;
-        const rotate = (i * 7) % 360; 
+        const left = (i * 11.255) % 100;
         const size = ((i % 3) + 2.2) * 20;
+
+        const duration = 60 + (i % 60); 
+        const direction = i % 2 === 0 ? 'normal' : 'reverse';
+        const delay = -1 * ((i * 13) % 100);
 
         let visibilityClass = "block";
 
@@ -34,13 +37,16 @@ const BackgroundPattern = () => {
             key={i}
             src={iconSrc}
             alt=""
-            className={`absolute transition-transform duration-700 hover:scale-110 opacity-20 ${visibilityClass}`}
+            className={`absolute transition-transform duration-700 hover:scale-110 opacity-20 animate-spin ${visibilityClass}`}
             style={{
               top: `${top}%`,
               left: `${left}%`,
               width: `${size}px`,
               height: `${size}px`,
-              transform: `rotate(${rotate}deg)`,
+              animationDuration: `${duration}s`,
+              animationDirection: direction,
+              animationDelay: `${delay}s`,
+              animationTimingFunction: 'linear',
             }}
           />
         );
