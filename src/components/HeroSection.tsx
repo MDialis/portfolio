@@ -35,7 +35,7 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
       <div className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center">
         {/* Background decorative elements (rotated divs and text) */}
         <div className="absolute top-0 md:-top-5 lg:-top-11 w-[300vw] h-[250px] md:h-[300px] lg:h-[275px] bg-spotlight-content z-0 rotate-5">
-          <BackgroundPattern invert />
+          <BackgroundPattern className="bg-spotlight opacity-100" />
         </div>
 
         <h1
@@ -57,7 +57,7 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
         </h1>
 
         <div className="absolute bottom-[-60px] md:-bottom-20 lg:bottom-[-100px] w-[300vw] h-[250px] md:h-[300px] lg:h-[250px] bg-spotlight-content z-0 rotate-5">
-          <BackgroundPattern invert />
+          <BackgroundPattern className="bg-spotlight opacity-100" />
         </div>
 
         {/* Reaper Animation Container */}

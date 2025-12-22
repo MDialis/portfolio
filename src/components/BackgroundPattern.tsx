@@ -1,4 +1,7 @@
-export default function BackgroundPattern({ invert = false }) {
+export default function BackgroundPattern({
+  invert = false,
+  className = "",
+}) {
   const items = Array.from({ length: 100 });
 
   const iconPaths = [
@@ -14,8 +17,8 @@ export default function BackgroundPattern({ invert = false }) {
         const iconSrc = i % 2 === 0 ? iconPaths[0] : iconPaths[1];
 
         const top = (i * 19) % 100;
-        const left = (i * 11.255) % 100;
-        const size = ((i % 3) + 2.2) * 20;
+        const left = (i * 11) % 100;
+        const size = ((i % 3) + 3) * 15;
 
         const duration = 60 + (i % 60);
         const direction = i % 2 === 0 ? "normal" : "reverse";
@@ -29,14 +32,13 @@ export default function BackgroundPattern({ invert = false }) {
           visibilityClass = "hidden lg:block";
         }
 
-        const colorFilter = invert ? "brightness-0 invert" : "";
+        const defaultColor = invert ? "bg-white" : "bg-black";
+        const finalColorClass = className || defaultColor;
 
         return (
-          <img
+          <div
             key={i}
-            src={iconSrc}
-            alt=""
-            className={`absolute transition-transform duration-700 hover:scale-110 opacity-20 animate-spin ${visibilityClass} ${colorFilter}`}
+            className={`absolute transition-transform duration-700 hover:scale-110 opacity-25 animate-spin ${visibilityClass} ${finalColorClass}`}
             style={{
               top: `${top}%`,
               left: `${left}%`,
@@ -46,6 +48,14 @@ export default function BackgroundPattern({ invert = false }) {
               animationDirection: direction,
               animationDelay: `${delay}s`,
               animationTimingFunction: "linear",
+              maskImage: `url(${iconSrc})`,
+              WebkitMaskImage: `url(${iconSrc})`,
+              maskSize: "contain",
+              WebkitMaskSize: "contain",
+              maskRepeat: "no-repeat",
+              WebkitMaskRepeat: "no-repeat",
+              maskPosition: "center",
+              WebkitMaskPosition: "center",
             }}
           />
         );
