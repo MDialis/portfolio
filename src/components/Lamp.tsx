@@ -41,8 +41,8 @@ export default function Lamp({ sizeMultiplier = 1 }: LampProps) {
   // Ref to store the interpolated (smoothed) position
   const bodyPos = useRef({ x: 0, y: 0 });
 
-  // Calculates the dynamic size for the Reaper component based on the window's inner width.
-  const getDynamicReaperSize = () => {
+  // Calculates the dynamic size for the Lamp component based on the window's inner width.
+  const getDynamicLampSize = () => {
     const screenWidth = window.innerWidth;
 
     if (screenWidth >= BREAKPOINTS.lg) {
@@ -54,25 +54,34 @@ export default function Lamp({ sizeMultiplier = 1 }: LampProps) {
     return screenWidth / 3.5;
   };
 
-  // Set and update the reaper size on window resize
+  // Set and update the lamp size on window resize
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
     const handleResize = () => {
-      setdefaultSize(getDynamicReaperSize());
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setdefaultSize(getDynamicLampSize());
+      }, 150);
     };
 
-    handleResize();
+    setdefaultSize(getDynamicLampSize());
 
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      clearTimeout(timeoutId);
     };
   }, []);
 
   const effectiveSize = defaultSize * sizeMultiplier;
 
   // Calculate the maximum pixels the body can move based on the component's size
-  const maxMoveBody = useMemo(() => effectiveSize * BODY_MAX_MOVE_RATIO, [effectiveSize]);
+  const maxMoveBody = useMemo(
+    () => effectiveSize * BODY_MAX_MOVE_RATIO,
+    [effectiveSize]
+  );
 
   // Animation callback, this function is called on each animation frame by the `followMove` hook.
   const handleAnimate = useCallback(
