@@ -93,16 +93,22 @@ export default function Reaper({ sizeMultiplier = 1 }: ReaperProps) {
 
   // Set and update the reaper size on window resize
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
     const handleResize = () => {
-      setdefaultSize(getDynamicReaperSize());
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setdefaultSize(getDynamicReaperSize());
+      }, 100);
     };
 
-    handleResize();
+    setdefaultSize(getDynamicReaperSize());
 
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      clearTimeout(timeoutId);
     };
   }, []);
 
@@ -132,16 +138,6 @@ export default function Reaper({ sizeMultiplier = 1 }: ReaperProps) {
         maxMoveValues.backCape,
         BACK_CAPE_SMOOTHING
       );
-      updatePartPosition(
-        baseTargetX,
-        baseTargetY,
-        backCapeRef,
-        backCapePos,
-        BACK_CAPE_MOVE_FACTOR,
-        maxMoveValues.backCape,
-        BACK_CAPE_SMOOTHING
-      );
-
       updatePartPosition(
         baseTargetX,
         baseTargetY,
