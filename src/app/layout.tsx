@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} bg-base-200 text-base-content transition-colors duration-200`}
+        className={`${inter.className} bg-base-200 text-base-content`}
       >
         <div className="flex flex-col min-h-screen">
           <ThemeProvider>

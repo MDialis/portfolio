@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useMemo, useState, useEffect } from "react";
+import { useRef, useCallback, useMemo, useState, useEffect, CSSProperties } from "react";
 import { followMove, updatePartPosition } from "@/hooks/followMove";
 import { useTheme } from "@/components/ThemeProvider";
 import styles from "./Reaper.module.css";
@@ -20,6 +20,30 @@ const BODY_MAX_MOVE_RATIO = 60 / BASE_SIZE;
 const BREAKPOINTS = {
   md: 768,
   lg: 1024,
+};
+
+const GRADIENT_PROPERTIES: CSSProperties = {
+  filter: "blur(100px)",
+  backfaceVisibility: "hidden",
+  transform: "translate3d(0,0,0)",
+};
+
+const GLOW_OFF_STYLE: CSSProperties = {
+  ...GRADIENT_PROPERTIES,
+  background:
+    "radial-gradient(circle, rgba(28, 50, 127, 0.7) 5%, rgb(41, 95, 156, 0.5) 10%, rgba(118, 239, 251, 0.2) 20%, rgb(0, 0, 0, 0) 40%)",
+};
+
+const GLOW_ON_STYLE: CSSProperties = {
+  ...GRADIENT_PROPERTIES,
+  background:
+    "radial-gradient(circle, rgba(253, 218, 119, 0.8) 5%, rgb(242, 240, 183, 0.5) 10%, rgba(118, 239, 251, 0.2) 20%, rgb(0, 0, 0, 0) 70%)",
+};
+
+const GLOW_ON_INNER_STYLE: CSSProperties = {
+  ...GRADIENT_PROPERTIES,
+  background:
+    "radial-gradient(circle, rgba(253, 218, 119, 1) 1%, rgb(242, 240, 183, 0.9) 5%, rgba(118, 239, 251, 0.8) 10%, rgb(0, 0, 0, 0) 15%)",
 };
 
 interface LampProps {
@@ -137,16 +161,12 @@ export default function Lamp({ sizeMultiplier = 1 }: LampProps) {
               transition: "opacity 0.2s ease-in-out",
               pointerEvents: "none",
               mixBlendMode: "screen",
+              willChange: "opacity",
             }}
           >
-            {/* The glow is a large, blurred radial gradient */}
             <div
-              className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(28, 50, 127, 0.7) 5%, rgb(41, 95, 156, 0.5) 10%, rgba(118, 239, 251, 0.2) 20%, rgb(0, 0, 0, 0) 40%)",
-                filter: "blur(100px)",
-              }}
+              className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform-gpu"
+              style={GLOW_OFF_STYLE}
             />
           </div>
 
@@ -158,16 +178,12 @@ export default function Lamp({ sizeMultiplier = 1 }: LampProps) {
               transition: "opacity 0.2s ease-in-out",
               pointerEvents: "none",
               mixBlendMode: "screen",
+              willChange: "opacity",
             }}
           >
-            {/* The glow is a large, blurred radial gradient */}
             <div
-              className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(253, 218, 119, 0.8) 5%, rgb(242, 240, 183, 0.5) 10%, rgba(118, 239, 251, 0.2) 20%, rgb(0, 0, 0, 0) 70%)",
-                filter: "blur(100px)",
-              }}
+              className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform-gpu"
+              style={GLOW_ON_STYLE}
             />
           </div>
 
@@ -183,7 +199,7 @@ export default function Lamp({ sizeMultiplier = 1 }: LampProps) {
             {/* Actual lamp svg */}
             <ReaperLamp />
 
-            {/* "On" Inner Glow: A more intense, concentrated glow for the 'on' state */}
+            {/* Inner Glow: A more intense, concentrated glow for the 'on' state */}
             <div
               className="absolute inset-0"
               style={{
@@ -191,15 +207,12 @@ export default function Lamp({ sizeMultiplier = 1 }: LampProps) {
                 transition: "opacity 0.2s ease-in-out",
                 pointerEvents: "none",
                 mixBlendMode: "screen",
+                willChange: "opacity",
               }}
             >
               <div
-                className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(253, 218, 119, 1) 1%, rgb(242, 240, 183, 0.9) 5%, rgba(118, 239, 251, 0.8) 10%, rgb(0, 0, 0, 0) 15%)",
-                  filter: "blur(100px)",
-                }}
+                className="absolute w-[100vh] h-screen left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform-gpu"
+                style={GLOW_ON_INNER_STYLE}
               />
             </div>
           </div>

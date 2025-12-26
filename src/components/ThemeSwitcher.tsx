@@ -2,6 +2,7 @@
 
 import { useTheme } from "@/components/ThemeProvider";
 import { Sun, Moon } from "lucide-react";
+import { useTransition } from "react";
 import { twMerge } from "tailwind-merge";
 
 type ThemeSwitcherProps = {
@@ -10,9 +11,12 @@ type ThemeSwitcherProps = {
 
 export const ThemeSwitcher = ({ className }: ThemeSwitcherProps) => {
   const { theme, setTheme } = useTheme();
+  const [isPending, startTransition] = useTransition();
 
   const cycleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    startTransition(() => {
+      setTheme(theme === "light" ? "dark" : "light");
+    });
   };
 
   const renderIcon = () => {
@@ -29,6 +33,7 @@ export const ThemeSwitcher = ({ className }: ThemeSwitcherProps) => {
     <button
       aria-label="Cycle Theme"
       onClick={cycleTheme}
+      disabled={isPending}
       className={`rounded-full p-1 transition-colors ${className}`}
     >
       {renderIcon()}
