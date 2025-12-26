@@ -12,6 +12,7 @@ type HeroSectionProps = {
 export default function HeroSection({ bodoniModa }: HeroSectionProps) {
   const [opacityOnScroll, setOpacityOnScroll] = useState(1);
   const [overlayOpacity, setOverlayOpacity] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
 
   // Handle scroll animations (opacity changes)
   useEffect(() => {
@@ -21,9 +22,15 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
 
       const progress = Math.min(scrollY / (heroHeight * 0.7), 1);
 
-      setOpacityOnScroll(1 - progress * 1.6);
+      const newOpacity = 1 - progress * 1.4;
+
+      setOpacityOnScroll((prev) =>
+        Math.abs(prev - newOpacity) > 0.01 ? newOpacity : prev
+      );
 
       setOverlayOpacity(progress * 0.9);
+
+      setIsVisible(newOpacity > 0);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -33,25 +40,30 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
   return (
     <section className="relative -top-10 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
       <div className="absolute inset-0 w-full h-full top-0 left-0 flex justify-center items-center">
-        {/* Background decorative elements (rotated divs and text) */}
-        <div className="absolute top-0 md:-top-5 lg:-top-11 w-[300vw] h-[250px] md:h-[300px] lg:h-[275px] bg-spotlight-content z-0 rotate-5">
-          <BackgroundPattern className="bg-spotlight opacity-100" />
-        </div>
+        {isVisible && (
+          <>
+            {/* Background decorative elements (rotated divs and text) */}
+            <div className="absolute top-0 md:-top-5 lg:-top-11 w-[300vw] h-[250px] md:h-[300px] lg:h-[275px] bg-spotlight-content z-0 rotate-5">
+              <BackgroundPattern className="bg-spotlight opacity-100" />
+            </div>
+          </>
+        )}
 
         <h1
           className={`${bodoniModa.className} absolute font-extrabold text-spotlight-content z-0 left-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
-                top-[clamp(14rem,100vh,15rem)] 
-                md:top-[clamp(15rem,25vh,22rem)]
-                lg:top-[clamp(6rem,16vh,9rem)]
-              `}
+            top-[clamp(14rem,100vh,15rem)] 
+            md:top-[clamp(15rem,25vh,22rem)]
+            lg:top-[clamp(6rem,16vh,9rem)]
+          `}
         >
           MATEUS
         </h1>
         <h1
           className={`${bodoniModa.className} absolute font-extrabold text-spotlight-content z-0 right-0 rotate-5 text-[clamp(2rem,16vw,16rem)] 
-                bottom-[clamp(5rem,100vh,11rem)]
-                md:bottom-[clamp(15rem,25vh,22rem)] 
-                lg:bottom-[clamp(2rem,8vh,5rem)]`}
+            bottom-[clamp(5rem,100vh,11rem)]
+            md:bottom-[clamp(15rem,25vh,22rem)] 
+            lg:bottom-[clamp(2rem,8vh,5rem)]
+          `}
         >
           DIÁLIS
         </h1>
@@ -60,36 +72,42 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
           <BackgroundPattern className="bg-spotlight opacity-100" />
         </div>
 
-        {/* Reaper Animation Container */}
-        <div
-          className="relative move-vertical h-1/2"
-          style={{ opacity: opacityOnScroll }}
-        >
-          <div className="move-horizontal">
-            <div className="relative move-sway">
-              <Reaper />
-            </div>
-          </div>
-        </div>
-
-        {/* Lamp Animation Container */}
-        <div
-          className="relative move-vertical"
-          style={{
-            opacity: opacityOnScroll,
-          }}
-        >
-          <div className="move-horizontal">
-            <div className="relative move-sway">
-              <div className="absolute move-vertical z-40">
-                <div className="relative">
-                  <Lamp />
+        {/* Only render if they are actually visible */}
+        {isVisible && (
+          <>
+            {/* Reaper Animation Container */}
+            <div
+              className="relative move-vertical h-1/2"
+              style={{ opacity: opacityOnScroll }}
+            >
+              <div className="move-horizontal">
+                <div className="relative move-sway">
+                  <Reaper />
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+
+            {/* Lamp Animation Container */}
+            <div
+              className="relative move-vertical"
+              style={{
+                opacity: opacityOnScroll,
+              }}
+            >
+              <div className="move-horizontal">
+                <div className="relative move-sway">
+                  <div className="absolute move-vertical z-40">
+                    <div className="relative">
+                      <Lamp />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
+
       {/* Overlay that fades in on scroll */}
       <div
         className="absolute inset-0 bg-blackwhite z-20 pointer-events-none"
