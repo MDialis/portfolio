@@ -3,13 +3,14 @@
 import { useState } from "react";
 import type { ReactNode } from "react";
 import Button from "./Button";
+import Image, { StaticImageData } from "next/image";
 
 // --- Front Content ---
 // Props for the FrontContent component
 interface FrontContentProps {
   onToggleClick: () => void;
   title: string;
-  imgLink: string;
+  imgLink: string | StaticImageData;
   imgAlt: string;
   text: string;
   buttonText?: string;
@@ -33,10 +34,11 @@ const FrontContent = ({
     <div className="flex flex-col md:flex-row items-stretch md:gap-12">
       {/* Clickable Image */}
       <div className="w-full md:w-1/3 mb-8 md:mb-0">
-        <img
+        <Image
           src={imgLink}
           alt={imgAlt}
           onClick={onToggleClick}
+          sizes="(max-width: 768px) 100vw, 384px"
           role="button"
           tabIndex={0}
           aria-label="Click?"
@@ -126,7 +128,7 @@ interface FlipSectionProps {
   textAlt: string;
 
   title: string;
-  imgLink: string;
+  imgLink: string | StaticImageData;
   imgAlt: string;
   text: string;
   buttonText?: string;

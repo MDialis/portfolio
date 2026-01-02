@@ -1,6 +1,7 @@
 import Card from "@/components/Card";
 import Reaper from "@/components/Reaper";
 import FlipSection from "@/components/FlipSection";
+import aboutImg from "../../public/mateus.webp";
 
 import { Bodoni_Moda } from "next/font/google";
 import InfiniteIconScroller from "@/components/InfiniteIconScroller";
@@ -65,7 +66,7 @@ export default async function Home() {
             <div className="relative z-10 max-w-5xl mx-auto">
               {/* FlipSection component for interactive "About Me" */}
               <FlipSection
-                imgLink="mateus.png"
+                imgLink={aboutImg}
                 imgAlt="Image of Mateus"
                 title="About Me"
                 text="
