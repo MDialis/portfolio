@@ -1,6 +1,5 @@
 import { TechIcon } from "@/lib/types";
 import Image from "next/image";
-import Link from "next/link";
 import { TechIconList } from "./TechIconList";
 
 interface ListItemProps {
@@ -68,7 +67,7 @@ export default function ListItem({
           "
         >
           {mobileImageUrl && (
-            <img
+            <Image
               src={mobileImageUrl}
               alt={title}
               className="aspect-4/6 h-full object-cover rounded-lg shadow-2xl md:hidden"
@@ -76,7 +75,7 @@ export default function ListItem({
           )}
 
           {cardImageUrl && (
-            <img
+            <Image
               src={cardImageUrl}
               alt={title}
               className="aspect-video h-full object-cover rounded-lg shadow-2xl hidden md:block"

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const SOCIAL_LINKS = [
   {
     name: "E-mail",
@@ -36,7 +38,7 @@ export default function SocialLinks() {
             aria-label={`Link to ${link.name}`}
             className="flex items-center gap-2 hover:opacity-80 transition-opacity w-fit pr-8"
           >
-            <img src={link.icon} alt={link.name} className="h-12 w-12" />
+            <Image src={link.icon} alt={link.name} width={48} height={48} />
             <p className="font-semibold">{link.name}</p>
           </a>
         ))}
