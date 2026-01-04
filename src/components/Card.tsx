@@ -26,7 +26,7 @@ export default function Card({
           </div>
         )}
         <div className="p-6 flex flex-col flex-1">
-          <h4 className="text-2xl font-bold mb-3">{title}</h4>
+          <h3 className="text-2xl font-bold mb-3">{title}</h3>
           <p className="mb-4">{text}</p>
 
           <div className="mt-auto flex flex-col sm:flex-row gap-4 sm:justify-between items-end pt-4">

@@ -84,7 +84,7 @@ const SubmitButton = ({
         className={`w-3/4 md:w-full mx-auto py-2 font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500
           ${
             loading
-              ? "bg-gray-500 cursor-not-allowed text-white"
+              ? "bg-base-dark/85 cursor-not-allowed text-white"
               : "bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content"
           }`}
       >
