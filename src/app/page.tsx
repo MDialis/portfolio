@@ -1,19 +1,28 @@
-import Card from "@/components/Card";
-import Reaper from "@/components/Reaper";
-import FlipSection from "@/components/FlipSection";
+import dynamic from "next/dynamic";
 import aboutImg from "../../public/mateus.webp";
-
 import { Bodoni_Moda } from "next/font/google";
-import InfiniteIconScroller from "@/components/InfiniteIconScroller";
-import HeroSection from "@/components/HeroSection";
 
+// --- Services & Types ---
 import {
   getFeaturedProjects,
   getFeaturedExperiences,
 } from "@/lib/contentfulService";
 import { TechIcon } from "@/lib/types";
-import Contacts from "@/components/Contacts";
+
+// --- Static Components ---
 import Button from "@/components/Button";
+import HeroSection from "@/components/HeroSection";
+
+// --- Dynamic Components (Lazy Loaded) ---
+// These components are loaded on demand to reduce initial bundle size
+const Reaper = dynamic(() => import("@/components/Reaper"));
+const FlipSection = dynamic(() => import("@/components/FlipSection"));
+const InfiniteIconScroller = dynamic(() => import("@/components/InfiniteIconScroller"));
+const Card = dynamic(() => import("@/components/Card"));
+const Contacts = dynamic(() => import("@/components/Contacts"), {
+  // Including a loading placeholder to prevent layout shifts
+  loading: () => <div className="min-h-[50vh] bg-neutral-variant" />,     
+});
 
 const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
 
