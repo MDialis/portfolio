@@ -2,7 +2,8 @@ const ICON_PATHS = ["/background/LampShadow.svg", "/background/LogoShadow.svg"];
 
 const GENERATED_ITEMS = Array.from({ length: 100 })
   .map((_, i) => {
-    if (i === 0) return {id: i, iconSrc: null, style: {}, visibilityClass: ""}; // Skip index 0 because i find it less cool than the other itens
+    if (i === 0)
+      return { id: i, iconSrc: null, style: {}, visibilityClass: "" }; // Skip index 0 because i find it less cool than the other itens
 
     const iconSrc = i % 2 === 0 ? ICON_PATHS[0] : ICON_PATHS[1];
 
@@ -51,9 +52,12 @@ const GENERATED_ITEMS = Array.from({ length: 100 })
 export default function BackgroundPattern({ invert = false, className = "" }) {
   const defaultColor = invert ? "bg-white" : "bg-black";
   const finalColorClass = className || defaultColor;
-  
+
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0">
+    <div
+      className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0"
+      style={{ contentVisibility: "auto", containIntrinsicSize: "100vw 100vh" }}
+    >
       {GENERATED_ITEMS.map((item) => (
         <div
           key={item.id}
