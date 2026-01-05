@@ -139,7 +139,6 @@ interface FlipSectionProps {
 export default function FlipSection({
   children,
   textAlt,
-
   title,
   imgLink,
   imgAlt,
@@ -148,9 +147,11 @@ export default function FlipSection({
   buttonLink,
 }: FlipSectionProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [hasBeenFlipped, setHasBeenFlipped] = useState(false);
 
   // Toggles the `isFlipped` state.
   const handleToggle = () => {
+    if (!hasBeenFlipped) setHasBeenFlipped(true);
     setIsFlipped(!isFlipped);
   };
 
@@ -193,7 +194,7 @@ export default function FlipSection({
           buttonText={buttonText}
           buttonLink={buttonLink}
         >
-          {children}
+          {hasBeenFlipped ? children : null}
         </BackContent>
       </div>
     </div>
