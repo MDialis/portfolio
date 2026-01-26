@@ -4,13 +4,13 @@ import { getProjects, getExperiences } from "@/lib/contentfulService";
 import { TechIcon } from "@/lib/types";
 import { formatTechIcons, getContentfulImageUrl } from "@/lib/utils";
 
-export default async function Home() {
+export default async function Works() {
   const projects = await getProjects();
   const experiences = await getExperiences();
   return (
-    <main className="flex flex-col gap-20 px-5">
+    <main className="flex flex-col gap-15 px-5 pt-10">
       {/* Projects Section */}
-      <section id="projects" className="py-10">
+      <section id="projects">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
             My Projects
@@ -31,7 +31,7 @@ export default async function Home() {
                   <ListItem
                     key={project.sys.id}
                     title={title}
-                    slug={slug}
+                    slug={`works/${slug}`}
                     summary={summary}
                     cardImageUrl={getContentfulImageUrl(cardImage)}
                     mobileImageUrl={getContentfulImageUrl(mobileImage)}
@@ -45,7 +45,7 @@ export default async function Home() {
       </section>
 
       {/* Experiences Section */}
-      <section id="experiences" className="py-10">
+      <section id="experiences">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
             My Experiences
@@ -60,18 +60,19 @@ export default async function Home() {
               <p className="text-lg py-3">Try Again Later!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="w-full flex flex-col">
               {experiences.map((experience) => {
-                const { title, systemLink, summary, image, tech } = experience.fields;
+                const { title, systemLink, summary, image, tech } =
+                  experience.fields;
 
                 return (
-                  <Card
+                  <ListItem
                     key={experience.sys.id}
                     title={title}
-                    text={summary}
                     link={`${systemLink}`}
-                    imageUrl={getContentfulImageUrl(image)}
-                    techIcons={formatTechIcons(tech)}
+                    summary={summary}
+                    cardImageUrl={getContentfulImageUrl(image)}
+                    formattedTechIcons={formatTechIcons(tech)}
                   />
                 );
               })}

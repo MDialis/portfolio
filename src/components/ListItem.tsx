@@ -4,7 +4,8 @@ import { TechIconList } from "./TechIconList";
 
 interface ListItemProps {
   title: string;
-  slug: string;
+  slug?: string;
+  link?: string;
   summary: string;
   cardImageUrl?: string;
   mobileImageUrl?: string;
@@ -14,15 +15,21 @@ interface ListItemProps {
 export default function ListItem({
   title,
   slug,
+  link,
   summary,
   cardImageUrl,
   mobileImageUrl,
   formattedTechIcons,
 }: ListItemProps) {
+  const href = link || `/${slug}`;
+  const isExternal = !!link;
+
   return (
     <a
       key={slug}
-      href={`/works/${slug}`}
+      href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
       className="
         group relative flex flex-col
         border-t border-base-content/40
