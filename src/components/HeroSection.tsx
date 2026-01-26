@@ -11,6 +11,7 @@ type HeroSectionProps = {
 
 export default function HeroSection({ bodoniModa }: HeroSectionProps) {
   const [opacityOnScroll, setOpacityOnScroll] = useState(1);
+  const [indicatorOpacity, setIndicatorOpacity] = useState(1);
   const [overlayOpacity, setOverlayOpacity] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -25,8 +26,10 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
       const newOpacity = 1 - progress * 1.4;
 
       setOpacityOnScroll((prev) =>
-        Math.abs(prev - newOpacity) > 0.01 ? newOpacity : prev
+        Math.abs(prev - newOpacity) > 0.01 ? newOpacity : prev,
       );
+
+      setIndicatorOpacity(1 - progress * 4);
 
       setOverlayOpacity(progress * 0.9);
 
@@ -36,6 +39,13 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleScrollDown = () => {
+    window.scrollTo({
+      top: window.innerHeight,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section className="relative -top-10 h-screen flex flex-col justify-center items-center overflow-hidden bg-spotlight">
@@ -106,12 +116,14 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
             </div>
             {/* --- SCROLL INDICATOR --- */}
             <div
-              className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-30 animate-bounce flex flex-col items-center gap-1 text-secondary"
-              style={{ opacity: opacityOnScroll }}
+              onClick={handleScrollDown}
+              className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-30 animate-bounce flex flex-col items-center gap-1 text-secondary cursor-pointer"
+              style={{
+                opacity: indicatorOpacity,
+                pointerEvents: indicatorOpacity <= 0 ? "none" : "auto",
+              }}
             >
-              <span className="text-xs uppercase tracking-widest">
-                Scroll
-              </span>
+              <span className="text-xs uppercase tracking-widest">Scroll</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
