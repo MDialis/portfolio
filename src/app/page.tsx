@@ -12,16 +12,19 @@ import { TechIcon } from "@/lib/types";
 import Button from "@/components/Button";
 import HeroSection from "@/components/HeroSection";
 import AboutMe from "@/components/AboutMe";
+import DraggableCarousel from "@/components/DraggableCarousel";
 
 // --- Dynamic Components (Lazy Loaded) ---
 // These components are loaded on demand to reduce initial bundle size
 const Reaper = dynamic(() => import("@/components/Reaper"));
 const FlipSection = dynamic(() => import("@/components/FlipSection"));
-const InfiniteIconScroller = dynamic(() => import("@/components/InfiniteIconScroller"));
+const InfiniteIconScroller = dynamic(
+  () => import("@/components/InfiniteIconScroller"),
+);
 const Card = dynamic(() => import("@/components/Card"));
 const Contacts = dynamic(() => import("@/components/Contacts"), {
   // Including a loading placeholder to prevent layout shifts
-  loading: () => <div className="min-h-[50vh] bg-neutral-variant" />,     
+  loading: () => <div className="min-h-[50vh] bg-neutral-variant" />,
 });
 
 const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
@@ -104,7 +107,7 @@ export default async function Home() {
 
           {/* Projects Section */}
           <section id="projects" className="py-10">
-            <div className="max-w-5xl mx-auto">
+            <div className="mx-auto">
               <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
                 <a href="/works" className="px-2">
                   My Projects
@@ -120,44 +123,46 @@ export default async function Home() {
                   <p className="text-lg py-3">Try Again Later!</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {projects.map((project) => {
-                    const { title, slug, summary, cardImage, tech } =
-                      project.fields;
+                <DraggableCarousel>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pointer-events-auto">
+                    {projects.map((project) => {
+                      const { title, slug, summary, cardImage, tech } =
+                        project.fields;
 
-                    const imageUrl = cardImage
-                      ? `https:${cardImage.fields.file.url}`
-                      : undefined;
+                      const imageUrl = cardImage
+                        ? `https:${cardImage.fields.file.url}`
+                        : undefined;
 
-                    const formattedTechIcons: TechIcon[] = (tech || []).map(
-                      (techName) => {
-                        return {
-                          src: techName
-                            ? `/icons/${techName}.svg`
-                            : "/icons/default.svg",
-                          alt: techName,
-                        };
-                      }
-                    );
-                    return (
-                      <Card
-                        key={project.sys.id}
-                        title={title}
-                        text={summary}
-                        link={`/works/${slug}`}
-                        imageUrl={imageUrl}
-                        techIcons={formattedTechIcons}
-                      />
-                    );
-                  })}
-                </div>
+                      const formattedTechIcons: TechIcon[] = (tech || []).map(
+                        (techName) => {
+                          return {
+                            src: techName
+                              ? `/icons/${techName}.svg`
+                              : "/icons/default.svg",
+                            alt: techName,
+                          };
+                        },
+                      );
+                      return (
+                        <Card
+                          key={project.sys.id}
+                          title={title}
+                          text={summary}
+                          link={`/works/${slug}`}
+                          imageUrl={imageUrl}
+                          techIcons={formattedTechIcons}
+                        />
+                      );
+                    })}
+                  </div>
+                </DraggableCarousel>
               )}
             </div>
           </section>
 
           {/* Experiences Section */}
           <section id="experiences" className="py-10">
-            <div className="max-w-5xl mx-auto">
+            <div className="mx-auto">
               <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
                 <a href="/works" className="px-2">
                   My Experiences
@@ -173,37 +178,39 @@ export default async function Home() {
                   <p className="text-lg py-3">Try Again Later!</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {experiences.map((experience) => {
-                    const { title, systemLink, summary, image, tech } =
-                      experience.fields;
+                <DraggableCarousel>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    {experiences.map((experience) => {
+                      const { title, systemLink, summary, image, tech } =
+                        experience.fields;
 
-                    const imageUrl = image
-                      ? `https:${image.fields.file.url}`
-                      : undefined;
+                      const imageUrl = image
+                        ? `https:${image.fields.file.url}`
+                        : undefined;
 
-                    const formattedTechIcons: TechIcon[] = (tech || []).map(
-                      (techName) => {
-                        return {
-                          src: techName
-                            ? `/icons/${techName}.svg`
-                            : "/icons/default.svg",
-                          alt: techName,
-                        };
-                      }
-                    );
-                    return (
-                      <Card
-                        key={experience.sys.id}
-                        title={title}
-                        text={summary}
-                        link={`${systemLink}`}
-                        imageUrl={imageUrl}
-                        techIcons={formattedTechIcons}
-                      />
-                    );
-                  })}
-                </div>
+                      const formattedTechIcons: TechIcon[] = (tech || []).map(
+                        (techName) => {
+                          return {
+                            src: techName
+                              ? `/icons/${techName}.svg`
+                              : "/icons/default.svg",
+                            alt: techName,
+                          };
+                        },
+                      );
+                      return (
+                        <Card
+                          key={experience.sys.id}
+                          title={title}
+                          text={summary}
+                          link={`${systemLink}`}
+                          imageUrl={imageUrl}
+                          techIcons={formattedTechIcons}
+                        />
+                      );
+                    })}
+                  </div>
+                </DraggableCarousel>
               )}
             </div>
           </section>
