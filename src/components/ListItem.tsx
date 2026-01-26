@@ -67,19 +67,27 @@ export default function ListItem({
           "
         >
           {mobileImageUrl && (
+            <div className="relative h-full aspect-4/6 md:hidden shadow-2xl rounded-lg overflow-hidden">
             <Image
               src={mobileImageUrl}
               alt={title}
+              fill
+              sizes="(max-width: 768px) 100vw, 300px"
               className="aspect-4/6 h-full object-cover rounded-lg shadow-2xl md:hidden"
             />
+            </div>
           )}
 
           {cardImageUrl && (
-            <Image
-              src={cardImageUrl}
-              alt={title}
-              className="aspect-video h-full object-cover rounded-lg shadow-2xl hidden md:block"
-            />
+            <div className="relative h-full aspect-video hidden md:block shadow-2xl rounded-lg overflow-hidden">
+              <Image
+                src={cardImageUrl}
+                alt={title}
+                fill
+                sizes="300px"
+                className="object-cover"
+              />
+            </div>
           )}
         </div>
       )}
