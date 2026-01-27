@@ -63,6 +63,7 @@ export default function DraggableCarousel({ children, className = '' }: Draggabl
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onClickCapture={handleClickCapture}
+        style={{ touchAction: "pan-y" }}
         className="flex gap-4 w-full"
       >
         {children}

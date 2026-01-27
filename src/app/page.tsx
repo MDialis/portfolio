@@ -162,6 +162,8 @@ export default async function Home() {
                           w-[85vw] h-[90vw]
                           md:w-[60vw] md:h-[60vw]
                           lg:w-[32vw] lg:h-[30vw]
+                          cursor-grab active:cursor-grabbing
+                          hover:scale-105 transition-transform
                           shrink-0"
                       >
                         <Card
@@ -170,6 +172,7 @@ export default async function Home() {
                           link={`/works/${slug}`}
                           imageUrl={imageUrl}
                           techIcons={formattedTechIcons}
+                          classname="cursor-grab active:cursor-grabbing"
                         />
                       </DistanceScaler>
                     );
@@ -243,6 +246,8 @@ export default async function Home() {
                           w-[85vw] h-[90vw]
                           md:w-[60vw] md:h-[60vw]
                           lg:w-[32vw] lg:h-[30vw]
+                          cursor-grab active:cursor-grabbing
+                          hover:scale-105 transition-transform
                           shrink-0"
                       >
                         <Card
@@ -251,6 +256,7 @@ export default async function Home() {
                           link={`${systemLink}`}
                           imageUrl={imageUrl}
                           techIcons={formattedTechIcons}
+                          classname="cursor-grab active:cursor-grabbing"
                         />
                       </DistanceScaler>
                     );
