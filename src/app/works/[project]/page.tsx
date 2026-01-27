@@ -82,7 +82,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
           return null;
         }
 
-        const { file, title } = asset.fields;
+        const { file, title, description } = asset.fields;
         const url = `https:${file.url}`;
 
         if (file.details.image) {
@@ -92,7 +92,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
                 src={url}
                 width={file.details.image.width}
                 height={file.details.image.height}
-                alt={title || "Project Image"}
+                alt={description || title || "Project Image"}
                 className="rounded-lg shadow-lg mx-auto"
               />
             </div>

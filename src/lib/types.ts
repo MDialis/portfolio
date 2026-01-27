@@ -11,6 +11,7 @@ export interface IContentfulAsset {
   };
   fields: {
     title: string;
+    description?: string;
     file: {
       url: string;
       details: {
