@@ -180,6 +180,10 @@ export default async function Home() {
             </div>
           </section>
 
+          <div className="max-w-6xl mx-auto">
+            <Button link="/works" text="Check All Projects" />
+          </div>
+
           {/* Experiences Section */}
           <section id="experiences" className="py-4">
             <div className="mx-auto">
@@ -251,8 +255,8 @@ export default async function Home() {
             </div>
           </section>
 
-          <div className="max-w-6xl mx-auto my-10">
-            <Button link="/works" text="Explore Full Portfolio" />
+          <div className="max-w-6xl mx-auto mb-15">
+            <Button link="/works" text="Check All Experiences" />
           </div>
         </div>
 
