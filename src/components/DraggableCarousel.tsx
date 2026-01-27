@@ -53,7 +53,7 @@ export default function DraggableCarousel({ children, className = '' }: Draggabl
   return (
     <div 
       ref={carouselRef} 
-      className={`p-4 overflow-hidden cursor-grab active:cursor-grabbing ${className}`}
+      className={`py-4 overflow-hidden cursor-grab active:cursor-grabbing ${className}`}
     >
       <motion.div
         ref={contentRef}

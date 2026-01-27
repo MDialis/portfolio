@@ -66,6 +66,9 @@ export default async function Home() {
   const projects = await getFeaturedProjects();
   const experiences = await getFeaturedExperiences();
 
+  const cardWidths = "w-[75vw] md:w-[60vw] lg:w-[32vw]";
+  const spacerWidths = "w-[1vw] md:w-[14vw] lg:w-[30.5vw]";
+
   return (
     <div className="flex-1">
       <main>
@@ -125,13 +128,7 @@ export default async function Home() {
                 </div>
               ) : (
                 <DraggableCarousel>
-                  <div
-                    className="
-                      w-[85vw] h-[90vw]
-                      md:w-[60vw] md:h-[60vw]
-                      lg:w-[32vw] lg:h-[30vw]
-                      shrink-0"
-                  />
+                  <div className={`${spacerWidths} shrink-0`} />
 
                   {projects.map((project) => {
                     const { title, slug, summary, cardImage, tech } =
@@ -158,13 +155,12 @@ export default async function Home() {
                         deform
                         maxScale={1}
                         minScale={0.7}
-                        className="
-                          w-[85vw] h-[90vw]
-                          md:w-[60vw] md:h-[60vw]
-                          lg:w-[32vw] lg:h-[30vw]
+                        className={`
+                          ${cardWidths}
+                          shrink-0
                           cursor-grab active:cursor-grabbing
                           hover:scale-105 transition-transform
-                          shrink-0"
+                        `}
                       >
                         <Card
                           title={title}
@@ -178,13 +174,7 @@ export default async function Home() {
                     );
                   })}
 
-                  <div
-                    className="
-                      w-[85vw] h-[90vw]
-                      md:w-[60vw] md:h-[60vw]
-                      lg:w-[32vw] lg:h-[30vw]
-                      shrink-0"
-                  />
+                  <div className={`${spacerWidths} shrink-0`} />
                 </DraggableCarousel>
               )}
             </div>
@@ -209,13 +199,7 @@ export default async function Home() {
                 </div>
               ) : (
                 <DraggableCarousel>
-                  <div
-                    className="
-                      w-[85vw] h-[90vw]
-                      md:w-[60vw] md:h-[60vw]
-                      lg:w-[32vw] lg:h-[30vw]
-                      shrink-0"
-                  />
+                  <div className={`${spacerWidths} shrink-0`} />
 
                   {experiences.map((experience) => {
                     const { title, systemLink, summary, image, tech } =
@@ -242,13 +226,12 @@ export default async function Home() {
                         deform
                         maxScale={1}
                         minScale={0.7}
-                        className="
-                          w-[85vw] h-[90vw]
-                          md:w-[60vw] md:h-[60vw]
-                          lg:w-[32vw] lg:h-[30vw]
+                        className={`
+                          ${cardWidths}
+                          shrink-0
                           cursor-grab active:cursor-grabbing
                           hover:scale-105 transition-transform
-                          shrink-0"
+                        `}
                       >
                         <Card
                           title={title}
@@ -262,13 +245,7 @@ export default async function Home() {
                     );
                   })}
 
-                  <div
-                    className="
-                      w-[85vw] h-[90vw]
-                      md:w-[60vw] md:h-[60vw]
-                      lg:w-[32vw] lg:h-[30vw]
-                      shrink-0"
-                  />
+                  <div className={`${spacerWidths} shrink-0`} />
                 </DraggableCarousel>
               )}
             </div>

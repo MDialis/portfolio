@@ -74,22 +74,28 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
 
         let rotateX = 0;
         let rotateY = 0;
+        let translateX = 0;
+        let translateY = 0;
 
         // Logic: If element is to the Left (-X), we want the Right side to pop out (towards center).
         // This means RotateY should be Positive.
         if (horizontal || (!vertical && !horizontal)) {
           rotateY = -signedNormX * maxRotation; 
+          // Invert the signed distance to pull towards center
+          translateX = -signedNormX * maxRotation * 2;
         }
 
         // Logic: If element is to the Top (-Y), we want the Bottom side to pop out.
         // This means RotateX should be Positive.
         if (vertical || (!vertical && !horizontal)) {
           rotateX = signedNormY * maxRotation; 
+          // Invert the signed distance to pull towards center
+          translateY = -signedNormY * maxRotation * 2;
         }
         
         // Add perspective and rotations to the transform string
         // Note: Perspective must come first in the string
-        transformString = `perspective(1000px) scale(${currentScale}) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        transformString = `perspective(1000px) translate3d(${translateX}px, ${translateY}px, 0) scale(${currentScale}) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
       }
 
       // Apply transform directly // `scale(${currentScale})`
