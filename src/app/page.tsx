@@ -147,9 +147,15 @@ export default async function Home() {
                       <DistanceScaler
                         key={project.sys.id}
                         horizontal
+                        maxScale={1}
+                        minScale={0.7}
                         className="
-                          w-[32vw]
-                          h-[30vw]
+                          w-[85vw]
+                          h-[90vw]
+                          md:w-[60vw]
+                          md:h-[60vw]
+                          lg:w-[32vw]
+                          lg:h-[30vw]
                           shrink-0"
                       >
                         <Card
@@ -209,9 +215,15 @@ export default async function Home() {
                         <DistanceScaler
                         key={experience.sys.id}
                         horizontal
+                        maxScale={1}
+                        minScale={0.7}
                         className="
-                          w-[32vw]
-                          h-[30vw]
+                          w-[85vw]
+                          h-[90vw]
+                          md:w-[60vw]
+                          md:h-[60vw]
+                          lg:w-[32vw]
+                          lg:h-[30vw]
                           shrink-0"
                       >
                           <Card
