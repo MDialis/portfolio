@@ -6,8 +6,10 @@ interface DistanceScalerProps {
   children: React.ReactNode;
   vertical?: boolean;
   horizontal?: boolean;
+  deform?: boolean;
   maxScale?: number;
   minScale?: number;
+  maxRotation?: number;
   className?: string;
 }
 
@@ -17,6 +19,8 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
   horizontal = false,
   maxScale = 1,
   minScale = 0.5,
+  deform = false,
+  maxRotation = 45,
   className = "",
 }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -39,36 +43,57 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
       const elementCenterX = rect.left + rect.width / 2;
       const elementCenterY = rect.top + rect.height / 2;
 
-      let distanceFactor = 0;
+      // --- 1. Calculate Distances for Scaling (Absolute) ---
+      let distanceFactor = 0; // 0 = center, 1 = edge
+      const absDistY = Math.abs(elementCenterY - viewCenterY);
+      const absDistX = Math.abs(elementCenterX - viewCenterX);
 
-      // Calculate Vertical Distance
+      const normY = Math.min(absDistY / (viewportHeight / 2), 1);
+      const normX = Math.min(absDistX / (viewportWidth / 2), 1);
+
       if (vertical) {
-        const distY = Math.abs(elementCenterY - viewCenterY);
-        const normY = Math.min(distY / (viewportHeight / 2), 1);
         distanceFactor = Math.max(distanceFactor, normY);
       }
-
-      // Calculate Horizontal Distance
       if (horizontal) {
-        const distX = Math.abs(elementCenterX - viewCenterX);
-        const normX = Math.min(distX / (viewportWidth / 2), 1);
         distanceFactor = Math.max(distanceFactor, normX);
       }
-
-      // Default if neither prop is set
       if (!vertical && !horizontal) {
-        const distY = Math.abs(elementCenterY - viewCenterY);
-        const distX = Math.abs(elementCenterX - viewCenterX);
-        const normY = Math.min(distY / (viewportHeight / 2), 1);
-        const normX = Math.min(distX / (viewportWidth / 2), 1);
         distanceFactor = Math.max(normY, normX);
       }
 
-      // Interpolate Scale
       const currentScale = maxScale - distanceFactor * (maxScale - minScale);
 
-      // Apply transform directly
-      ref.current.style.transform = `scale(${currentScale})`;
+      // --- Calculate Deformation (Signed Distances) ---
+      let transformString = `scale(${currentScale})`;
+
+      if (deform) {
+        // We calculate signed Normalization (-1 to 1)
+        // -1 = Top/Left, 1 = Bottom/Right
+        const signedNormX = (elementCenterX - viewCenterX) / (viewportWidth / 2);
+        const signedNormY = (elementCenterY - viewCenterY) / (viewportHeight / 2);
+
+        let rotateX = 0;
+        let rotateY = 0;
+
+        // Logic: If element is to the Left (-X), we want the Right side to pop out (towards center).
+        // This means RotateY should be Positive.
+        if (horizontal || (!vertical && !horizontal)) {
+          rotateY = -signedNormX * maxRotation; 
+        }
+
+        // Logic: If element is to the Top (-Y), we want the Bottom side to pop out.
+        // This means RotateX should be Positive.
+        if (vertical || (!vertical && !horizontal)) {
+          rotateX = signedNormY * maxRotation; 
+        }
+        
+        // Add perspective and rotations to the transform string
+        // Note: Perspective must come first in the string
+        transformString = `perspective(1000px) scale(${currentScale}) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      }
+
+      // Apply transform directly // `scale(${currentScale})`
+      ref.current.style.transform = transformString;
 
       // Schedule next frame
       animationFrameId = requestAnimationFrame(updateScale);
@@ -80,12 +105,14 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [vertical, horizontal, maxScale, minScale]);
+  }, [vertical, horizontal, maxScale, minScale, deform, maxRotation]);
 
   return (
     <div
       ref={ref}
       className={`will-change-transform ease-out ${className}`}
+      // Ensure the parent preserves 3d if needed, though perspective() in transform handles most cases
+      style={{ transformStyle: "preserve-3d" }}
     >
       {children}
     </div>

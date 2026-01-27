@@ -6,6 +6,7 @@ interface CardProps {
   title: string;
   text: string;
   link: string;
+  classname?: string;
   imageUrl?: string;
   techIcons?: TechIcon[];
 }
@@ -14,12 +15,13 @@ export default function Card({
   title,
   text,
   link,
+  classname,
   imageUrl,
   techIcons,
 }: CardProps) {
   return (
     <a href={link}>
-      <div className="bg-primary text-primary-content rounded-xl shadow-xl transition-transform hover:scale-[1.02] flex flex-col h-full overflow-hidden">
+      <div className={`bg-primary text-primary-content rounded-xl shadow-xl transition-transform hover:scale-[1.02] flex flex-col h-full overflow-hidden ${classname}`}>
         {imageUrl && (
           <div className="relative w-full h-56">
             <Image src={imageUrl} alt={title} layout="fill" objectFit="cover" />

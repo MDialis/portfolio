@@ -77,7 +77,7 @@ export default async function Home() {
           <AboutMe />
 
           {/* Skills Section */}
-          <section id="skills" className="py-10">
+          <section id="skills" className="py-4">
             <div className="relative z-10 max-w-7xl mx-auto">
               <h2 className="text-3xl font-bold text-center text-base-content mb-12">
                 My Skills
@@ -107,9 +107,9 @@ export default async function Home() {
           </section>
 
           {/* Projects Section */}
-          <section id="projects" className="py-10">
+          <section id="projects" className="py-4 pt-10">
             <div className="mx-auto">
-              <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
+              <h2 className="text-4xl font-bold text-center mb-2 text-base-content">
                 <a href="/works" className="px-2">
                   My Projects
                 </a>
@@ -125,6 +125,14 @@ export default async function Home() {
                 </div>
               ) : (
                 <DraggableCarousel>
+                  <div
+                    className="
+                      w-[85vw] h-[90vw]
+                      md:w-[60vw] md:h-[60vw]
+                      lg:w-[32vw] lg:h-[30vw]
+                      shrink-0"
+                  />
+
                   {projects.map((project) => {
                     const { title, slug, summary, cardImage, tech } =
                       project.fields;
@@ -147,15 +155,13 @@ export default async function Home() {
                       <DistanceScaler
                         key={project.sys.id}
                         horizontal
+                        deform
                         maxScale={1}
                         minScale={0.7}
                         className="
-                          w-[85vw]
-                          h-[90vw]
-                          md:w-[60vw]
-                          md:h-[60vw]
-                          lg:w-[32vw]
-                          lg:h-[30vw]
+                          w-[85vw] h-[90vw]
+                          md:w-[60vw] md:h-[60vw]
+                          lg:w-[32vw] lg:h-[30vw]
                           shrink-0"
                       >
                         <Card
@@ -168,15 +174,23 @@ export default async function Home() {
                       </DistanceScaler>
                     );
                   })}
+
+                  <div
+                    className="
+                      w-[85vw] h-[90vw]
+                      md:w-[60vw] md:h-[60vw]
+                      lg:w-[32vw] lg:h-[30vw]
+                      shrink-0"
+                  />
                 </DraggableCarousel>
               )}
             </div>
           </section>
 
           {/* Experiences Section */}
-          <section id="experiences" className="py-10">
+          <section id="experiences" className="py-4">
             <div className="mx-auto">
-              <h2 className="text-4xl font-bold text-center mb-12 text-base-content">
+              <h2 className="text-4xl font-bold text-center mb-2 text-base-content">
                 <a href="/works" className="px-2">
                   My Experiences
                 </a>
@@ -192,51 +206,63 @@ export default async function Home() {
                 </div>
               ) : (
                 <DraggableCarousel>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                    {experiences.map((experience) => {
-                      const { title, systemLink, summary, image, tech } =
-                        experience.fields;
+                  <div
+                    className="
+                      w-[85vw] h-[90vw]
+                      md:w-[60vw] md:h-[60vw]
+                      lg:w-[32vw] lg:h-[30vw]
+                      shrink-0"
+                  />
 
-                      const imageUrl = image
-                        ? `https:${image.fields.file.url}`
-                        : undefined;
+                  {experiences.map((experience) => {
+                    const { title, systemLink, summary, image, tech } =
+                      experience.fields;
 
-                      const formattedTechIcons: TechIcon[] = (tech || []).map(
-                        (techName) => {
-                          return {
-                            src: techName
-                              ? `/icons/${techName}.svg`
-                              : "/icons/default.svg",
-                            alt: techName,
-                          };
-                        },
-                      );
-                      return (
-                        <DistanceScaler
+                    const imageUrl = image
+                      ? `https:${image.fields.file.url}`
+                      : undefined;
+
+                    const formattedTechIcons: TechIcon[] = (tech || []).map(
+                      (techName) => {
+                        return {
+                          src: techName
+                            ? `/icons/${techName}.svg`
+                            : "/icons/default.svg",
+                          alt: techName,
+                        };
+                      },
+                    );
+                    return (
+                      <DistanceScaler
                         key={experience.sys.id}
                         horizontal
+                        deform
                         maxScale={1}
                         minScale={0.7}
                         className="
-                          w-[85vw]
-                          h-[90vw]
-                          md:w-[60vw]
-                          md:h-[60vw]
-                          lg:w-[32vw]
-                          lg:h-[30vw]
+                          w-[85vw] h-[90vw]
+                          md:w-[60vw] md:h-[60vw]
+                          lg:w-[32vw] lg:h-[30vw]
                           shrink-0"
                       >
-                          <Card
-                            title={title}
-                            text={summary}
-                            link={`${systemLink}`}
-                            imageUrl={imageUrl}
-                            techIcons={formattedTechIcons}
-                          />
-                        </DistanceScaler>
-                      );
-                    })}
-                  </div>
+                        <Card
+                          title={title}
+                          text={summary}
+                          link={`${systemLink}`}
+                          imageUrl={imageUrl}
+                          techIcons={formattedTechIcons}
+                        />
+                      </DistanceScaler>
+                    );
+                  })}
+
+                  <div
+                    className="
+                      w-[85vw] h-[90vw]
+                      md:w-[60vw] md:h-[60vw]
+                      lg:w-[32vw] lg:h-[30vw]
+                      shrink-0"
+                  />
                 </DraggableCarousel>
               )}
             </div>
