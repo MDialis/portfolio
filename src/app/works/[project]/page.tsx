@@ -187,8 +187,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
             </div>
           </div>
         </section>
-      ) : (cardImage && cardImage.fields.file.details.image) ||
-        (mobileImage && mobileImage.fields.file.details.image) ? (
+      ) : (cardImage && cardImage.fields.file.details.image) || (mobileImage && mobileImage.fields.file.details.image) ? (
         <section className="relative w-full h-[55vh] min-h-[500px] flex items-center md:py-12 bg-base-300">
           <div className="relative w-full md:w-11/12 lg:w-10/12 px-4 md:px-0 mx-auto grid grid-cols-1 lg:grid-cols-5 h-full">
             {/* Back to projects button */}
@@ -310,16 +309,32 @@ export default async function ProjectPage(props: ProjectPageProps) {
           <div className="p-6 md:p-12 space-y-4">
             <h3 className="text-lg font-bold">Details</h3>
             {/* <p>slug: {slug}</p> */}
-            <div className="flex flex-wrap justify-center gap-3">
+            <div className="flex flex-col gap-6">
               <TechIconList
                 icons={formattedTechIcons}
                 iconClass="hover:mx-1 duration-300"
                 className="
                   bg-neutral/50
-                  self-start p-1 px-2 shrink-0
+                  p-1 px-2 shrink-0
                   gap-2 md:gap-4 duration-300
                   hover:bg-accent/10 hover:gap-3 md:hover:gap-5"
               />
+
+              <p className="text-sm font-semibold">
+                {date ? (
+                  <>
+                    Made in{" "}
+                    {new Date(date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      timeZone: "UTC",
+                    })}
+                  </>
+                ) : (
+                  "Date not available" 
+                )}
+              </p>
             </div>
           </div>
         </div>
