@@ -13,6 +13,7 @@ import Button from "@/components/Button";
 import HeroSection from "@/components/HeroSection";
 import AboutMe from "@/components/AboutMe";
 import DraggableCarousel from "@/components/DraggableCarousel";
+import DistanceScaler from "@/components/DistanceScaler";
 
 // --- Dynamic Components (Lazy Loaded) ---
 // These components are loaded on demand to reduce initial bundle size
@@ -124,37 +125,43 @@ export default async function Home() {
                 </div>
               ) : (
                 <DraggableCarousel>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pointer-events-auto">
-                    {projects.map((project) => {
-                      const { title, slug, summary, cardImage, tech } =
-                        project.fields;
+                  {projects.map((project) => {
+                    const { title, slug, summary, cardImage, tech } =
+                      project.fields;
 
-                      const imageUrl = cardImage
-                        ? `https:${cardImage.fields.file.url}`
-                        : undefined;
+                    const imageUrl = cardImage
+                      ? `https:${cardImage.fields.file.url}`
+                      : undefined;
 
-                      const formattedTechIcons: TechIcon[] = (tech || []).map(
-                        (techName) => {
-                          return {
-                            src: techName
-                              ? `/icons/${techName}.svg`
-                              : "/icons/default.svg",
-                            alt: techName,
-                          };
-                        },
-                      );
-                      return (
+                    const formattedTechIcons: TechIcon[] = (tech || []).map(
+                      (techName) => {
+                        return {
+                          src: techName
+                            ? `/icons/${techName}.svg`
+                            : "/icons/default.svg",
+                          alt: techName,
+                        };
+                      },
+                    );
+                    return (
+                      <DistanceScaler
+                        key={project.sys.id}
+                        horizontal
+                        className="
+                          w-[32vw]
+                          h-[30vw]
+                          shrink-0"
+                      >
                         <Card
-                          key={project.sys.id}
                           title={title}
                           text={summary}
                           link={`/works/${slug}`}
                           imageUrl={imageUrl}
                           techIcons={formattedTechIcons}
                         />
-                      );
-                    })}
-                  </div>
+                      </DistanceScaler>
+                    );
+                  })}
                 </DraggableCarousel>
               )}
             </div>
@@ -199,14 +206,22 @@ export default async function Home() {
                         },
                       );
                       return (
-                        <Card
-                          key={experience.sys.id}
-                          title={title}
-                          text={summary}
-                          link={`${systemLink}`}
-                          imageUrl={imageUrl}
-                          techIcons={formattedTechIcons}
-                        />
+                        <DistanceScaler
+                        key={experience.sys.id}
+                        horizontal
+                        className="
+                          w-[32vw]
+                          h-[30vw]
+                          shrink-0"
+                      >
+                          <Card
+                            title={title}
+                            text={summary}
+                            link={`${systemLink}`}
+                            imageUrl={imageUrl}
+                            techIcons={formattedTechIcons}
+                          />
+                        </DistanceScaler>
                       );
                     })}
                   </div>
