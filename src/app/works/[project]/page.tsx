@@ -55,7 +55,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
     (linkedAssets as IContentfulAsset[])?.map((asset) => [
       asset.sys.id,
       asset,
-    ]) || []
+    ]) || [],
   );
 
   const options: Parameters<typeof documentToReactComponents>[1] = {
@@ -187,7 +187,8 @@ export default async function ProjectPage(props: ProjectPageProps) {
             </div>
           </div>
         </section>
-      ) : (cardImage && cardImage.fields.file.details.image) || (mobileImage && mobileImage.fields.file.details.image) ? (
+      ) : (cardImage && cardImage.fields.file.details.image) ||
+        (mobileImage && mobileImage.fields.file.details.image) ? (
         <section className="relative w-full h-[55vh] min-h-[500px] flex items-center md:py-12 bg-base-300">
           <div className="relative w-full md:w-11/12 lg:w-10/12 px-4 md:px-0 mx-auto grid grid-cols-1 lg:grid-cols-5 h-full">
             {/* Back to projects button */}
@@ -332,7 +333,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
                     })}
                   </>
                 ) : (
-                  "Date not available" 
+                  "Date not available"
                 )}
               </p>
             </div>
@@ -347,6 +348,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
               </article>
             </div>
 
+            {/* Debugging Info 
             <div>
               <details className="bg-base-300 rounded-lg">
                 <summary className="collapse-title text-xl font-medium cursor-pointer">
@@ -370,6 +372,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
                 </div>
               </details>
             </div>
+            */}
           </div>
         </div>
       </div>
