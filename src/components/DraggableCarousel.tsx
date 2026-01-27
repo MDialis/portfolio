@@ -12,6 +12,7 @@ export default function DraggableCarousel({ children, className = '' }: Draggabl
   const [constraint, setConstraint] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
 
   useEffect(() => {
     if (!carouselRef.current || !contentRef.current) return;
@@ -29,6 +30,26 @@ export default function DraggableCarousel({ children, className = '' }: Draggabl
     return () => window.removeEventListener('resize', updateConstraints);
   }, [children]);
 
+  const handleDragStart = () => {
+    isDragging.current = true;
+  };
+
+  const handleDragEnd = () => {
+    // We use a small timeout because the 'click' event fires immediately
+    // after 'dragEnd'. We need the flag to stay true long enough to
+    // block that click.
+    setTimeout(() => {
+      isDragging.current = false;
+    }, 150);
+  };
+
+  const handleClickCapture = (e: React.MouseEvent) => {
+    if (isDragging.current) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
   return (
     <div 
       ref={carouselRef} 
@@ -39,6 +60,9 @@ export default function DraggableCarousel({ children, className = '' }: Draggabl
         drag="x"
         dragConstraints={{ right: 0, left: -constraint }}
         dragElastic={0.5}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onClickCapture={handleClickCapture}
         className="flex gap-4 w-full"
       >
         {children}
