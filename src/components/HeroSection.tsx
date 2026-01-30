@@ -117,13 +117,21 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
             {/* --- SCROLL INDICATOR --- */}
             <div
               onClick={handleScrollDown}
-              className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-30 animate-bounce flex flex-col items-center gap-1 text-secondary cursor-pointer"
+              className="
+                absolute transform animate-bounce 
+                bottom-12 left-1/2 -translate-x-1/2
+                flex flex-col items-center 
+                text-secondary font-semibold 
+                z-30 gap-1 cursor-pointer
+                "
               style={{
                 opacity: indicatorOpacity,
                 pointerEvents: indicatorOpacity <= 0 ? "none" : "auto",
               }}
             >
-              <span className="text-xs uppercase tracking-widest">Scroll</span>
+              <span className="text-sm uppercase tracking-widest">
+                Scroll
+              </span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
