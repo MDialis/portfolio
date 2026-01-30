@@ -184,6 +184,7 @@ export default function ContactForm() {
                 type="text"
                 name="search_query"
                 autoComplete="off"
+                aria-hidden="true"
                 tabIndex={-1}
               />
             </div>
