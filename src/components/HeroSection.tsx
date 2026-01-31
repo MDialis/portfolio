@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Reaper from "@/components/Reaper";
-import Lamp from "@/components/Lamp";
 import BackgroundPattern from "./BackgroundPattern";
+import dynamic from "next/dynamic";
+
+const Reaper = dynamic(() => import("@/components/Reaper"));
+const Lamp = dynamic(() => import("@/components/Lamp"));
 
 type HeroSectionProps = {
   bodoniModa: { className: string };

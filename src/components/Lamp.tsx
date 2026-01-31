@@ -2,7 +2,7 @@
 
 import { useRef, useCallback, useMemo, useState, useEffect, CSSProperties } from "react";
 import { followMove, updatePartPosition } from "@/hooks/followMove";
-import { useTheme } from "@/components/ThemeProvider";
+import { useTheme } from "@/contexts/ThemeProvider";
 import styles from "./Reaper.module.css";
 
 import ReaperLamp from "@/assets/lamp/Lamp.svg";

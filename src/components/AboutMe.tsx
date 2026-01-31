@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
-import FlipSection from "@/components/FlipSection";
 import aboutImg from "../../public/mateus.webp";
 
 const Reaper = dynamic(() => import("@/components/Reaper"));
+const FlipSection = dynamic(() => import("@/components/FlipSection"));
 
 export default function AboutMe() {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "@/components/ThemeProvider";
+import { useTheme } from "@/contexts/ThemeProvider";
 import { Sun, Moon } from "lucide-react";
 import { useTransition } from "react";
 import { twMerge } from "tailwind-merge";

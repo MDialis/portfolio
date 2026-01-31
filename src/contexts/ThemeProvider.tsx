@@ -1,4 +1,4 @@
-'use client' // Este componente precisa ser um Client Component
+'use client'
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 

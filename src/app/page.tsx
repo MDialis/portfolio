@@ -17,8 +17,6 @@ import DistanceScaler from "@/components/DistanceScaler";
 
 // --- Dynamic Components (Lazy Loaded) ---
 // These components are loaded on demand to reduce initial bundle size
-const Reaper = dynamic(() => import("@/components/Reaper"));
-const FlipSection = dynamic(() => import("@/components/FlipSection"));
 const InfiniteIconScroller = dynamic(
   () => import("@/components/InfiniteIconScroller"),
 );
@@ -28,7 +26,7 @@ const Contacts = dynamic(() => import("@/components/Contacts"), {
   loading: () => <div className="min-h-[50vh] bg-neutral-variant" />,
 });
 
-const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400" });
+const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400", display: "swap", variable: "--font-bodoni" });
 
 // Array of objects defining the skills for the top scrolling bar
 const skillsTop = [

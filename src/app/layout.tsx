@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import "../styles/animations.css";
 import "../styles/globals.css";
+import "../styles/theme.css";
 
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { ThemeProvider } from "@/contexts/ThemeProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -23,6 +25,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://images.ctfassets.net" crossOrigin="anonymous" />
+      </head>
       <body
         className={`${inter.className} bg-base-200 text-base-content`}
       >
