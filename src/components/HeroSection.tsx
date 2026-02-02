@@ -116,6 +116,7 @@ export default function HeroSection({ bodoniModa }: HeroSectionProps) {
                 </div>
               </div>
             </div>
+            
             {/* --- SCROLL INDICATOR --- */}
             <div
               onClick={handleScrollDown}
