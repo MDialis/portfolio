@@ -1,7 +1,7 @@
 interface ButtonProps {
   text: string;
-  link?: string; // Now optional
-  onClick?: () => void; // New optional prop
+  link?: string;
+  onClick?: () => void;
 }
 
 export default function Button({ text, link, onClick }: ButtonProps) {
@@ -14,7 +14,7 @@ export default function Button({ text, link, onClick }: ButtonProps) {
     transition-all duration-200 ease-in-out
     cursor-pointer
   `;
-  
+
   return (
     <div className="flex justify-end">
       {link ? (

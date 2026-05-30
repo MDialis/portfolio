@@ -6,13 +6,47 @@ import Button from "./Button";
 import Lottie from "lottie-react";
 import successAnimation from "@/assets/SuccessSend.json";
 
+// --- Form Dictionary ---
+const dictionaries = {
+  en: {
+    nameLabel: "Name",
+    namePlaceholder: "Your name",
+    emailLabel: "Email",
+    emailPlaceholder: "example@email.com",
+    messageLabel: "Message",
+    messagePlaceholder: "Hi! I'd like to talk about...",
+    sending: "Sending...",
+    holdOn: "Hold on",
+    submit: "Submit",
+    successTitle: "Message Sent!",
+    successDesc: (
+      <>Thanks for reaching out, <strong>friend</strong>. I'll get back to you as soon as possible.</>
+    ),
+    sendAnother: "Send another message",
+  },
+  pt: {
+    nameLabel: "Nome",
+    namePlaceholder: "Seu nome",
+    emailLabel: "E-mail",
+    emailPlaceholder: "exemplo@email.com",
+    messageLabel: "Mensagem",
+    messagePlaceholder: "Olá! Eu gostaria de falar sobre...",
+    sending: "Enviando...",
+    holdOn: "Aguarde",
+    submit: "Enviar",
+    successTitle: "Mensagem Enviada!",
+    successDesc: (
+      <>Obrigado por entrar em contato, <strong>amigo</strong>. Retornarei o mais breve possível.</>
+    ),
+    sendAnother: "Enviar outra mensagem",
+  },
+};
+
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
+    transition: { staggerChildren: 0.1 },
   },
   exit: {
     opacity: 0,
@@ -63,9 +97,11 @@ const FormInput = ({ label, id, as = "input", ...props }: any) => (
 const SubmitButton = ({
   loading,
   cooldown,
+  dict,
 }: {
   loading: boolean;
   cooldown: number;
+  dict: typeof dictionaries.en;
 }) => {
   const formatTime = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60);
@@ -82,18 +118,16 @@ const SubmitButton = ({
         type="submit"
         disabled={loading}
         className={`w-3/4 md:w-full mx-auto py-2 font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500
-          ${
-            loading
-              ? "bg-base-dark/85 cursor-not-allowed text-white"
-              : "bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content"
+          ${loading
+            ? "bg-base-dark/85 cursor-not-allowed text-white"
+            : "bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content"
           }`}
       >
         {loading ? (
-          "Sending..."
+          dict.sending
         ) : cooldown > 0 ? (
           <div className="flex justify-center items-center gap-2 animate-pulse">
-            <span>Hold on</span>
-            {/* Tiny Clock Icon */}
+            <span>{dict.holdOn}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -111,14 +145,20 @@ const SubmitButton = ({
             <span>{formatTime(cooldown)}</span>
           </div>
         ) : (
-          "Submit"
+          dict.submit
         )}
       </button>
     </motion.div>
   );
 };
 
-const SuccessView = ({ onReset }: { onReset: () => void }) => (
+const SuccessView = ({
+  onReset,
+  dict,
+}: {
+  onReset: () => void;
+  dict: typeof dictionaries.en;
+}) => (
   <motion.div
     key="success-message"
     initial="hidden"
@@ -131,33 +171,35 @@ const SuccessView = ({ onReset }: { onReset: () => void }) => (
       <Lottie animationData={successAnimation} loop={false} autoplay={true} />
     </div>
     <motion.div variants={itemVariants}>
-      <h3 className="text-2xl font-bold">Message Sent!</h3>
+      <h3 className="text-2xl font-bold">{dict.successTitle}</h3>
       <p className="text-neutral-variant-content/70 mt-2 max-w-xs mx-auto">
-        Thanks for reaching out, <strong>friend</strong>. I'll get back to you
-        as soon as possible.
+        {dict.successDesc}
       </p>
     </motion.div>
     <motion.div variants={itemVariants}>
-      <Button text="Send another message" onClick={onReset} />
+      <Button text={dict.sendAnother} onClick={onReset} />
     </motion.div>
   </motion.div>
 );
 
-export default function ContactForm() {
+export default function ContactForm({ lang }: { lang: string }) {
+  const dict = dictionaries[lang as keyof typeof dictionaries] || dictionaries.en;
+
   const {
     formRef,
     loading,
     cooldown,
     success,
     handleSubmit,
-    setSuccessTrue,
+    //  setSuccessTrue,
     setSuccessFalse,
   } = useContactForm();
+
   return (
     <div className="min-h-[40vh]">
       <AnimatePresence mode="wait" initial={false}>
         {success ? (
-          <SuccessView onReset={setSuccessFalse} />
+          <SuccessView onReset={setSuccessFalse} dict={dict} />
         ) : (
           /* --- FORM STATE --- */
           <motion.form
@@ -178,7 +220,7 @@ export default function ContactForm() {
               tabIndex={-1}
             />
 
-            {/* --- HONEYPOT FIELD (The Trap) --- */}
+            {/* --- HONEYPOT FIELD --- */}
             <div className="opacity-0 absolute top-0 left-0 h-0 w-0 z-[-1] overflow-hidden">
               <input
                 type="text"
@@ -191,37 +233,36 @@ export default function ContactForm() {
 
             {/* Visible Fields */}
             <FormInput
-              label="Name"
+              label={dict.nameLabel}
               id="name"
               name="name"
               autoComplete="name"
               required
-              placeholder="Your name"
+              placeholder={dict.namePlaceholder}
             />
 
             <FormInput
-              label="Email"
+              label={dict.emailLabel}
               id="email"
               type="email"
               name="email"
               autoComplete="email"
               required
-              placeholder="example@email.com"
+              placeholder={dict.emailPlaceholder}
               pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
             />
 
             <FormInput
-              label="Message"
+              label={dict.messageLabel}
               id="message"
               name="message"
               as="textarea"
               rows={4}
               required
-              placeholder="Hi! I'd like to talk about..."
+              placeholder={dict.messagePlaceholder}
             />
 
-            <SubmitButton loading={loading} cooldown={cooldown} />
-            {/* </form> */}
+            <SubmitButton loading={loading} cooldown={cooldown} dict={dict} />
           </motion.form>
         )}
       </AnimatePresence>

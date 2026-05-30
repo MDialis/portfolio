@@ -28,6 +28,30 @@ const Contacts = dynamic(() => import("@/components/Contacts"), {
 
 const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400", display: "swap", variable: "--font-bodoni" });
 
+// --- Dictionary for Hardcoded Text ---
+const dictionaries = {
+  en: {
+    skillsTitle: "My Skills",
+    projectsTitle: "My Projects",
+    projectsEmpty: "Oops! Looks like there's no projects ready for show or the system failed to connect to the CMS.",
+    tryAgain: "Try Again Later!",
+    checkAllProjects: "Check All Projects",
+    experiencesTitle: "My Experiences",
+    experiencesEmpty: "Oops! Looks like there's no work ready for show or the system failed to connect to the CMS.",
+    checkAllExperiences: "Check All Experiences",
+  },
+  pt: {
+    skillsTitle: "Minhas Habilidades",
+    projectsTitle: "Meus Projetos",
+    projectsEmpty: "Ops! Parece que não há projetos prontos para exibir ou o sistema falhou ao conectar com o CMS.",
+    tryAgain: "Tente novamente mais tarde!",
+    checkAllProjects: "Ver Todos os Projetos",
+    experiencesTitle: "Minhas Experiências",
+    experiencesEmpty: "Ops! Parece que não há trabalhos prontos para exibir ou o sistema falhou ao conectar com o CMS.",
+    checkAllExperiences: "Ver Todas as Experiências",
+  },
+};
+
 // Array of objects defining the skills for the top scrolling bar
 const skillsTop = [
   { name: "Postgres", icon: "postgresql.svg" },
@@ -70,6 +94,10 @@ export default async function Home({
   // Map the URL param to Contentful locale code
   // If ?lang=pt is in the URL, use 'pt-BR', otherwise default to 'en-US'
   const locale = resolvedSearchParams?.lang === "pt" ? "pt-BR" : "en-US";
+  const currentLang = resolvedSearchParams?.lang === "pt" ? "pt" : "en";
+
+  // Select the correct dictionary
+  const dict = dictionaries[currentLang];
 
   // Pass the locale to your fetch functions
   const projects = await getFeaturedProjects(locale);
@@ -86,13 +114,13 @@ export default async function Home({
 
         {/* Main Content Area */}
         <div className="relative px-5 text-sm">
-          <AboutMe />
+          <AboutMe lang={currentLang} />
 
           {/* Skills Section */}
           <section id="skills" className="py-4">
             <div className="relative z-10 max-w-7xl mx-auto">
               <h2 className="text-3xl font-bold text-center text-base-content mb-12">
-                My Skills
+                {dict.skillsTitle}
               </h2>
 
               {/* Skills Scroller Container */}
@@ -123,17 +151,14 @@ export default async function Home({
             <div className="mx-auto">
               <h2 className="text-4xl font-bold text-center mb-2 text-base-content">
                 <a href="/works" className="px-2">
-                  My Projects
+                  {dict.projectsTitle}
                 </a>
               </h2>
 
               {projects.length === 0 ? (
                 <div className="text-center">
-                  <h3 className="text-xl">
-                    Oops! Looks like there's no projects ready for show or the
-                    system failed to connect to the CMS.
-                  </h3>
-                  <p className="text-lg py-3">Try Again Later!</p>
+                  <h3 className="text-xl">{dict.projectsEmpty}</h3>
+                  <p className="text-lg py-3">{dict.tryAgain}</p>
                 </div>
               ) : (
                 <DraggableCarousel>
@@ -190,7 +215,7 @@ export default async function Home({
           </section>
 
           <div className="max-w-6xl mx-auto">
-            <Button link="/works" text="Check All Projects" />
+            <Button link="/works" text={dict.checkAllProjects} />
           </div>
 
           {/* Experiences Section */}
@@ -198,17 +223,14 @@ export default async function Home({
             <div className="mx-auto">
               <h2 className="text-4xl font-bold text-center mb-2 text-base-content">
                 <a href="/works" className="px-2">
-                  My Experiences
+                  {dict.experiencesTitle}
                 </a>
               </h2>
 
               {experiences.length === 0 ? (
                 <div className="text-center">
-                  <h3 className="text-xl">
-                    Oops! Looks like there's no work ready for show or the
-                    system failed to connect to the CMS.
-                  </h3>
-                  <p className="text-lg py-3">Try Again Later!</p>
+                  <h3 className="text-xl">{dict.experiencesEmpty}</h3>
+                  <p className="text-lg py-3">{dict.tryAgain}</p>
                 </div>
               ) : (
                 <DraggableCarousel>
@@ -265,11 +287,11 @@ export default async function Home({
           </section>
 
           <div className="max-w-6xl mx-auto mb-15">
-            <Button link="/works" text="Check All Experiences" />
+            <Button link="/works" text={dict.checkAllExperiences} />
           </div>
         </div>
 
-        <Contacts />
+        <Contacts lang={currentLang} />
       </main>
     </div>
   );

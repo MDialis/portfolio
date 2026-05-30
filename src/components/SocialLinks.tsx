@@ -23,10 +23,17 @@ const SOCIAL_LINKS = [
   },
 ];
 
-export default function SocialLinks() {
+const dictionaries = {
+  en: { heading: "Contacts" },
+  pt: { heading: "Contatos" },
+};
+
+export default function SocialLinks({ lang }: { lang: string }) {
+  const dict = dictionaries[lang as keyof typeof dictionaries] || dictionaries.en;
+
   return (
     <>
-      <h3 className="text-3xl font-bold hidden md:block">Contacts</h3>
+      <h3 className="text-3xl font-bold hidden md:block">{dict.heading}</h3>
       {/* Socials */}
       <div className="grid grid-cols-2 md:grid-cols-1 gap-4">
         {SOCIAL_LINKS.map((link) => (
