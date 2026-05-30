@@ -202,68 +202,71 @@ export default function ContactForm({ lang }: { lang: string }) {
           <SuccessView onReset={setSuccessFalse} dict={dict} />
         ) : (
           /* --- FORM STATE --- */
-          <motion.form
+          <motion.div
             key="contact-form"
-            ref={formRef}
-            onSubmit={handleSubmit}
             initial="hidden"
             animate="visible"
             exit="exit"
             variants={containerVariants}
-            className="space-y-4"
+            className="w-full"
           >
-            {/* --- HIDDEN SUBJECT FIELD --- */}
-            <input
-              type="hidden"
-              name="subject"
-              value="[Portfolio Inquiry] New Dev Contact"
-              tabIndex={-1}
-            />
-
-            {/* --- HONEYPOT FIELD --- */}
-            <div className="opacity-0 absolute top-0 left-0 h-0 w-0 z-[-1] overflow-hidden">
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              className="space-y-4"
+            >
+              {/* --- HIDDEN SUBJECT FIELD --- */}
               <input
-                type="text"
-                name="search_query"
-                autoComplete="off"
-                aria-hidden="true"
+                type="hidden"
+                name="subject"
+                value="[Portfolio Inquiry] New Dev Contact"
                 tabIndex={-1}
               />
-            </div>
 
-            {/* Visible Fields */}
-            <FormInput
-              label={dict.nameLabel}
-              id="name"
-              name="name"
-              autoComplete="name"
-              required
-              placeholder={dict.namePlaceholder}
-            />
+              <div className="opacity-0 absolute top-0 left-0 h-0 w-0 z-[-1] overflow-hidden">
+                <input
+                  type="text"
+                  name="search_query"
+                  autoComplete="off"
+                  aria-hidden="true"
+                  tabIndex={-1}
+                />
+              </div>
 
-            <FormInput
-              label={dict.emailLabel}
-              id="email"
-              type="email"
-              name="email"
-              autoComplete="email"
-              required
-              placeholder={dict.emailPlaceholder}
-              pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
-            />
+              {/* Visible Fields */}
+              <FormInput
+                label={dict.nameLabel}
+                id="name"
+                name="name"
+                autoComplete="name"
+                required
+                placeholder={dict.namePlaceholder}
+              />
 
-            <FormInput
-              label={dict.messageLabel}
-              id="message"
-              name="message"
-              as="textarea"
-              rows={4}
-              required
-              placeholder={dict.messagePlaceholder}
-            />
+              <FormInput
+                label={dict.emailLabel}
+                id="email"
+                type="email"
+                name="email"
+                autoComplete="email"
+                required
+                placeholder={dict.emailPlaceholder}
+                pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+              />
 
-            <SubmitButton loading={loading} cooldown={cooldown} dict={dict} />
-          </motion.form>
+              <FormInput
+                label={dict.messageLabel}
+                id="message"
+                name="message"
+                as="textarea"
+                rows={4}
+                required
+                placeholder={dict.messagePlaceholder}
+              />
+
+              <SubmitButton loading={loading} cooldown={cooldown} dict={dict} />
+            </form>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
