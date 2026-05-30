@@ -31,10 +31,11 @@ export async function getAllProjectSlugs() {
   }
 }
 
-export async function getProjectBySlug(slug: string) {
+export async function getProjectBySlug(slug: string, locale: string = "en-US") {
   try {
     const res = await contentfulClient.getEntries({
       content_type: 'project',
+      locale: locale,
       'fields.slug': slug,
       limit: 1,
       include: 10,
@@ -47,10 +48,11 @@ export async function getProjectBySlug(slug: string) {
   }
 }
 
-export async function getProjects(): Promise<IProjectEntry[]> {
+export async function getProjects(locale: string = "en-US"): Promise<IProjectEntry[]> {
   try {
     const res = await contentfulClient.getEntries({
       content_type: "project",
+      locale: locale,
       //select: ['fields.slug'],
       order: ["-fields.date"],
     });
@@ -63,10 +65,11 @@ export async function getProjects(): Promise<IProjectEntry[]> {
   }
 }
 
-export async function getExperiences(): Promise<IExperienceEntry[]> {
+export async function getExperiences(locale: string = "en-US"): Promise<IExperienceEntry[]> {
   try {
     const res = await contentfulClient.getEntries({
       content_type: "experience",
+      locale: locale,
       //select: ['fields.slug'],
       order: ["-fields.date"],
     });

@@ -150,7 +150,7 @@ export default async function Home({
           <section id="projects" className="py-4 pt-10">
             <div className="mx-auto">
               <h2 className="text-4xl font-bold text-center mb-2 text-base-content">
-                <a href="/works" className="px-2">
+                <a href={`/works?lang=${currentLang}`} className="px-2">
                   {dict.projectsTitle}
                 </a>
               </h2>
@@ -199,7 +199,7 @@ export default async function Home({
                         <Card
                           title={title}
                           text={summary}
-                          link={`/works/${slug}`}
+                          link={`/works/${slug}?lang=${currentLang}`}
                           imageUrl={imageUrl}
                           techIcons={formattedTechIcons}
                           classname="cursor-grab active:cursor-grabbing"
@@ -215,14 +215,14 @@ export default async function Home({
           </section>
 
           <div className="max-w-6xl mx-auto">
-            <Button link="/works" text={dict.checkAllProjects} />
+            <Button link={`/works?lang=${currentLang}`} text={dict.checkAllProjects} />
           </div>
 
           {/* Experiences Section */}
           <section id="experiences" className="py-4">
             <div className="mx-auto">
               <h2 className="text-4xl font-bold text-center mb-2 text-base-content">
-                <a href="/works" className="px-2">
+                <a href={`/works?lang=${currentLang}`} className="px-2">
                   {dict.experiencesTitle}
                 </a>
               </h2>
@@ -271,7 +271,7 @@ export default async function Home({
                         <Card
                           title={title}
                           text={summary}
-                          link={`${systemLink}`}
+                          link={`${systemLink}?lang=${currentLang}`}
                           imageUrl={imageUrl}
                           techIcons={formattedTechIcons}
                           classname="cursor-grab active:cursor-grabbing"
@@ -287,7 +287,7 @@ export default async function Home({
           </section>
 
           <div className="max-w-6xl mx-auto mb-15">
-            <Button link="/works" text={dict.checkAllExperiences} />
+            <Button link={`/works?lang=${currentLang}`} text={dict.checkAllExperiences} />
           </div>
         </div>
 

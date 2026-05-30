@@ -14,16 +14,42 @@ import LaptopFrame from "@/components/LaptopFrame";
 
 export type ProjectPageProps = {
   params: Promise<{ project: string }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<{ lang?: string }>;
 };
 
-export default async function ProjectPage(props: ProjectPageProps) {
-  const { params: awaitedParams } = props;
-  const params = await awaitedParams;
+const dictionaries = {
+  en: {
+    explore: "Explore Projects",
+    checkOut: "Check out!",
+    repository: "Repository",
+    details: "Details",
+    madeIn: "Made in",
+    dateNotAvailable: "Date not available",
+  },
+  pt: {
+    explore: "Explorar Projetos",
+    checkOut: "Confira!",
+    repository: "Repositório",
+    details: "Detalhes",
+    madeIn: "Feito em",
+    dateNotAvailable: "Data não disponível",
+  },
+};
 
-  const res = await getProjectBySlug(params.project);
+export default async function ProjectPage({
+  params,
+  searchParams,
+}: ProjectPageProps) {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
 
-  if (!res) {
+  const lang = resolvedSearchParams?.lang === "pt" ? "pt" : "en";
+  const locale = lang === "pt" ? "pt-BR" : "en-US";
+  const dict = dictionaries[lang];
+
+  const res = await getProjectBySlug(resolvedParams.project, locale);
+
+  if (!res || !res.items || res.items.length === 0) {
     notFound();
   }
 
@@ -34,10 +60,8 @@ export default async function ProjectPage(props: ProjectPageProps) {
     title,
     repositoryLink,
     systemLink,
-    slug,
     tech,
     date,
-    summary,
     description,
     cardImage,
     mobileImage,
@@ -82,7 +106,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
           return null;
         }
 
-        const { file, title, description } = asset.fields;
+        const { file, assetTitle, assetDescription } = asset.fields as any;
         const url = `https:${file.url}`;
 
         if (file.details.image) {
@@ -92,7 +116,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
                 src={url}
                 width={file.details.image.width}
                 height={file.details.image.height}
-                alt={description || title || "Project Image"}
+                alt={assetDescription || assetTitle || "Project Image"}
                 className="rounded-lg shadow-lg mx-auto"
               />
             </div>
@@ -107,7 +131,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
               rel="noopener noreferrer"
               className="link link-primary"
             >
-              {title || file.url}
+              {assetTitle || file.url}
             </a>
           </div>
         );
@@ -115,11 +139,39 @@ export default async function ProjectPage(props: ProjectPageProps) {
     },
   };
 
+  {/* Back to projects button */ }
+  const BackButton = () => (
+    <Link
+      href={`/works?lang=${lang}`}
+      className="
+        absolute top-5 left-10
+        flex items-center px-3 p-2 gap-2 
+        bg-base-200/20 backdrop-blur-md rounded-full
+        hover:bg-base-200/40 transition-all duration-300"
+    >
+      {/* Left Top Arrow SVG */}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={2.5}
+        stroke="currentColor"
+        className="w-5 h-5"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M19.5 19.5l-15-15m0 0v11.25m0-11.25h11.25"
+        />
+      </svg>
+      {dict.explore}
+    </Link>
+  );
+
   return (
     <main>
       {fullImage ? (
         <section className="relative w-full h-[55vh] min-h-[500px] flex items-end justify-start overflow-hidden bg-base-300">
-          {/* Background Full Image */}
           <Image
             src={`https:${fullImage.fields.file.url}`}
             alt={fullImage.fields.title || `Card Image of ${title}`}
@@ -127,45 +179,10 @@ export default async function ProjectPage(props: ProjectPageProps) {
             className="object-cover object-top"
             priority
           />
-
-          {/* Overlay */}
           <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
 
-          {/* Hero Content */}
-          <div
-            className="
-                relative z-10 h-full
-                w-full px-4 md:w-11/12 md:px-0 lg:w-10/12
-                mx-auto text-base-content 
-                flex flex-col justify-end"
-          >
-            {/* Back to projects button */}
-            <Link
-              href="/works"
-              className="
-                absolute top-5 left-0
-                flex items-center px-3 p-2 gap-2 
-                bg-base-200/20 backdrop-blur-md rounded-full
-                hover:bg-base-200/40 transition-all duration-300"
-            >
-              {/* Left Top Arrow SVG */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19.5 19.5l-15-15m0 0v11.25m0-11.25h11.25"
-                />
-              </svg>
-              Explore Projects
-            </Link>
-
+          <div className="relative z-10 h-full w-full px-4 md:w-11/12 md:px-0 lg:w-10/12 mx-auto text-base-content flex flex-col justify-end">
+            <BackButton />
             <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 py-8">
               {/* Title */}
               <div>
@@ -179,53 +196,23 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-4 my-auto">
-                {systemLink && <Button link={systemLink} text="Check out!" />}
-                {repositoryLink && (
-                  <Button link={repositoryLink} text="Repository" />
-                )}
+                {systemLink && <Button link={systemLink} text={dict.checkOut} />}
+                {repositoryLink && <Button link={repositoryLink} text={dict.repository} />}
               </div>
             </div>
           </div>
         </section>
-      ) : (cardImage && cardImage.fields.file.details.image) ||
-        (mobileImage && mobileImage.fields.file.details.image) ? (
+      ) : (cardImage && cardImage.fields.file.details.image) || (mobileImage && mobileImage.fields.file.details.image) ? (
         <section className="relative w-full h-[55vh] min-h-[500px] flex items-center md:py-12 bg-base-300">
           <div className="relative w-full md:w-11/12 lg:w-10/12 px-4 md:px-0 mx-auto grid grid-cols-1 lg:grid-cols-5 h-full">
-            {/* Back to projects button */}
-            <Link
-              href="/works"
-              className="
-                  absolute top-5 left-3 md:left-0
-                  flex items-center px-3 p-2 gap-2 
-                  bg-base-200/20 backdrop-blur-md rounded-full
-                  hover:bg-base-200/40 transition-all duration-300"
-            >
-              {/* Left Top Arrow SVG */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19.5 19.5l-15-15m0 0v11.25m0-11.25h11.25"
-                />
-              </svg>
-              Explore Projects
-            </Link>
-
+            <BackButton />
             {/* Content Column */}
-            <div
-              className="
-                    relative z-10 h-full
-                    w-full md:col-span-2
-                    mx-auto text-base-content
-                    flex flex-col justify-end 
-                    order-2 lg:order-1"
+            <div className="
+              relative z-10 h-full
+              w-full md:col-span-2
+              mx-auto text-base-content
+              flex flex-col justify-end 
+              order-2 lg:order-1"
             >
               <div className="flex flex-col md:flex-row lg:flex-col justify-between gap-6 py-8">
                 {/* Title */}
@@ -240,10 +227,8 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-4 my-auto">
-                  {systemLink && <Button link={systemLink} text="Check out!" />}
-                  {repositoryLink && (
-                    <Button link={repositoryLink} text="Repository" />
-                  )}
+                  {systemLink && <Button link={systemLink} text={dict.checkOut} />}
+                  {repositoryLink && <Button link={repositoryLink} text={dict.repository} />}
                 </div>
               </div>
             </div>
@@ -257,32 +242,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
         </section>
       ) : (
         <section className="relative w-full min-h-[40vh] flex flex-col items-center justify-center bg-base-300 py-20 text-center">
-          <Link
-            href="/works"
-            className="
-                absolute top-5 left-4 md:left-10
-                flex items-center px-3 p-2 gap-2 
-                bg-base-200/20 backdrop-blur-md rounded-full
-                hover:bg-base-200/40 transition-all duration-300"
-          >
-            {/* Left Top Arrow SVG */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2.5}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19.5 19.5l-15-15m0 0v11.25m0-11.25h11.25"
-              />
-            </svg>
-            Explore Projects
-          </Link>
-
+          <BackButton />
           <div className="flex flex-col gap-6 py-8">
             {/* Title */}
             <div>
@@ -296,10 +256,8 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-4 mx-auto">
-              {systemLink && <Button link={systemLink} text="Check out!" />}
-              {repositoryLink && (
-                <Button link={repositoryLink} text="Repository" />
-              )}
+              {systemLink && <Button link={systemLink} text={dict.checkOut} />}
+              {repositoryLink && <Button link={repositoryLink} text={dict.repository} />}
             </div>
           </div>
         </section>
@@ -308,24 +266,20 @@ export default async function ProjectPage(props: ProjectPageProps) {
       <div className="grid grid-cols-1 md:grid-cols-7">
         <div className="md:col-span-2">
           <div className="p-6 md:p-12 space-y-4">
-            <h3 className="text-lg font-bold">Details</h3>
+            <h3 className="text-lg font-bold">{dict.details}</h3>
             {/* <p>slug: {slug}</p> */}
             <div className="flex flex-col gap-6">
               <TechIconList
                 icons={formattedTechIcons}
                 iconClass="hover:mx-1 duration-300"
-                className="
-                  bg-neutral/50
-                  p-1 px-2 shrink-0
-                  gap-2 md:gap-4 duration-300
-                  hover:bg-accent/10 hover:gap-3 md:hover:gap-5"
+                className="bg-neutral/50 p-1 px-2 shrink-0 gap-2 md:gap-4 duration-300 hover:bg-accent/10 hover:gap-3 md:hover:gap-5"
               />
 
               <p className="text-sm font-semibold">
                 {date ? (
                   <>
-                    Made in{" "}
-                    {new Date(date).toLocaleDateString("en-US", {
+                    {dict.madeIn}{" "}
+                    {new Date(date).toLocaleDateString(locale, {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
@@ -333,7 +287,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
                     })}
                   </>
                 ) : (
-                  "Date not available"
+                  dict.dateNotAvailable
                 )}
               </p>
             </div>
