@@ -1,6 +1,7 @@
 "use client";
 
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
   return (
@@ -10,7 +11,10 @@ export default function Navbar() {
           <h1 className="text-xl font-bold text-light-blue">MDialis</h1>
         </a>
 
-        <ThemeSwitcher className="text-light-blue hover:bg-primary/30 hover:opacity-90" />
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher className="text-light-blue hover:bg-primary/30 hover:opacity-90" />
+          <ThemeSwitcher className="text-light-blue hover:bg-primary/30 hover:opacity-90" />
+        </div>
       </div>
     </nav>
   );

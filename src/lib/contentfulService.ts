@@ -79,10 +79,11 @@ export async function getExperiences(): Promise<IExperienceEntry[]> {
   }
 }
 
-export async function getFeaturedProjects(): Promise<IProjectEntry[]> {
+export async function getFeaturedProjects(locale: string = "en-US"): Promise<IProjectEntry[]> {
   try {
     const res = await contentfulClient.getEntries({
       content_type: "project",
+      locale: locale,
       //select: ['fields.slug'],
       order: ["-fields.date"],
       "fields.featured": true,
@@ -96,10 +97,11 @@ export async function getFeaturedProjects(): Promise<IProjectEntry[]> {
   }
 }
 
-export async function getFeaturedExperiences(): Promise<IExperienceEntry[]> {
+export async function getFeaturedExperiences(locale: string = "en-US"): Promise<IExperienceEntry[]> {
   try {
     const res = await contentfulClient.getEntries({
       content_type: "experience",
+      locale: locale,
       //select: ['fields.slug'],
       order: ["-fields.date"],
       "fields.featured": true,

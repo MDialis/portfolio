@@ -60,9 +60,20 @@ const skillsBottom = [
   { name: "Figma", icon: "figma.svg" },
 ];
 
-export default async function Home() {
-  const projects = await getFeaturedProjects();
-  const experiences = await getFeaturedExperiences();
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ lang?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+
+  // Map the URL param to Contentful locale code
+  // If ?lang=pt is in the URL, use 'pt-BR', otherwise default to 'en-US'
+  const locale = resolvedSearchParams?.lang === "pt" ? "pt-BR" : "en-US";
+
+  // Pass the locale to your fetch functions
+  const projects = await getFeaturedProjects(locale);
+  const experiences = await getFeaturedExperiences(locale);
 
   const cardWidths = "w-[75vw] md:w-[60vw] lg:w-[32vw]";
   const spacerWidths = "w-[1vw] md:w-[14vw] lg:w-[30.5vw]";
