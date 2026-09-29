@@ -1,12 +1,106 @@
 "use client";
 
 import { useCarouselMoving } from "@/contexts/CarouselContext";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useLayoutEffect } from "react";
+
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+// ============================================================================
+// GLOBAL MASTER ENGINE
+// ============================================================================
+
+let viewportWidth = 0;
+let viewportHeight = 0;
+let parentElement: HTMLElement | null = null;
+let lastParentLeft = -99999;
+let isLoopRunning = false;
+let globalIdleFrames = 0;
+
+const subscribers = new Set<any>();
+
+if (typeof window !== "undefined") {
+  viewportWidth = window.innerWidth;
+  viewportHeight = window.innerHeight;
+  window.addEventListener("resize", () => {
+    viewportWidth = window.innerWidth;
+    viewportHeight = window.innerHeight;
+    lastParentLeft = -99999; 
+    subscribers.forEach(sub => (sub.initialized = false));
+    startGlobalLoop();
+  });
+}
+
+const startGlobalLoop = () => {
+  if (isLoopRunning) return;
+  isLoopRunning = true;
+  globalIdleFrames = 0;
+
+  const tick = () => {
+    if (subscribers.size === 0) {
+      isLoopRunning = false;
+      return;
+    }
+
+    if (!parentElement) {
+      const firstSub = subscribers.values().next().value;
+      parentElement = firstSub.measureRef.current?.parentElement || null;
+    }
+
+    if (!parentElement) {
+      requestAnimationFrame(tick);
+      return;
+    }
+
+    const parentRect = parentElement.getBoundingClientRect();
+    const hasMoved = Math.abs(parentRect.left - lastParentLeft) > 0.1;
+
+    if (hasMoved || lastParentLeft === -99999) {
+      lastParentLeft = parentRect.left;
+      globalIdleFrames = 0;
+
+      subscribers.forEach((sub) => {
+        if (!sub.initialized) {
+          const rect = sub.measureRef.current.getBoundingClientRect();
+          sub.offsetX = rect.left - parentRect.left;
+          sub.offsetY = rect.top - parentRect.top;
+          sub.width = rect.width;
+          sub.height = rect.height;
+          sub.initialized = true;
+        }
+
+        const elementCenterX = parentRect.left + sub.offsetX + (sub.width / 2);
+        const elementCenterY = parentRect.top + sub.offsetY + (sub.height / 2);
+
+        sub.calculate(elementCenterX, elementCenterY);
+      });
+
+      subscribers.forEach((sub) => sub.write());
+    } else {
+      globalIdleFrames++;
+    }
+
+    let isAnyContextMoving = false;
+    subscribers.forEach((sub) => {
+      if (sub.isMovingRef.current) isAnyContextMoving = true;
+    });
+
+    if (isAnyContextMoving || globalIdleFrames < 15) {
+      requestAnimationFrame(tick);
+    } else {
+      isLoopRunning = false;
+    }
+  };
+
+  requestAnimationFrame(tick);
+};
+
+// ============================================================================
+// COMPONENT
+// ============================================================================
 
 interface DistanceScalerProps {
   children: React.ReactNode;
   className?: string;
-  enabled?: boolean;
   vertical?: boolean;
   horizontal?: boolean;
   deform?: boolean;
@@ -18,149 +112,145 @@ interface DistanceScalerProps {
 export const DistanceScaler: React.FC<DistanceScalerProps> = ({
   children,
   className = "",
-  enabled,
   vertical = false,
   horizontal = false,
   maxScale = 1,
   minScale = 0.5,
   deform = false,
-  maxRotation = 45,
+  maxRotation = 25,
 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const lastPosition = useRef({ x: 0, y: 0 });
-  const viewport = useRef({ width: 0, height: 0 });
+  const measureRef = useRef<HTMLDivElement>(null);
+  const transformRef = useRef<HTMLDivElement>(null);
 
-  const isCarouselMoving = useCarouselMoving();
-
-  const shouldAnimate = enabled !== undefined ? enabled : isCarouselMoving;
+  const isMoving = useCarouselMoving();
+  const isMovingRef = useRef(isMoving);
+  isMovingRef.current = isMoving;
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (isMoving) {
+      startGlobalLoop();
+    }
+  }, [isMoving]);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0 },
-    );
+  useIsomorphicLayoutEffect(() => {
+    let calculatedTransform = "";
+    let calculatedZIndex = "";
+    
+    let lastAppliedTransform = "";
+    let lastAppliedZIndex = "";
 
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const updateViewport = () => {
-      viewport.current = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-    };
-
-    updateViewport();
-    window.addEventListener("resize", updateViewport);
-    return () => window.removeEventListener("resize", updateViewport);
-  }, []);
-
-  useEffect(() => {
-    let animationFrameId: number;
-
-    const calculateTransformation = (
-      elementCenterX: number,
-      elementCenterY: number,
-    ) => {
-      const { width: viewportWidth, height: viewportHeight } = viewport.current;
+    const calculateTransformation = (elementCenterX: number, elementCenterY: number) => {
       const viewCenterX = viewportWidth / 2;
       const viewCenterY = viewportHeight / 2;
 
+      const physicalDistX = elementCenterX - viewCenterX;
+      const physicalDistY = elementCenterY - viewCenterY;
+
+      const normX = Math.abs(physicalDistX) / viewCenterX;
+      const normY = Math.abs(physicalDistY) / viewCenterY;
+
+      const boundary = 0.7; 
+      const pileSpeed = 0.2; 
+
+      const progressX = Math.min(normX / boundary, 1);
+      const progressY = Math.min(normY / boundary, 1);
+
       let distanceFactor = 0;
-
-      const absDistY = Math.abs(elementCenterY - viewCenterY);
-      const absDistX = Math.abs(elementCenterX - viewCenterX);
-
-      const normY = Math.min(absDistY / (viewportHeight / 2), 1);
-      const normX = Math.min(absDistX / (viewportWidth / 2), 1);
-
-      if (vertical) distanceFactor = Math.max(distanceFactor, normY);
-      if (horizontal) distanceFactor = Math.max(distanceFactor, normX);
-      if (!vertical && !horizontal) distanceFactor = Math.max(normY, normX);
+      if (vertical) distanceFactor = progressY;
+      if (horizontal) distanceFactor = progressX;
+      if (!vertical && !horizontal) distanceFactor = Math.max(progressY, progressX);
 
       const currentScale = maxScale - distanceFactor * (maxScale - minScale);
+      
+      const rawDistance = Math.max(Math.abs(physicalDistX), Math.abs(physicalDistY));
+      const zIndex = 1000 - Math.floor(rawDistance / 20);
 
       let transformString = `scale(${currentScale})`;
 
       if (deform) {
-        const signedNormX =
-          (elementCenterX - viewCenterX) / (viewportWidth / 2);
-        const signedNormY =
-          (elementCenterY - viewCenterY) / (viewportHeight / 2);
-
         let rotateX = 0;
         let rotateY = 0;
         let translateX = 0;
         let translateY = 0;
 
+        const calcPileTranslate = (physDist: number, radius: number, progress: number) => {
+          const absDist = Math.abs(physDist);
+          const sign = Math.sign(physDist);
+          const threshold = radius * boundary;
+
+          let targetVisualDist;
+          if (absDist < threshold) {
+            targetVisualDist = absDist; 
+          } else {
+            targetVisualDist = threshold + (absDist - threshold) * pileSpeed;
+          }
+
+          const tiltPush = progress * maxRotation * 2;
+          return (sign * targetVisualDist) - physDist - (sign * tiltPush);
+        };
+
         if (horizontal || (!vertical && !horizontal)) {
-          rotateY = -signedNormX * maxRotation;
-          translateX = -signedNormX * maxRotation * 2;
+          rotateY = -Math.sign(physicalDistX) * progressX * maxRotation;
+          translateX = calcPileTranslate(physicalDistX, viewCenterX, progressX);
         }
 
         if (vertical || (!vertical && !horizontal)) {
-          rotateX = signedNormY * maxRotation;
-          translateY = -signedNormY * maxRotation * 2;
+          rotateX = Math.sign(physicalDistY) * progressY * maxRotation;
+          translateY = calcPileTranslate(physicalDistY, viewCenterY, progressY);
         }
 
         transformString = `perspective(1000px) translate3d(${translateX}px, ${translateY}px, 0) scale(${currentScale}) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
       }
 
-      return transformString;
+      calculatedTransform = transformString;
+      calculatedZIndex = zIndex.toString();
     };
 
-    const updateScale = () => {
-      if (!ref.current) return;
-
-      const rect = ref.current.getBoundingClientRect();
-
-      const elementCenterX = rect.left + rect.width / 2;
-      const elementCenterY = rect.top + rect.height / 2;
-
-      const prev = lastPosition.current;
-      const hasMoved =
-        Math.abs(elementCenterX - prev.x) > 0.1 ||
-        Math.abs(elementCenterY - prev.y) > 0.1;
-
-      if (hasMoved) {
-        lastPosition.current = { x: elementCenterX, y: elementCenterY };
-        const transformString = calculateTransformation(elementCenterX, elementCenterY);
-        ref.current.style.transform = transformString;
-      }
-
-      if (shouldAnimate && isVisible) {
-        animationFrameId = requestAnimationFrame(updateScale);
+    const subscriber = {
+      measureRef,
+      isMovingRef,
+      initialized: false,
+      offsetX: 0,
+      offsetY: 0,
+      width: 0,
+      height: 0,
+      calculate: calculateTransformation,
+      write: () => {
+        if (transformRef.current && measureRef.current) {
+          if (lastAppliedTransform !== calculatedTransform) {
+            transformRef.current.style.transform = calculatedTransform;
+            lastAppliedTransform = calculatedTransform;
+          }
+          if (lastAppliedZIndex !== calculatedZIndex) {
+            measureRef.current.style.zIndex = calculatedZIndex;
+            lastAppliedZIndex = calculatedZIndex;
+          }
+        }
       }
     };
+
+    subscribers.add(subscriber);
     
-    updateScale();
-    
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [
-    isVisible,
-    shouldAnimate,
-    vertical,
-    horizontal,
-    maxScale,
-    minScale,
-    deform,
-    maxRotation,
-  ]);
+    lastParentLeft = -99999;
+    startGlobalLoop();
+
+    return () => {
+      subscribers.delete(subscriber);
+    };
+  }, [vertical, horizontal, maxScale, minScale, deform, maxRotation]);
 
   return (
-    <div
-      ref={ref}
-      className={`will-change-transform ease-out ${className}`}
-      style={{ transformStyle: "preserve-3d" }}
+    <div 
+      ref={measureRef} 
+      className={`relative ${className} ${isMoving ? "pointer-events-none" : ""}`}
     >
-      {children}
+      <div 
+        ref={transformRef}
+        className="w-full h-full will-change-transform"
+        style={{ transformStyle: "preserve-3d", position: "relative" }} 
+      >
+        {children}
+      </div>
     </div>
   );
 };
