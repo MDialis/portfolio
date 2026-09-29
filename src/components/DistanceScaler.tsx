@@ -165,6 +165,36 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
     }
   }, [isMoving]);
 
+  // Recalculates the exact layout when the carousel approaches the viewport
+  useEffect(() => {
+    if (!measureRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const parentElement = measureRef.current?.parentElement;
+          if (parentElement && carouselGroups.has(parentElement)) {
+            const group = carouselGroups.get(parentElement)!;
+            
+            // Wipe the stale cached offsets
+            group.lastParentLeft = -99999;
+            group.subscribers.forEach((sub) => (sub.initialized = false));
+            
+            // Trigger the engine's warm-up phase to lock in the true visible layout
+            initFrames = 0;
+            startGlobalLoop();
+          }
+        }
+      },
+      // rootMargin 100% means it fires when the element is 1 full screen away,
+      // guaranteeing it calculates before you actually see it (no pop-in).
+      { rootMargin: "100% 0px" } 
+    );
+
+    observer.observe(measureRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   useIsomorphicLayoutEffect(() => {
     const parentElement = measureRef.current?.parentElement;
     if (!parentElement) return;
