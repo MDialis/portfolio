@@ -1,41 +1,90 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
 import { useRef, useEffect, useState, ReactNode, useCallback } from "react";
 import { CarouselProvider } from "@/contexts/CarouselContext";
 
 interface DraggableCarouselProps {
   children: ReactNode;
   className?: string;
+  initialIndex?: number;
 }
 
-export default function DraggableCarousel({ children, className = "" }: DraggableCarouselProps) {
-  const [constraint, setConstraint] = useState(0);
-  const [isMoving, setIsMoving] = useState(false); // State to share with children
+export default function DraggableCarousel({
+  children,
+  className = "",
+  initialIndex = 0,
+}: DraggableCarouselProps) {
+  const x = useMotionValue(0);
+  const [isMoving, setIsMoving] = useState(false);
+  const [constraints, setConstraints] = useState({ left: 0, right: 0 });
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
-  // Ref to track dragging for click prevention
   const isDraggingRef = useRef(false);
-  // Ref for the debounce timer
+  const isInitializedRef = useRef(false);
+  const activeIndexRef = useRef(initialIndex);
+  const snapPointsRef = useRef<number[]>([]);
+
+  // Calculate the exact translation needed to center each card
+  const updateSnapPoints = useCallback(() => {
+    if (!carouselRef.current || !contentRef.current) return;
+
+    const carouselWidth = carouselRef.current.offsetWidth;
+    const carouselCenter = carouselWidth / 2;
+
+    // Filter out spacers (spacers have no child elements; cards contain children)
+    let cardElements = Array.from(contentRef.current.children).filter(
+      (el) => el.children.length > 0
+    ) as HTMLElement[];
+
+    // Fallback if no spacers are used
+    if (cardElements.length === 0) {
+      cardElements = Array.from(contentRef.current.children) as HTMLElement[];
+    }
+
+    if (cardElements.length === 0) return;
+
+    // Snap point formula: carouselCenter - (cardLeft + cardWidth / 2)
+    const points = cardElements.map((card) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      return Math.round(carouselCenter - cardCenter);
+    });
+
+    snapPointsRef.current = points;
+
+    // Set constraints to the outer limits of the cards
+    // points[0] is the right limit (first card), points[last] is the left limit (last card)
+    const maxRight = points[0];
+    const maxLeft = points[points.length - 1];
+
+    setConstraints({ right: maxRight, left: maxLeft });
+
+    // On initial load, immediately align the initial card without animation
+    if (!isInitializedRef.current && points[initialIndex] !== undefined) {
+      x.set(points[initialIndex]);
+      isInitializedRef.current = true;
+    } else if (!isDraggingRef.current && points[activeIndexRef.current] !== undefined) {
+      // Keep currently active card centered on screen resize/orientation change
+      x.set(points[activeIndexRef.current]);
+    }
+  }, [initialIndex, x]);
 
   useEffect(() => {
     if (!carouselRef.current || !contentRef.current) return;
 
-    const updateConstraints = () => {
-      const scrollWidth = contentRef.current?.scrollWidth || 0;
-      const offsetWidth = carouselRef.current?.offsetWidth || 0;
+    updateSnapPoints();
 
-      setConstraint(scrollWidth - offsetWidth);
-    };
+    const resizeObserver = new ResizeObserver(() => {
+      updateSnapPoints();
+    });
 
-    updateConstraints();
+    resizeObserver.observe(carouselRef.current);
+    resizeObserver.observe(contentRef.current);
 
-    window.addEventListener("resize", updateConstraints);
-    return () => window.removeEventListener("resize", updateConstraints);
-  }, [children]);
+    return () => resizeObserver.disconnect();
+  }, [children, updateSnapPoints]);
 
   // --- LOGIC TO DETECT MOVEMENT (Drag + Inertia) ---
   const handleUpdate = useCallback(() => {
@@ -56,7 +105,7 @@ export default function DraggableCarousel({ children, className = "" }: Draggabl
 
   const handleDragStart = () => {
     isDraggingRef.current = true;
-    handleUpdate(); // Ensure we start moving immediately
+    handleUpdate();
   };
 
   const handleDragEnd = () => {
@@ -74,6 +123,28 @@ export default function DraggableCarousel({ children, className = "" }: Draggabl
     }
   };
 
+  // Determine which snap point to lock into based on flick momentum
+  const handleModifyTarget = useCallback((target: number) => {
+    const snapPoints = snapPointsRef.current;
+    if (!snapPoints || snapPoints.length === 0) return target;
+
+    let closest = snapPoints[0];
+    let closestIndex = 0;
+    let minDistance = Math.abs(target - snapPoints[0]);
+
+    for (let i = 1; i < snapPoints.length; i++) {
+      const distance = Math.abs(target - snapPoints[i]);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closest = snapPoints[i];
+        closestIndex = i;
+      }
+    }
+
+    activeIndexRef.current = closestIndex;
+    return closest;
+  }, []);
+
   return (
     <CarouselProvider value={isMoving}>
       <div
@@ -82,15 +153,20 @@ export default function DraggableCarousel({ children, className = "" }: Draggabl
       >
         <motion.div
           ref={contentRef}
+          style={{ x, touchAction: "pan-y" }}
           drag="x"
-          dragConstraints={{ right: 0, left: -constraint }}
-          dragElastic={0.5}
+          dragConstraints={constraints}
+          dragElastic={0.2}
+          dragTransition={{
+            power: 0.18,       // Friction sensitivity
+            timeConstant: 200,  // Deceleration speed
+            modifyTarget: handleModifyTarget,
+          }}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onUpdate={handleUpdate}
           onClickCapture={handleClickCapture}
-          style={{ touchAction: "pan-y" }}
-          className="flex gap-4 w-full"
+          className="relative flex gap-4 w-max"
         >
           {children}
         </motion.div>

@@ -26,28 +26,37 @@ const Contacts = dynamic(() => import("@/components/Contacts"), {
   loading: () => <div className="min-h-[50vh] bg-neutral-variant" />,
 });
 
-const bodoniModa = Bodoni_Moda({ subsets: ["latin"], weight: "400", display: "swap", variable: "--font-bodoni" });
+const bodoniModa = Bodoni_Moda({
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+  variable: "--font-bodoni",
+});
 
 // --- Dictionary for Hardcoded Text ---
 const dictionaries = {
   en: {
     skillsTitle: "My Skills",
     projectsTitle: "My Projects",
-    projectsEmpty: "Oops! Looks like there's no projects ready for show or the system failed to connect to the CMS.",
+    projectsEmpty:
+      "Oops! Looks like there's no projects ready for show or the system failed to connect to the CMS.",
     tryAgain: "Try Again Later!",
     checkAllProjects: "Check All Projects",
     experiencesTitle: "My Experiences",
-    experiencesEmpty: "Oops! Looks like there's no work ready for show or the system failed to connect to the CMS.",
+    experiencesEmpty:
+      "Oops! Looks like there's no work ready for show or the system failed to connect to the CMS.",
     checkAllExperiences: "Check All Experiences",
   },
   pt: {
     skillsTitle: "Minhas Habilidades",
     projectsTitle: "Meus Projetos",
-    projectsEmpty: "Ops! Parece que não há projetos prontos para exibir ou o sistema falhou ao conectar com o CMS.",
+    projectsEmpty:
+      "Ops! Parece que não há projetos prontos para exibir ou o sistema falhou ao conectar com o CMS.",
     tryAgain: "Tente novamente mais tarde!",
     checkAllProjects: "Ver Todos os Projetos",
     experiencesTitle: "Minhas Experiências",
-    experiencesEmpty: "Ops! Parece que não há trabalhos prontos para exibir ou o sistema falhou ao conectar com o CMS.",
+    experiencesEmpty:
+      "Ops! Parece que não há trabalhos prontos para exibir ou o sistema falhou ao conectar com o CMS.",
     checkAllExperiences: "Ver Todas as Experiências",
   },
 };
@@ -191,7 +200,7 @@ export default async function Home({
                         minScale={0.7}
                         className={`
                           ${cardWidths}
-                          shrink-0
+                          shrink-0 relative
                           cursor-grab active:cursor-grabbing
                           hover:scale-105 transition-transform
                         `}
@@ -215,7 +224,10 @@ export default async function Home({
           </section>
 
           <div className="max-w-6xl mx-auto">
-            <Button link={`/works?lang=${currentLang}`} text={dict.checkAllProjects} />
+            <Button
+              link={`/works?lang=${currentLang}`}
+              text={dict.checkAllProjects}
+            />
           </div>
 
           {/* Experiences Section */}
@@ -287,7 +299,10 @@ export default async function Home({
           </section>
 
           <div className="max-w-6xl mx-auto mb-15">
-            <Button link={`/works?lang=${currentLang}`} text={dict.checkAllExperiences} />
+            <Button
+              link={`/works?lang=${currentLang}`}
+              text={dict.checkAllExperiences}
+            />
           </div>
         </div>
 

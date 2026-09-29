@@ -26,7 +26,7 @@ export default function Card({
       href={link}
       draggable="false"
       onDragStart={(e) => e.preventDefault()}
-      className={`select-none bg-primary text-primary-content rounded-xl shadow-xl transition-transform flex flex-col h-full overflow-hidden ${classname}`}
+      className={`select-none bg-primary text-primary-content rounded-xl transition-transform flex flex-col h-full overflow-hidden ${classname}`}
     >
       {imageUrl && (
         <div className="relative w-full h-56">
