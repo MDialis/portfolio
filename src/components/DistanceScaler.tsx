@@ -4,7 +4,8 @@ import { useCarouselMoving } from "@/contexts/CarouselContext";
 import React, { useRef, useEffect, useLayoutEffect } from "react";
 
 // Prevents React warnings when using useLayoutEffect in Next.js Server-Side Rendering
-const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 // ============================================================================
 // GLOBAL MASTER ENGINE
@@ -13,29 +14,38 @@ const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffec
 
 let viewportWidth = 0;
 let viewportHeight = 0;
-let parentElement: HTMLElement | null = null;
-let lastParentLeft = -99999;
 let isLoopRunning = false;
 let globalIdleFrames = 0;
+let initFrames = 0;
 
-// Forces continuous DOM recalculation for the first seconds.
-let initFrames = 180; 
-
-const subscribers = new Set<any>();
+const carouselGroups = new Map<
+  HTMLElement,
+  {
+    lastParentLeft: number;
+    subscribers: Set<any>;
+  }
+>();
 
 if (typeof window !== "undefined") {
   viewportWidth = window.innerWidth;
   viewportHeight = window.innerHeight;
-  
+
   const forceRecalculation = () => {
     viewportWidth = window.innerWidth;
     viewportHeight = window.innerHeight;
-    initFrames = 0; 
+    initFrames = 0; // Restart the warm-up phase
+
+    // Reset cache for all carousels
+    carouselGroups.forEach((group) => {
+      group.lastParentLeft = -99999;
+      group.subscribers.forEach((sub) => (sub.initialized = false));
+    });
+
     startGlobalLoop();
   };
 
   window.addEventListener("resize", forceRecalculation);
-  window.addEventListener("load", forceRecalculation); 
+  window.addEventListener("load", forceRecalculation);
 }
 
 const startGlobalLoop = () => {
@@ -44,66 +54,69 @@ const startGlobalLoop = () => {
   globalIdleFrames = 0;
 
   const tick = () => {
-    if (subscribers.size === 0) {
+    if (carouselGroups.size === 0) {
       isLoopRunning = false;
       return;
     }
 
-    if (!parentElement) {
-      const firstSub = subscribers.values().next().value;
-      parentElement = firstSub.measureRef.current?.parentElement || null;
-    }
-
-    if (!parentElement) {
-      requestAnimationFrame(tick);
-      return;
-    }
-
-    // Single O(1) DOM Read for the entire carousel. 
-    // Card positions are calculated relative to this parent to save CPU.
-    const parentRect = parentElement.getBoundingClientRect();
-    const hasMoved = Math.abs(parentRect.left - lastParentLeft) > 0.1;
-    
     const isWarmUpPhase = initFrames < 30;
-
     if (isWarmUpPhase) {
       initFrames++;
-      lastParentLeft = -99999; 
     }
 
-    if (hasMoved || lastParentLeft === -99999) {
-      lastParentLeft = parentRect.left;
-      globalIdleFrames = 0;
+    let isAnyContextMoving = false;
+    let anyGroupMoved = false;
 
-      // Math & Position Caching
-      subscribers.forEach((sub) => {
-        if (!sub.initialized || isWarmUpPhase) {
-          const rect = sub.measureRef.current.getBoundingClientRect();
-          sub.offsetX = rect.left - parentRect.left;
-          sub.offsetY = rect.top - parentRect.top;
-          sub.width = rect.width;
-          sub.height = rect.height;
-          sub.initialized = true;
-        }
+    // Iterate through each independent carousel on the page
+    carouselGroups.forEach((group, parentElement) => {
+      if (group.subscribers.size === 0) return;
 
-        const elementCenterX = parentRect.left + sub.offsetX + (sub.width / 2);
-        const elementCenterY = parentRect.top + sub.offsetY + (sub.height / 2);
+      // Single DOM Read per carousel
+      const parentRect = parentElement.getBoundingClientRect();
+      const hasMoved = Math.abs(parentRect.left - group.lastParentLeft) > 0.1;
 
-        sub.calculate(elementCenterX, elementCenterY);
+      if (isWarmUpPhase) {
+        group.lastParentLeft = -99999; // Bypass the cache during warm-up
+      }
+
+      if (hasMoved || group.lastParentLeft === -99999) {
+        group.lastParentLeft = parentRect.left;
+        anyGroupMoved = true;
+
+        // Math & Caching
+        group.subscribers.forEach((sub) => {
+          if (!sub.initialized || isWarmUpPhase) {
+            const rect = sub.measureRef.current.getBoundingClientRect();
+            sub.offsetX = rect.left - parentRect.left;
+            sub.offsetY = rect.top - parentRect.top;
+            sub.width = rect.width;
+            sub.height = rect.height;
+            sub.initialized = true;
+          }
+
+          const elementCenterX = parentRect.left + sub.offsetX + sub.width / 2;
+          const elementCenterY = parentRect.top + sub.offsetY + sub.height / 2;
+
+          sub.calculate(elementCenterX, elementCenterY);
+        });
+
+        // Batched Writes
+        group.subscribers.forEach((sub) => sub.write());
+      }
+
+      // Check if this specific carousel is currently being dragged
+      group.subscribers.forEach((sub) => {
+        if (sub.isMovingRef.current) isAnyContextMoving = true;
       });
+    });
 
-      // Batched DOM Writes
-      subscribers.forEach((sub) => sub.write());
+    if (anyGroupMoved) {
+      globalIdleFrames = 0;
     } else {
       globalIdleFrames++;
     }
 
-    let isAnyContextMoving = false;
-    subscribers.forEach((sub) => {
-      if (sub.isMovingRef.current) isAnyContextMoving = true;
-    });
-
-    // Loop sleeps (0% CPU) unless actively dragging, settling momentum, or warming up
+    // Loop stays alive if ANY carousel is moving, settling, or warming up
     if (isAnyContextMoving || globalIdleFrames < 15 || isWarmUpPhase) {
       requestAnimationFrame(tick);
     } else {
@@ -147,17 +160,35 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
   isMovingRef.current = isMoving;
 
   useEffect(() => {
-    if (isMoving) startGlobalLoop();
+    if (isMoving) {
+      startGlobalLoop();
+    }
   }, [isMoving]);
 
   useIsomorphicLayoutEffect(() => {
+    const parentElement = measureRef.current?.parentElement;
+    if (!parentElement) return;
+
+    // Ensure the group exists in the global map for this specific carousel container
+    if (!carouselGroups.has(parentElement)) {
+      carouselGroups.set(parentElement, {
+        lastParentLeft: -99999,
+        subscribers: new Set(),
+      });
+    }
+
+    const group = carouselGroups.get(parentElement)!;
+
     let calculatedTransform = "";
     let calculatedZIndex = "";
-    
+
     let lastAppliedTransform = "";
     let lastAppliedZIndex = "";
 
-    const calculateTransformation = (elementCenterX: number, elementCenterY: number) => {
+    const calculateTransformation = (
+      elementCenterX: number,
+      elementCenterY: number,
+    ) => {
       const viewCenterX = viewportWidth / 2;
       const viewCenterY = viewportHeight / 2;
 
@@ -177,13 +208,17 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
       let distanceFactor = 0;
       if (vertical) distanceFactor = progressY;
       if (horizontal) distanceFactor = progressX;
-      if (!vertical && !horizontal) distanceFactor = Math.max(progressY, progressX);
+      if (!vertical && !horizontal)
+        distanceFactor = Math.max(progressY, progressX);
 
       const currentScale = maxScale - distanceFactor * (maxScale - minScale);
-      
+
       // Forces elements physically closer to the screen center to render on top
-      const rawDistance = Math.max(Math.abs(physicalDistX), Math.abs(physicalDistY));
-      const zIndex = 1000 - Math.floor(rawDistance / 20);
+      const rawDistance = Math.max(
+        Math.abs(physicalDistX),
+        Math.abs(physicalDistY),
+      );
+      const zIndex = Math.round(10000 - rawDistance);
 
       let transformString = `scale(${currentScale})`;
 
@@ -193,21 +228,25 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
         let translateX = 0;
         let translateY = 0;
 
-        const calcPileTranslate = (physDist: number, radius: number, progress: number) => {
+        const calcPileTranslate = (
+          physDist: number,
+          radius: number,
+          progress: number,
+        ) => {
           const absDist = Math.abs(physDist);
           const sign = Math.sign(physDist);
           const threshold = radius * boundary;
 
           let targetVisualDist;
           if (absDist < threshold) {
-            targetVisualDist = absDist; 
+            targetVisualDist = absDist;
           } else {
             targetVisualDist = threshold + (absDist - threshold) * pileSpeed;
           }
 
           // Counter-acts the physical scroll by pushing the element backwards, locking it visually in the deck
           const tiltPush = progress * maxRotation * 2;
-          return (sign * targetVisualDist) - physDist - (sign * tiltPush);
+          return sign * targetVisualDist - physDist - sign * tiltPush;
         };
 
         if (horizontal || (!vertical && !horizontal)) {
@@ -248,29 +287,35 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
             lastAppliedZIndex = calculatedZIndex;
           }
         }
-      }
+      },
     };
 
-    subscribers.add(subscriber);
-    
+    // Register card to its specific parent group
+    group.subscribers.add(subscriber);
+
+    // Kick off the engine
     initFrames = 0;
     startGlobalLoop();
 
     return () => {
-      subscribers.delete(subscriber);
+      // Clean up when unmounting
+      group.subscribers.delete(subscriber);
+      if (group.subscribers.size === 0) {
+        carouselGroups.delete(parentElement);
+      }
     };
   }, [vertical, horizontal, maxScale, minScale, deform, maxRotation]);
 
   return (
-    <div 
-      ref={measureRef} 
+    <div
+      ref={measureRef}
       // pointer-events-none disables CSS hover transitions while dragging to prevent JS/CSS fighting
       className={`relative ${className} ${isMoving ? "pointer-events-none" : ""}`}
     >
-      <div 
+      <div
         ref={transformRef}
         className="w-full h-full will-change-transform"
-        style={{ transformStyle: "preserve-3d", position: "relative" }} 
+        style={{ transformStyle: "preserve-3d", position: "relative" }}
       >
         {children}
       </div>
