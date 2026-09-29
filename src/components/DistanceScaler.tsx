@@ -3,10 +3,12 @@
 import { useCarouselMoving } from "@/contexts/CarouselContext";
 import React, { useRef, useEffect, useLayoutEffect } from "react";
 
+// Prevents React warnings when using useLayoutEffect in Next.js Server-Side Rendering
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 // ============================================================================
 // GLOBAL MASTER ENGINE
+// Centralized loop to prevent Layout Thrashing. 1 Read -> N Math -> N Writes per frame.
 // ============================================================================
 
 let viewportWidth = 0;
@@ -16,18 +18,24 @@ let lastParentLeft = -99999;
 let isLoopRunning = false;
 let globalIdleFrames = 0;
 
+// Forces continuous DOM recalculation for the first seconds.
+let initFrames = 180; 
+
 const subscribers = new Set<any>();
 
 if (typeof window !== "undefined") {
   viewportWidth = window.innerWidth;
   viewportHeight = window.innerHeight;
-  window.addEventListener("resize", () => {
+  
+  const forceRecalculation = () => {
     viewportWidth = window.innerWidth;
     viewportHeight = window.innerHeight;
-    lastParentLeft = -99999; 
-    subscribers.forEach(sub => (sub.initialized = false));
+    initFrames = 0; 
     startGlobalLoop();
-  });
+  };
+
+  window.addEventListener("resize", forceRecalculation);
+  window.addEventListener("load", forceRecalculation); 
 }
 
 const startGlobalLoop = () => {
@@ -51,15 +59,25 @@ const startGlobalLoop = () => {
       return;
     }
 
+    // Single O(1) DOM Read for the entire carousel. 
+    // Card positions are calculated relative to this parent to save CPU.
     const parentRect = parentElement.getBoundingClientRect();
     const hasMoved = Math.abs(parentRect.left - lastParentLeft) > 0.1;
+    
+    const isWarmUpPhase = initFrames < 30;
+
+    if (isWarmUpPhase) {
+      initFrames++;
+      lastParentLeft = -99999; 
+    }
 
     if (hasMoved || lastParentLeft === -99999) {
       lastParentLeft = parentRect.left;
       globalIdleFrames = 0;
 
+      // Math & Position Caching
       subscribers.forEach((sub) => {
-        if (!sub.initialized) {
+        if (!sub.initialized || isWarmUpPhase) {
           const rect = sub.measureRef.current.getBoundingClientRect();
           sub.offsetX = rect.left - parentRect.left;
           sub.offsetY = rect.top - parentRect.top;
@@ -74,6 +92,7 @@ const startGlobalLoop = () => {
         sub.calculate(elementCenterX, elementCenterY);
       });
 
+      // Batched DOM Writes
       subscribers.forEach((sub) => sub.write());
     } else {
       globalIdleFrames++;
@@ -84,7 +103,8 @@ const startGlobalLoop = () => {
       if (sub.isMovingRef.current) isAnyContextMoving = true;
     });
 
-    if (isAnyContextMoving || globalIdleFrames < 15) {
+    // Loop sleeps (0% CPU) unless actively dragging, settling momentum, or warming up
+    if (isAnyContextMoving || globalIdleFrames < 15 || isWarmUpPhase) {
       requestAnimationFrame(tick);
     } else {
       isLoopRunning = false;
@@ -127,9 +147,7 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
   isMovingRef.current = isMoving;
 
   useEffect(() => {
-    if (isMoving) {
-      startGlobalLoop();
-    }
+    if (isMoving) startGlobalLoop();
   }, [isMoving]);
 
   useIsomorphicLayoutEffect(() => {
@@ -149,8 +167,9 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
       const normX = Math.abs(physicalDistX) / viewCenterX;
       const normY = Math.abs(physicalDistY) / viewCenterY;
 
-      const boundary = 0.7; 
-      const pileSpeed = 0.2; 
+      // Deck Settings
+      const boundary = 0.7; // Start stacking at 70% of screen distance
+      const pileSpeed = 0.2; // Move at 20% speed once inside the stack
 
       const progressX = Math.min(normX / boundary, 1);
       const progressY = Math.min(normY / boundary, 1);
@@ -162,6 +181,7 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
 
       const currentScale = maxScale - distanceFactor * (maxScale - minScale);
       
+      // Forces elements physically closer to the screen center to render on top
       const rawDistance = Math.max(Math.abs(physicalDistX), Math.abs(physicalDistY));
       const zIndex = 1000 - Math.floor(rawDistance / 20);
 
@@ -185,6 +205,7 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
             targetVisualDist = threshold + (absDist - threshold) * pileSpeed;
           }
 
+          // Counter-acts the physical scroll by pushing the element backwards, locking it visually in the deck
           const tiltPush = progress * maxRotation * 2;
           return (sign * targetVisualDist) - physDist - (sign * tiltPush);
         };
@@ -217,6 +238,7 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
       calculate: calculateTransformation,
       write: () => {
         if (transformRef.current && measureRef.current) {
+          // Strict caching ensures we only write to the DOM if values actively changed
           if (lastAppliedTransform !== calculatedTransform) {
             transformRef.current.style.transform = calculatedTransform;
             lastAppliedTransform = calculatedTransform;
@@ -231,7 +253,7 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
 
     subscribers.add(subscriber);
     
-    lastParentLeft = -99999;
+    initFrames = 0;
     startGlobalLoop();
 
     return () => {
@@ -242,6 +264,7 @@ export const DistanceScaler: React.FC<DistanceScalerProps> = ({
   return (
     <div 
       ref={measureRef} 
+      // pointer-events-none disables CSS hover transitions while dragging to prevent JS/CSS fighting
       className={`relative ${className} ${isMoving ? "pointer-events-none" : ""}`}
     >
       <div 
