@@ -1,6 +1,5 @@
 import dynamic from "next/dynamic";
-import { Bodoni_Moda } from "next/font/google";
-
+import { Inter, Fira_Code } from "next/font/google";
 // --- Services & Types ---
 import {
   getFeaturedProjects,
@@ -26,11 +25,16 @@ const Contacts = dynamic(() => import("@/components/Contacts"), {
   loading: () => <div className="min-h-[50vh] bg-neutral-variant" />,
 });
 
-const bodoniModa = Bodoni_Moda({
+const inter = Inter({
   subsets: ["latin"],
-  weight: "400",
   display: "swap",
-  variable: "--font-bodoni",
+  variable: "--font-inter",
+});
+
+const firaCode = Fira_Code({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-fira-code",
 });
 
 // --- Dictionary for Hardcoded Text ---
@@ -116,10 +120,10 @@ export default async function Home({
   const spacerWidths = "w-[1vw] md:w-[14vw] lg:w-[30.5vw]";
 
   return (
-    <div className="flex-1">
+    <div className={`flex-1 ${inter.variable} font-sans`}>
       <main>
         {/* Hero Section: Full-screen, spotlight background */}
-        <HeroSection bodoniModa={bodoniModa} />
+        <HeroSection lang={currentLang} />
 
         {/* Main Content Area */}
         <div className="relative px-5 text-sm">
