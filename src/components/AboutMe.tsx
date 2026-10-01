@@ -27,7 +27,7 @@ export default function AboutMe({ lang }: { lang: string }) {
   const dict = dictionaries[lang as keyof typeof dictionaries] || dictionaries.en;
 
   return (
-    <section id="aboutMe" className="py-10">
+    <section id="about" className="pt-30 pb-15">
       <div className="relative z-10 max-w-5xl mx-auto">
         {/* FlipSection component for interactive "About Me" */}
         <FlipSection
