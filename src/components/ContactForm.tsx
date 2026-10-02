@@ -5,38 +5,47 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import Button from "./Button";
 import Lottie from "lottie-react";
 import successAnimation from "@/assets/SuccessSend.json";
+import { Fira_Code } from "next/font/google";
+
+const firaCode = Fira_Code({ subsets: ["latin"], weight: ["400", "500"] });
 
 // --- Form Dictionary ---
 const dictionaries = {
   en: {
     nameLabel: "Name",
-    namePlaceholder: "Your name",
+    namePlaceholder: "John Doe",
     emailLabel: "Email",
-    emailPlaceholder: "example@email.com",
+    emailPlaceholder: "john@example.com",
     messageLabel: "Message",
-    messagePlaceholder: "Hi! I'd like to talk about...",
-    sending: "Sending...",
-    holdOn: "Hold on",
-    submit: "Submit",
-    successTitle: "Message Sent!",
+    messagePlaceholder: "Let's discuss a secure architecture project...",
+    sending: "TRANSMITTING...",
+    holdOn: "COOLDOWN",
+    submit: "SEND PAYLOAD",
+    successTitle: "Transmission Successful",
     successDesc: (
-      <>Thanks for reaching out, <strong>friend</strong>. I'll get back to you as soon as possible.</>
+      <>
+        Thanks for reaching out. The data packets have been received. I'll get
+        back to you shortly.
+      </>
     ),
     sendAnother: "Send another message",
   },
   pt: {
     nameLabel: "Nome",
-    namePlaceholder: "Seu nome",
+    namePlaceholder: "João Silva",
     emailLabel: "E-mail",
-    emailPlaceholder: "exemplo@email.com",
+    emailPlaceholder: "joao@exemplo.com",
     messageLabel: "Mensagem",
-    messagePlaceholder: "Olá! Eu gostaria de falar sobre...",
-    sending: "Enviando...",
-    holdOn: "Aguarde",
-    submit: "Enviar",
-    successTitle: "Mensagem Enviada!",
+    messagePlaceholder: "Vamos discutir um projeto de arquitetura segura...",
+    sending: "TRANSMITINDO...",
+    holdOn: "AGUARDE",
+    submit: "ENVIAR PAYLOAD",
+    successTitle: "Transmissão Concluída",
     successDesc: (
-      <>Obrigado por entrar em contato, <strong>amigo</strong>. Retornarei o mais breve possível.</>
+      <>
+        Obrigado pelo contato. Os pacotes de dados foram recebidos. Retornarei
+        em breve.
+      </>
     ),
     sendAnother: "Enviar outra mensagem",
   },
@@ -44,13 +53,10 @@ const dictionaries = {
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   exit: {
     opacity: 0,
-    scale: 0.9,
+    scale: 0.95,
     transition: {
       staggerChildren: 0.05,
       staggerDirection: -1,
@@ -60,34 +66,30 @@ const containerVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { type: "spring", stiffness: 100 },
-  },
-  exit: {
-    y: -20,
-    opacity: 0,
-    transition: { duration: 0.2, ease: "easeIn" },
-  },
+  hidden: { y: 15, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } },
+  exit: { y: -15, opacity: 0, transition: { duration: 0.2, ease: "easeIn" } },
 };
 
 const FormInput = ({ label, id, as = "input", ...props }: any) => (
-  <motion.div variants={itemVariants}>
-    <label htmlFor={id} className="block text-sm font-medium mb-1">
-      {label}
+  <motion.div variants={itemVariants} className="flex flex-col gap-1 mb-8">
+    <label
+      htmlFor={id}
+      className={`text-xs font-bold tracking-widest uppercase text-foreground ${firaCode.className}`}
+    >
+      {label} <span className="text-accent">*</span>
     </label>
+
     {as === "textarea" ? (
       <textarea
         id={id}
-        className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full py-3 bg-transparent text-foreground placeholder-muted-foreground/30 border-b border-border focus:outline-none focus:border-primary transition-colors resize-none text-sm"
         {...props}
       />
     ) : (
       <input
         id={id}
-        className="w-full p-2 bg-white/65 text-black border border-base-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full py-3 bg-transparent text-foreground placeholder-muted-foreground/30 border-b border-border focus:outline-none focus:border-primary transition-colors text-sm"
         {...props}
       />
     )}
@@ -107,42 +109,27 @@ const SubmitButton = ({
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     // PadStart ensures we get "01" instead of "1"
-    return `${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
   return (
-    <motion.div variants={itemVariants} className="flex space-x-4">
+    <motion.div variants={itemVariants} className="pt-4">
       <button
         type="submit"
-        disabled={loading}
-        className={`w-3/4 md:w-full mx-auto py-2 font-semibold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500
-          ${loading
-            ? "bg-base-dark/85 cursor-not-allowed text-white"
-            : "bg-base-dark/70 text-accent hover:bg-accent hover:text-accent-content"
-          }`}
+        disabled={loading || cooldown > 0}
+        className={`w-full py-3.5 px-6 font-semibold rounded-md transition-all flex justify-center items-center gap-3
+          ${
+            loading || cooldown > 0
+              ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
+              : "bg-foreground text-background hover:bg-foreground/90 shadow-lg shadow-foreground/10"
+          } ${firaCode.className} text-sm tracking-widest uppercase`}
       >
         {loading ? (
-          dict.sending
+          <span className="animate-pulse">{dict.sending}</span>
         ) : cooldown > 0 ? (
-          <div className="flex justify-center items-center gap-2 animate-pulse">
+          <div className="flex items-center gap-2">
             <span>{dict.holdOn}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-4 h-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span>{formatTime(cooldown)}</span>
+            <span className="text-destructive">[{formatTime(cooldown)}]</span>
           </div>
         ) : (
           dict.submit
@@ -165,38 +152,38 @@ const SuccessView = ({
     animate="visible"
     exit="exit"
     variants={containerVariants}
-    className="flex flex-col items-center justify-center h-full text-center space-y-4"
+    className="flex flex-col items-center justify-center h-full text-center space-y-6 py-12"
   >
-    <div className="w-50 h-50 filter hue-rotate-20 brightness-80 saturate-200">
+    <div className="w-40 h-40 filter hue-rotate-180 brightness-110">
       <Lottie animationData={successAnimation} loop={false} autoplay={true} />
     </div>
     <motion.div variants={itemVariants}>
-      <h3 className="text-2xl font-bold">{dict.successTitle}</h3>
-      <p className="text-neutral-variant-content/70 mt-2 max-w-xs mx-auto">
+      <h3 className="text-2xl font-bold text-foreground mb-2">
+        {dict.successTitle}
+      </h3>
+      <p className="text-muted-foreground text-sm leading-relaxed max-w-sm mx-auto">
         {dict.successDesc}
       </p>
     </motion.div>
     <motion.div variants={itemVariants}>
-      <Button text={dict.sendAnother} onClick={onReset} />
+      <button
+        onClick={onReset}
+        className={`mt-4 px-6 py-2 border border-border rounded-md text-sm text-foreground hover:bg-muted transition-colors ${firaCode.className}`}
+      >
+        {dict.sendAnother}
+      </button>
     </motion.div>
   </motion.div>
 );
 
 export default function ContactForm({ lang }: { lang: string }) {
-  const dict = dictionaries[lang as keyof typeof dictionaries] || dictionaries.en;
-
-  const {
-    formRef,
-    loading,
-    cooldown,
-    success,
-    handleSubmit,
-    //  setSuccessTrue,
-    setSuccessFalse,
-  } = useContactForm();
+  const dict =
+    dictionaries[lang as keyof typeof dictionaries] || dictionaries.en;
+  const { formRef, loading, cooldown, success, handleSubmit, setSuccessFalse } =
+    useContactForm();
 
   return (
-    <div className="min-h-[40vh]">
+    <div className="w-full">
       <AnimatePresence mode="wait" initial={false}>
         {success ? (
           <SuccessView onReset={setSuccessFalse} dict={dict} />
@@ -210,11 +197,7 @@ export default function ContactForm({ lang }: { lang: string }) {
             variants={containerVariants}
             className="w-full"
           >
-            <form
-              ref={formRef}
-              onSubmit={handleSubmit}
-              className="space-y-4"
-            >
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
               {/* --- HIDDEN SUBJECT FIELD --- */}
               <input
                 type="hidden"
