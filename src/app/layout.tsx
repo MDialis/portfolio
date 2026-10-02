@@ -27,7 +27,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://images.ctfassets.net" crossOrigin="anonymous" />
       </head>
       <body
-        className={`${inter.className} bg-base-200 text-base-content`}
+        className={`${inter.className} bg-muted text-foreground`}
       >
         <div className="flex flex-col min-h-screen">
           <ThemeProvider>

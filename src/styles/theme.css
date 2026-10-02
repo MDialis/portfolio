@@ -1,38 +1,44 @@
 @theme {
-  /* Keep your custom names if other parts of your app still use them */
-  --color-base-100: var(--theme-base-100);
-  --color-primary: var(--theme-primary);
-  --color-spotlight: var(--theme-spotlight);
+  /* Shadcn utility mappings for Tailwind v4 */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   
-  /* Map Shadcn UI Variables */
-  --background: var(--background);
-  --foreground: var(--foreground);
-  --card: var(--card);
-  --card-foreground: var(--card-foreground);
-  --popover: var(--popover);
-  --popover-foreground: var(--popover-foreground);
-  --primary: var(--primary);
-  --primary-foreground: var(--primary-foreground);
-  --secondary: var(--secondary);
-  --secondary-foreground: var(--secondary-foreground);
-  --muted: var(--muted);
-  --muted-foreground: var(--muted-foreground);
-  --accent: var(--accent);
-  --accent-foreground: var(--accent-foreground);
-  --destructive: var(--destructive);
-  --destructive-foreground: var(--destructive-foreground);
-  --border: var(--border);
-  --input: var(--input);
-  --ring: var(--ring);
-  --radius: 0.5rem;
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
 }
 
 :root, [data-theme="light"] {
   color-scheme: light;
   
-  /* Shadcn Light Theme (Using your Light Theme OKLCH values) */
-  --background: oklch(92% 0.013 255.508); /* your base-100 */
-  --foreground: oklch(20% 0.042 265.755); /* your base-content */
+  /* Light Theme (Using your Light Theme OKLCH values) */
+  --background: oklch(92% 0.013 255.508);
+  --foreground: oklch(20% 0.042 265.755);
   
   --card: oklch(96% 0.01 255);
   --card-foreground: oklch(20% 0.042 265.755);
@@ -40,14 +46,14 @@
   --popover: oklch(96% 0.01 255);
   --popover-foreground: oklch(20% 0.042 265.755);
   
-  --primary: oklch(0.4805 0.114 253.57); /* your primary */
+  --primary: oklch(0.4805 0.114 253.57);
   --primary-foreground: oklch(93.35% 0.021 215.26); 
   
-  --secondary: oklch(86% 0.022 252.894); /* your base-200 */
+  --secondary: oklch(86% 0.022 252.894);
   --secondary-foreground: oklch(20% 0.042 265.755);
   
   --muted: oklch(86% 0.022 252.894);
-  --muted-foreground: oklch(44% 0.03 256.802); /* your neutral */
+  --muted-foreground: oklch(44% 0.03 256.802);
   
   --accent: oklch(0.3587 0.074 235.73);
   --accent-foreground: oklch(0.9355 0.0373 196.53);
@@ -58,34 +64,35 @@
   --border: oklch(86% 0.022 252.894);
   --input: oklch(86% 0.022 252.894);
   --ring: oklch(0.4805 0.114 253.57);
+  --radius: 0.5rem;
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
   
-  /* Shadcn Dark Theme (Using your Dark/Reaper OKLCH values) */
-  --background: oklch(13% 0.028 261.692); /* your base-dark */
-  --foreground: oklch(96% 0.003 264.542); /* your base-content */
+  /* Dark Theme (Using your Dark/Reaper OKLCH values) */
+  --background: oklch(13% 0.028 261.692);
+  --foreground: oklch(96% 0.003 264.542);
   
-  --card: oklch(20% 0.042 265.755); /* your base-300 */
+  --card: oklch(20% 0.042 265.755);
   --card-foreground: oklch(96% 0.003 264.542);
   
   --popover: oklch(20% 0.042 265.755);
   --popover-foreground: oklch(96% 0.003 264.542);
   
-  --primary: oklch(0.3516 0.1331 267); /* your primary */
+  --primary: oklch(0.3516 0.1331 267);
   --primary-foreground: oklch(89.63% 0.048 266.64);
   
-  --secondary: oklch(27% 0.041 260.031); /* your base-200 */
+  --secondary: oklch(27% 0.041 260.031);
   --secondary-foreground: oklch(96% 0.003 264.542);
   
   --muted: oklch(27% 0.041 260.031);
-  --muted-foreground: oklch(50% 0.03 256.802); /* your neutral */
+  --muted-foreground: oklch(50% 0.03 256.802);
   
-  --accent: oklch(0.8868 0.1098 204.04); /* your light-blue */
+  --accent: oklch(0.8868 0.1098 204.04);
   --accent-foreground: oklch(0.2671 0.056 229.695);
   
-  --destructive: oklch(57% 0.245 27.325); /* your error */
+  --destructive: oklch(57% 0.245 27.325);
   --destructive-foreground: oklch(97% 0.013 17.38);
 
   --border: oklch(27% 0.041 260.031);
