@@ -13,11 +13,12 @@ import HeroSection from "@/components/HeroSection";
 import DraggableCarousel from "@/components/DraggableCarousel";
 import DistanceScaler from "@/components/DistanceScaler";
 import InteractiveIndex from "@/components/InteractiveIndex";
+import TechStack from "@/components/TechStack";
 
 // --- Dynamic Components (Lazy Loaded) ---
 // These components are loaded on demand to reduce initial bundle size
 const InfiniteIconScroller = dynamic(
-  () => import("@/components/InfiniteIconScroller"),
+  () => import("@/components/TechStack"),
 );
 const Card = dynamic(() => import("@/components/Card"));
 const Contacts = dynamic(() => import("@/components/Contacts"), {
@@ -139,18 +140,10 @@ export default async function Home({
                 <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 md:w-48 bg-gradient-to-l from-background to-transparent" />
 
                 {/* Top Row: Right to Left Movement */}
-                <InfiniteIconScroller
-                  skills={skillsTop}
-                  direction="left"
-                  className="py-6 pb-3"
+                <TechStack lang={currentLang}
+
                 />
 
-                {/* Top Row: Left to Right Movement */}
-                <InfiniteIconScroller
-                  skills={skillsBottom}
-                  direction="right"
-                  className="py-6 pt-3"
-                />
               </div>
             </div>
           </section>
