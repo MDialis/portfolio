@@ -12,6 +12,7 @@ import HeroSection from "@/components/HeroSection";
 import InteractiveIndex from "@/components/InteractiveIndex";
 import TechStack from "@/components/TechStack";
 import ExperienceShowcase from "@/components/ExperienceShowcase";
+import Preloader from "@/components/PreLoader";
 
 // --- Dynamic Components ---
 const Contacts = dynamic(() => import("@/components/Contacts"), {
@@ -48,6 +49,8 @@ export default async function Home({
   return (
     <div className={`flex-1 bg-background text-foreground ${inter.variable} font-sans`}>
       <main>
+        <Preloader lang={currentLang} />
+        
         {/* 1. Hero Section */}
         <HeroSection lang={currentLang} />
 

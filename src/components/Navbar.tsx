@@ -16,10 +16,18 @@ export default function Navbar() {
   const searchParams = useSearchParams();
   const lang = searchParams.get("lang") || "en";
   const [isMounted, setIsMounted] = useState(false);
+  const [isLogoMounted, setIsLogoMounted] = useState(false);
 
   useEffect(() => {
-    // Triggers the slide-down animation right after the component mounts
+    // Triggers the main navbar container slide-down immediately
     requestAnimationFrame(() => setIsMounted(true));
+    
+    // Triggers the logo slide-up reveal exactly as the preloader finishes (3.1s)
+    const logoTimer = setTimeout(() => {
+      setIsLogoMounted(true);
+    }, 4500);
+
+    return () => clearTimeout(logoTimer);
   }, []);
 
   const navDict = {
@@ -38,13 +46,14 @@ export default function Navbar() {
       `}
     >
       <div className="w-full px-6 md:px-12 xl:px-20 py-5 flex justify-between items-center">
-        {/* Logo */}
+        
+        {/* Logo (Masked and Delayed Reveal) */}
         <a
           href={`/?lang=${lang}`}
-          className="hover:opacity-80 transition-opacity"
+          className="hover:opacity-80 transition-opacity overflow-hidden pb-1"
         >
           <h1
-            className={`text-2xl font-bold text-foreground tracking-tight ${inter.className}`}
+            className={`text-2xl font-bold text-foreground tracking-tight transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isLogoMounted ? "translate-y-0" : "translate-y-full"} ${inter.className}`}
           >
             MDialis<span className="text-accent">.</span>
           </h1>
@@ -56,22 +65,13 @@ export default function Navbar() {
           <div
             className={`hidden md:flex items-center gap-6 text-xs tracking-widest uppercase text-muted-foreground font-semibold ${inter.className}`}
           >
-            <a
-              href="#projects"
-              className="hover:text-foreground transition-colors"
-            >
+            <a href="#projects" className="hover:text-foreground transition-colors">
               {dict.work}
             </a>
-            <a
-              href="#about"
-              className="hover:text-foreground transition-colors"
-            >
+            <a href="#about" className="hover:text-foreground transition-colors">
               {dict.about}
             </a>
-            <a
-              href="#contacts"
-              className="hover:text-foreground transition-colors"
-            >
+            <a href="#contacts" className="hover:text-foreground transition-colors">
               {dict.contact}
             </a>
           </div>
