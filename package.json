@@ -12,6 +12,8 @@
     "@contentful/rich-text-react-renderer": "^16.1.6",
     "@contentful/rich-text-types": "^17.2.5",
     "@emailjs/browser": "^4.4.1",
+    "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^2.0.71",
     "@vercel/speed-insights": "^1.2.0",
     "contentful": "^11.8.12",
     "framer-motion": "^12.29.0",
