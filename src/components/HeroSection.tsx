@@ -1,7 +1,16 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Fira_Code, Inter } from "next/font/google";
-import { motion } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
+import dynamic from "next/dynamic";
+
+const Scene3D = dynamic(() => import("./Scene3D"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-muted/5 animate-pulse" />
+  ),
+});
 
 const firaCode = Fira_Code({ subsets: ["latin"], weight: ["400", "500"] });
 const inter = Inter({
@@ -10,6 +19,25 @@ const inter = Inter({
 });
 
 export default function HeroSection({ lang }: { lang: string }) {
+  const [reaperMode, setReaperMode] = useState(false);
+
+  // --- HIGH-PERFORMANCE MOUSE TRACKING ---
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const { currentTarget, clientX, clientY } = e;
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  };
+
+  useEffect(() => {
+    const toggleReaper = () => setReaperMode((prev) => !prev);
+    window.addEventListener("toggleReaperMode", toggleReaper);
+    return () => window.removeEventListener("toggleReaperMode", toggleReaper);
+  }, []);
+
   const content = {
     en: {
       badge: "Status: Available for Work",
@@ -18,8 +46,6 @@ export default function HeroSection({ lang }: { lang: string }) {
       subhead:
         "ENGINEERING FULL-STACK MODERNIZATION, DATA GOVERNANCE, AND RESILIENT WEB ARCHITECTURES.",
       scroll: "SCROLL TO EXPLORE",
-      mockupTitle: "Data Sync Pipeline",
-      mockupSub: "ETL Worker",
     },
     pt: {
       badge: "Status: Disponível para Projetos",
@@ -28,8 +54,6 @@ export default function HeroSection({ lang }: { lang: string }) {
       subhead:
         "ENGENHARIA FOCADA EM MODERNIZAÇÃO FULL-STACK, GOVERNANÇA DE DADOS E ARQUITETURAS RESILIENTES.",
       scroll: "ROLE PARA EXPLORAR",
-      mockupTitle: "Pipeline de Sincronização",
-      mockupSub: "Worker ETL",
     },
   };
 
@@ -37,34 +61,65 @@ export default function HeroSection({ lang }: { lang: string }) {
 
   return (
     <section
+      onMouseMove={handleMouseMove}
       className={`relative h-screen w-full flex flex-col justify-between bg-background overflow-hidden ${inter.className} pt-32 pb-20 px-6 md:px-12 xl:px-20`}
     >
-      {/* Premium SaaS Background Gradients (Pulsing slowly) */}
+      {/* Background Gradients & Mouse Glow */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+        {/* Dynamic Mouse Tracker */}
         <motion.div
-          animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[10%] right-[20%] w-[600px] h-[600px] rounded-full bg-primary/20 blur-[150px]"
+          className={`absolute top-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px] ${reaperMode ? "bg-primary/50" : "bg-primary/30"}`}
+          style={{
+            x: mouseX,
+            y: mouseY,
+            // Offset by half the width/height to center the glow on the cursor
+            marginLeft: "-250px",
+            marginTop: "-250px",
+          }}
         />
+
+        {/* Static Ambient Blobs */}
         <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+          animate={{ scale: [1, 1.05, 1], opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[-30%] left-[20%] w-[600px] h-[600px] rounded-full bg-yellow-400 blur-[150px]"
+        />
+
+        <motion.div
+          animate={{ scale: [1, 1.05, 1], opacity: [0.2, 0.4, 0.4] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[-20%] left-[-5%] w-[600px] h-[600px] rounded-full bg-blue-500 blur-[200px]"
+        />
+
+        <motion.div
+          animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
           transition={{
             duration: 10,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 1,
           }}
-          className="absolute bottom-[0%] left-[0%] w-[800px] h-[800px] rounded-full bg-accent/20 blur-[150px]"
+          className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] rounded-full bg-pink-700 blur-[150px]"
         />
       </div>
 
-      <div className="relative z-10 w-full grid lg:grid-cols-12 gap-12 flex-1 pt-4">
-        {/* Left/Center: Raw Details Text */}
+      {/* 3D SCENE */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5, delay: 3.8, ease: "easeOut" }}
+        className="absolute inset-0 w-full h-full z-0 hidden lg:block pointer-events-none"
+      >
+        <Scene3D reaperMode={reaperMode} />
+      </motion.div>
+
+      {/* Text Grid Container */}
+      <div className="relative z-10 w-full grid lg:grid-cols-12 gap-12 flex-1 pt-4 pointer-events-none">
+        {/* Left: Raw Details Text */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 3.2, ease: [0.16, 1, 0.3, 1] }}
-          className="lg:col-span-5 flex flex-col gap-6 self-start"
+          className="lg:col-span-6 xl:col-span-5 flex flex-col gap-6 self-start pointer-events-auto"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border w-max shadow-sm">
             <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
@@ -73,153 +128,15 @@ export default function HeroSection({ lang }: { lang: string }) {
             </span>
           </div>
 
-          <p className="text-sm md:text-base text-foreground/80 leading-loose max-w-xl tracking-wide mt-2">
+          <p className="text-sm md:text-base text-foreground/80 leading-loose max-w-xl tracking-wide mt-2 transition-colors duration-500">
             {dict.subhead}
           </p>
         </motion.div>
-
-        {/* Right/Center: Floating SaaS Mockups */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 3.4, ease: [0.16, 1, 0.3, 1] }}
-          className="lg:col-span-7 relative hidden lg:flex justify-end lg:-mr-8 self-center lg:mt-24 perspective-1000"
-        >
-          <div className="relative w-full max-w-[320px] h-[300px] origin-right scale-95 xl:scale-100">
-            {/* Main Dashboard Panel */}
-            <motion.div
-              animate={{ y: [-5, 5, -5] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="
-                absolute top-[-2.5rem] right-12 md:right-24 lg:right-32 
-                w-[380px] lg:w-[420px] bg-card/95 
-                backdrop-blur-sm border border-border 
-                rounded-xl shadow-2xl p-4 z-10 
-                transition-transform duration-700 hover:scale-[1.02]
-            "
-            >
-              <div className="flex justify-between items-center mb-6 border-b border-border pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded bg-primary/20 flex justify-center items-center">
-                    <svg
-                      className="w-4 h-4 text-primary"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-foreground text-sm font-semibold">
-                      {dict.mockupTitle}
-                    </h3>
-                    <p className="text-muted-foreground text-xs">
-                      {dict.mockupSub}
-                    </p>
-                  </div>
-                </div>
-                <span
-                  className={`text-accent text-xs bg-accent/10 px-2 py-1 rounded ${firaCode.className}`}
-                >
-                  Active
-                </span>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    label: "Data Integrity Check",
-                    value: "Verified",
-                    status: "accent",
-                  },
-                  {
-                    label: "Legacy DB Connection",
-                    value: "Secure",
-                    status: "accent",
-                  },
-                  {
-                    label: "Next Sync Cycle",
-                    value: "T-minus 5m",
-                    status: "muted-foreground",
-                  },
-                ].map((item, i) => (
-                  <div
-                    key={i}
-                    className="flex justify-between items-center text-sm"
-                  >
-                    <span className="text-muted-foreground text-sm font-medium">
-                      {item.label}
-                    </span>
-                    <span
-                      className={`text-${item.status} ${firaCode.className} text-xs`}
-                    >
-                      {item.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Floating Code Snippet Card */}
-            <motion.div
-              animate={{ y: [5, -5, 5] }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5,
-              }}
-              className="
-                absolute bottom-[-2rem] left-[-3rem] xl:left-[-2rem] 
-                w-[280px] bg-[#0d1117] border border-border 
-                rounded-xl shadow-2xl p-4 z-20 opacity-95 
-                transition-transform duration-500 hover:scale-[1.02]"
-            >
-              <div className="flex gap-1.5 mb-3">
-                <div className="w-2.5 h-2.5 rounded-full bg-destructive/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-warning/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-success/80" />
-              </div>
-              <pre
-                className={`text-[10px] leading-relaxed text-slate-300 ${firaCode.className} overflow-hidden`}
-              >
-                <code>
-                  <span className="text-pink-400">async function</span>{" "}
-                  <span className="text-blue-300">syncData</span>() {"{"}
-                  <br />
-                  &nbsp;&nbsp;<span className="text-pink-400">try</span> {"{"}
-                  <br />
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  <span className="text-pink-400">await</span>{" "}
-                  processBatch(payload);
-                  <br />
-                  &nbsp;&nbsp;&nbsp;&nbsp;logger.info(
-                  <span className="text-green-300">'Sync OK'</span>);
-                  <br />
-                  &nbsp;&nbsp;{"}"} <span className="text-pink-400">catch</span>{" "}
-                  (err) {"{"}
-                  <br />
-                  &nbsp;&nbsp;&nbsp;&nbsp;handleException(err);
-                  <br />
-                  &nbsp;&nbsp;{"}"}
-                  <br />
-                  {"}"}
-                </code>
-              </pre>
-            </motion.div>
-          </div>
-        </motion.div>
       </div>
 
-      {/* BOTTOM HALF: Anchored Massive Title & Scroll Indicator */}
+      {/* BOTTOM HALF */}
       <div className="relative z-10 w-full flex justify-between items-end mt-auto">
-        {/* Bottom Left: Mechanical Snapping Typography Effect */}
+        {/* Bottom Left */}
         <h1 className="uppercase flex flex-col overflow-hidden pb-4">
           <motion.span
             initial={{
