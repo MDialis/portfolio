@@ -26,16 +26,41 @@ export default function HeroSection({ lang }: { lang: string }) {
   const mouseY = useMotionValue(0);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    const { currentTarget, clientX, clientY } = e;
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
+    mouseX.set(e.pageX);
+    mouseY.set(e.pageY);
   };
 
   useEffect(() => {
     const toggleReaper = () => setReaperMode((prev) => !prev);
     window.addEventListener("toggleReaperMode", toggleReaper);
     return () => window.removeEventListener("toggleReaperMode", toggleReaper);
+  }, []);
+
+  // --- STAGGERED 3D PRELOAD ---
+  useEffect(() => {
+    // Preload the main abstract scene.
+    const preloadSplineAsset = async () => {
+      try {
+        await fetch(
+          "https://prod.spline.design/eBDJuZuqvXUGsJan/scene.splinecode",
+          { mode: "cors" },
+        );
+      } catch (error) {
+        console.warn("Spline preloading skipped");
+      }
+    };
+
+    // Preload the Reaper Easter Egg after 15 seconds.
+    const reaperTimer = setTimeout(() => {
+      fetch("https://prod.spline.design/0-YokRHnFzyrNMdY/scene.splinecode", {
+        mode: "cors",
+      }).catch(() => {});
+    }, 15000);
+
+    return () => {
+      preloadSplineAsset();
+      clearTimeout(reaperTimer);
+    };
   }, []);
 
   const content = {
@@ -68,7 +93,7 @@ export default function HeroSection({ lang }: { lang: string }) {
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         {/* Dynamic Mouse Tracker */}
         <motion.div
-          className={`absolute top-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px] ${reaperMode ? "bg-primary/50" : "bg-primary/30"}`}
+          className={`absolute top-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px] will-change-transform ${reaperMode ? "bg-primary/40" : "bg-primary/30"}`}
           style={{
             x: mouseX,
             y: mouseY,
@@ -79,18 +104,22 @@ export default function HeroSection({ lang }: { lang: string }) {
         />
 
         {/* Static Ambient Blobs */}
+
+        {/* Light Yellow - Top Left Rim */}
         <motion.div
           animate={{ scale: [1, 1.05, 1], opacity: [0.1, 0.2, 0.1] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-30%] left-[20%] w-[600px] h-[600px] rounded-full bg-yellow-400 blur-[150px]"
+          className="absolute top-[-30%] left-[20%] w-[500px] h-[500px] rounded-full bg-yellow-400 blur-[150px] will-change-transform"
         />
 
+        {/* Blue - Bottom Left Rim */}
         <motion.div
-          animate={{ scale: [1, 1.05, 1], opacity: [0.2, 0.4, 0.4] }}
+          animate={{ scale: [1, 1.05, 1], opacity: [0.15, 0.25, 0.15] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[-20%] left-[-5%] w-[600px] h-[600px] rounded-full bg-blue-500 blur-[200px]"
+          className="absolute bottom-[-20%] left-[-5%] w-[600px] h-[600px] rounded-full bg-blue-500 blur-[200px] will-change-transform"
         />
 
+        {/* Neon Pink - Bottom Right Rim */}
         <motion.div
           animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
           transition={{
@@ -98,7 +127,7 @@ export default function HeroSection({ lang }: { lang: string }) {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute bottom-[-10%] right-[-10%] w-[800px] h-[800px] rounded-full bg-pink-700 blur-[150px]"
+          className="absolute bottom-[-10%] right-[-20%] w-[800px] h-[800px] rounded-full bg-pink-700 blur-[150px] will-change-transform"
         />
       </div>
 
@@ -230,7 +259,9 @@ export default function HeroSection({ lang }: { lang: string }) {
             {dict.scroll}
           </span>
           <div className="w-px h-16 bg-border relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full bg-foreground animate-[bounce_2s_infinite]" />
+            <div
+              className={`absolute top-0 left-0 w-full h-full animate-[bounce_2s_infinite] ${reaperMode ? "bg-destructive" : "bg-foreground"}`}
+            />
           </div>
         </motion.div>
       </div>
