@@ -135,7 +135,7 @@ export default function HeroSection({ lang }: { lang: string }) {
       </div>
 
       {/* BOTTOM HALF */}
-      <div className="relative z-10 w-full flex justify-between items-end mt-auto">
+      <div className="relative z-10 w-full flex justify-between items-end mt-auto pointer-events-none">
         {/* Bottom Left */}
         <h1 className="uppercase flex flex-col overflow-hidden pb-4">
           <motion.span
@@ -156,7 +156,6 @@ export default function HeroSection({ lang }: { lang: string }) {
             transition={{
               y: { duration: 0.8, delay: 3.6, ease: [0.16, 1, 0.3, 1] },
               opacity: { duration: 0.8, delay: 3.6, ease: "easeOut" },
-              // Duration 0 forces an instant CSS update, eliminating layout thrashing
               fontWeight: {
                 duration: 0,
                 delay: 4.4,
@@ -223,7 +222,7 @@ export default function HeroSection({ lang }: { lang: string }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.7 }}
           transition={{ duration: 1, delay: 4.6 }}
-          className="hidden lg:flex flex-col items-center gap-3 mb-2 hover:opacity-100 transition-opacity"
+          className="hidden lg:flex flex-col items-center gap-3 mb-2 hover:opacity-100 transition-opacity pointer-events-auto"
         >
           <span
             className={`text-[10px] tracking-[0.25em] text-foreground uppercase style={{ writingMode: 'vertical-rl' }} ${firaCode.className}`}
