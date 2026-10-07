@@ -36,9 +36,8 @@ export default function HeroSection({ lang }: { lang: string }) {
     return () => window.removeEventListener("toggleReaperMode", toggleReaper);
   }, []);
 
-  // --- STAGGERED 3D PRELOAD ---
+  // --- SMART NETWORK-AWARE 3D PRELOAD ---
   useEffect(() => {
-    // Preload the main abstract scene.
     const preloadSplineAsset = async () => {
       try {
         await fetch(
@@ -50,15 +49,32 @@ export default function HeroSection({ lang }: { lang: string }) {
       }
     };
 
-    // Preload the Reaper Easter Egg after 15 seconds.
+    // Preload the Reaper Easter Egg after 10 seconds.
     const reaperTimer = setTimeout(() => {
-      fetch("https://prod.spline.design/0-YokRHnFzyrNMdY/scene.splinecode", {
-        mode: "cors",
-      }).catch(() => {});
-    }, 15000);
+      // Safely access the Network API (works in Chromium-based browsers & Android)
+      const connection =
+        (navigator as any).connection ||
+        (navigator as any).mozConnection ||
+        (navigator as any).webkitConnection;
+
+      // Check for metered data, data-saver mode, or cellular connections
+      const isCellular =
+        connection &&
+        (connection.saveData ||
+          connection.type === "cellular" ||
+          ["slow-2g", "2g", "3g", "4g"].includes(connection.effectiveType));
+
+      // Only preload the heavy Easter Egg if they are on a robust connection
+      if (!isCellular) {
+        fetch("https://prod.spline.design/0-YokRHnFzyrNMdY/scene.splinecode", {
+          mode: "cors",
+        }).catch(() => {});
+      }
+    }, 10000);
+
+    preloadSplineAsset();
 
     return () => {
-      preloadSplineAsset();
       clearTimeout(reaperTimer);
     };
   }, []);
@@ -166,7 +182,7 @@ export default function HeroSection({ lang }: { lang: string }) {
       {/* BOTTOM HALF */}
       <div className="relative z-10 w-full flex justify-between items-end mt-auto pointer-events-none">
         {/* Bottom Left */}
-        <h1 className="uppercase flex flex-col overflow-hidden pb-4">
+        <h1 className="uppercase flex flex-col overflow-hidden pb-4 pointer-events-none select-none">
           <motion.span
             initial={{
               y: "100%",
@@ -201,7 +217,7 @@ export default function HeroSection({ lang }: { lang: string }) {
               },
               scale: { duration: 0.3, delay: 4.4, ease: "backOut" },
             }}
-            className="text-[clamp(3.5rem,10vw,12rem)] leading-[0.9] text-foreground origin-left"
+            className="text-[clamp(3.5rem,10vw,12rem)] leading-[0.9] text-foreground origin-left pointer-events-none"
           >
             {dict.headlineLine1}
           </motion.span>
@@ -240,7 +256,7 @@ export default function HeroSection({ lang }: { lang: string }) {
               },
               scale: { duration: 0.3, delay: 4.5, ease: "backOut" },
             }}
-            className="text-[clamp(3.5rem,10vw,12rem)] leading-[0.8] text-muted-foreground/60 ml-2 md:ml-12 lg:ml-24 mr-12 origin-left"
+            className="text-[clamp(3.5rem,10vw,12rem)] leading-[0.8] text-muted-foreground/60 ml-2 md:ml-12 lg:ml-24 mr-12 origin-left pointer-events-none"
           >
             {dict.headlineLine2}
           </motion.span>
