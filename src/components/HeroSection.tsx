@@ -20,6 +20,7 @@ const inter = Inter({
 
 export default function HeroSection({ lang }: { lang: string }) {
   const [reaperMode, setReaperMode] = useState(false);
+  const [mount3D, setMount3D] = useState(false);
 
   // --- HIGH-PERFORMANCE MOUSE TRACKING ---
   const mouseX = useMotionValue(0);
@@ -34,6 +35,14 @@ export default function HeroSection({ lang }: { lang: string }) {
     const toggleReaper = () => setReaperMode((prev) => !prev);
     window.addEventListener("toggleReaperMode", toggleReaper);
     return () => window.removeEventListener("toggleReaperMode", toggleReaper);
+  }, []);
+
+  // Delay the heavy WebGL initialization until React finishes building the page
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMount3D(true);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   // --- SMART NETWORK-AWARE 3D PRELOAD ---
@@ -142,7 +151,7 @@ export default function HeroSection({ lang }: { lang: string }) {
         transition={{ duration: 1.5, delay: 3.8, ease: "easeOut" }}
         className="absolute inset-0 w-full h-full z-0 hidden lg:block pointer-events-none"
       >
-        <Scene3D reaperMode={reaperMode} />
+        {mount3D && <Scene3D reaperMode={reaperMode} />}
       </motion.div>
 
       {/* Text Grid Container */}
