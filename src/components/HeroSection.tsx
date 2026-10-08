@@ -38,20 +38,8 @@ export default function HeroSection({ lang }: { lang: string }) {
 
   // --- SMART NETWORK-AWARE 3D PRELOAD ---
   useEffect(() => {
-    const preloadSplineAsset = async () => {
-      try {
-        await fetch(
-          "https://prod.spline.design/eBDJuZuqvXUGsJan/scene.splinecode",
-          { mode: "cors" },
-        );
-      } catch (error) {
-        console.warn("Spline preloading skipped");
-      }
-    };
-
-    // Preload the Reaper Easter Egg after 10 seconds.
     const reaperTimer = setTimeout(() => {
-      // Safely access the Network API (works in Chromium-based browsers & Android)
+      // Safely access the Network API
       const connection =
         (navigator as any).connection ||
         (navigator as any).mozConnection ||
@@ -64,15 +52,15 @@ export default function HeroSection({ lang }: { lang: string }) {
           connection.type === "cellular" ||
           ["slow-2g", "2g", "3g", "4g"].includes(connection.effectiveType));
 
-      // Only preload the heavy Easter Egg if they are on a robust connection
+      // Only preload the heavy Easter Egg if on a robust connection
       if (!isCellular) {
         fetch("https://prod.spline.design/0-YokRHnFzyrNMdY/scene.splinecode", {
           mode: "cors",
-        }).catch(() => {});
+        })
+          .then((res) => res.blob())
+          .catch(() => {});
       }
-    }, 10000);
-
-    preloadSplineAsset();
+    }, 15000);
 
     return () => {
       clearTimeout(reaperTimer);
@@ -82,16 +70,16 @@ export default function HeroSection({ lang }: { lang: string }) {
   const content = {
     en: {
       badge: "Status: Available for Work",
-      headlineLine1: "SCALABLE",
-      headlineLine2: "SYSTEMS",
+      headlineLine1: "FULL-CYCLE",
+      headlineLine2: "ENGINEERING",
       subhead:
         "ENGINEERING FULL-STACK MODERNIZATION, DATA GOVERNANCE, AND RESILIENT WEB ARCHITECTURES.",
       scroll: "SCROLL TO EXPLORE",
     },
     pt: {
       badge: "Status: Disponível para Projetos",
-      headlineLine1: "SISTEMAS",
-      headlineLine2: "ESCALÁVEIS",
+      headlineLine1: "ENGENHARIA",
+      headlineLine2: "FULL CYCLE",
       subhead:
         "ENGENHARIA FOCADA EM MODERNIZAÇÃO FULL-STACK, GOVERNANÇA DE DADOS E ARQUITETURAS RESILIENTES.",
       scroll: "ROLE PARA EXPLORAR",
