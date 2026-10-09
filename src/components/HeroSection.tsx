@@ -3,6 +3,7 @@
 import { Fira_Code, Inter } from "next/font/google";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
+import CodeBlock from "@/components/CodeBlock";
 import { useHeroLogic } from "@/hooks/useHeroLogic";
 
 const Scene3D = dynamic(() => import("./Scene3D"), {
@@ -46,7 +47,7 @@ export default function HeroSection({ lang }: { lang: string }) {
   return (
     <section
       onMouseMove={handleMouseMove}
-      className={`relative h-screen w-full flex flex-col justify-between bg-background overflow-hidden ${inter.className} pt-32 pb-20 px-6 md:px-12 xl:px-20`}
+      className={`relative h-screen w-full flex flex-col justify-between bg-background overflow-hidden ${inter.className} pt-[15vh] pb-[8vh] px-6 md:px-12 xl:px-20`}
     >
       {/* Background Gradients & Mouse Glow */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
@@ -104,7 +105,7 @@ export default function HeroSection({ lang }: { lang: string }) {
         />
       </div>
 
-      {/* 3D Scene */}
+      {/* 3D Scene AND Code Mockup */}
       {hasGPU === true && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -114,6 +115,12 @@ export default function HeroSection({ lang }: { lang: string }) {
         >
           <Scene3D reaperMode={reaperMode} />
         </motion.div>
+      )}
+
+      {hasGPU === false && (
+        <div className="absolute inset-0 w-full h-full z-0 hidden lg:block pointer-events-none">
+          <CodeBlock reaperMode={reaperMode} />
+        </div>
       )}
 
       {/* Text Grid Container */}
@@ -141,7 +148,7 @@ export default function HeroSection({ lang }: { lang: string }) {
       {/* BOTTOM HALF */}
       <div className="relative z-10 w-full flex justify-between items-end mt-auto pointer-events-none">
         {/* Bottom Left */}
-        <h1 className="uppercase flex flex-col overflow-hidden pb-4 pointer-events-none select-none">
+        <h1 className="uppercase flex flex-col overflow-hidden pb-[2vh] pointer-events-none select-none">
           <motion.span
             initial={{
               y: "100%",
@@ -176,7 +183,7 @@ export default function HeroSection({ lang }: { lang: string }) {
               },
               scale: { duration: 0.3, delay: 4.4, ease: "backOut" },
             }}
-            className="text-[clamp(3.5rem,10vw,12rem)] leading-[0.9] text-foreground origin-left pointer-events-none"
+            className="text-[clamp(3rem,min(9vw,15vh),12rem)] leading-[0.9] text-foreground origin-left pointer-events-none"
           >
             {dict.headlineLine1}
           </motion.span>
@@ -215,7 +222,7 @@ export default function HeroSection({ lang }: { lang: string }) {
               },
               scale: { duration: 0.3, delay: 4.5, ease: "backOut" },
             }}
-            className="text-[clamp(3.5rem,10vw,12rem)] leading-[0.8] text-muted-foreground/60 ml-2 md:ml-12 lg:ml-24 mr-12 origin-left pointer-events-none"
+            className="text-[clamp(3rem,min(9vw,15vh),12rem)] leading-[0.8] text-muted-foreground/60 ml-2 md:ml-12 lg:ml-24 mr-12 origin-left pointer-events-none"
           >
             {dict.headlineLine2}
           </motion.span>
