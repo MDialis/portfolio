@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Fira_Code, Inter } from "next/font/google";
-import { motion, useMotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
+import { useHeroLogic } from "@/hooks/useHeroLogic";
 
 const Scene3D = dynamic(() => import("./Scene3D"), {
   ssr: false,
@@ -18,82 +18,28 @@ const inter = Inter({
   weight: ["200", "400", "500", "600", "700", "800", "900"],
 });
 
+const content = {
+  en: {
+    badge: "Status: Available for Work",
+    headlineLine1: "FULL-CYCLE",
+    headlineLine2: "ENGINEERING",
+    subhead:
+      "ENGINEERING FULL-STACK MODERNIZATION, DATA GOVERNANCE, AND RESILIENT WEB ARCHITECTURES.",
+    scroll: "SCROLL TO EXPLORE",
+  },
+  pt: {
+    badge: "Status: Disponível para Projetos",
+    headlineLine1: "ENGENHARIA",
+    headlineLine2: "FULL CYCLE",
+    subhead:
+      "ENGENHARIA FOCADA EM MODERNIZAÇÃO FULL-STACK, GOVERNANÇA DE DADOS E ARQUITETURAS RESILIENTES.",
+    scroll: "ROLE PARA EXPLORAR",
+  },
+};
+
 export default function HeroSection({ lang }: { lang: string }) {
-  const [reaperMode, setReaperMode] = useState(false);
-  const [mount3D, setMount3D] = useState(false);
-
-  // --- HIGH-PERFORMANCE MOUSE TRACKING ---
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    mouseX.set(e.pageX);
-    mouseY.set(e.pageY);
-  };
-
-  useEffect(() => {
-    const toggleReaper = () => setReaperMode((prev) => !prev);
-    window.addEventListener("toggleReaperMode", toggleReaper);
-    return () => window.removeEventListener("toggleReaperMode", toggleReaper);
-  }, []);
-
-  // Delay the heavy WebGL initialization until React finishes building the page
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMount3D(true);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // --- SMART NETWORK-AWARE 3D PRELOAD ---
-  useEffect(() => {
-    const reaperTimer = setTimeout(() => {
-      // Safely access the Network API
-      const connection =
-        (navigator as any).connection ||
-        (navigator as any).mozConnection ||
-        (navigator as any).webkitConnection;
-
-      // Check for metered data, data-saver mode, or cellular connections
-      const isCellular =
-        connection &&
-        (connection.saveData ||
-          connection.type === "cellular" ||
-          ["slow-2g", "2g", "3g", "4g"].includes(connection.effectiveType));
-
-      // Only preload the heavy Easter Egg if on a robust connection
-      if (!isCellular) {
-        fetch("https://prod.spline.design/0-YokRHnFzyrNMdY/scene.splinecode", {
-          mode: "cors",
-        })
-          .then((res) => res.blob())
-          .catch(() => {});
-      }
-    }, 15000);
-
-    return () => {
-      clearTimeout(reaperTimer);
-    };
-  }, []);
-
-  const content = {
-    en: {
-      badge: "Status: Available for Work",
-      headlineLine1: "FULL-CYCLE",
-      headlineLine2: "ENGINEERING",
-      subhead:
-        "ENGINEERING FULL-STACK MODERNIZATION, DATA GOVERNANCE, AND RESILIENT WEB ARCHITECTURES.",
-      scroll: "SCROLL TO EXPLORE",
-    },
-    pt: {
-      badge: "Status: Disponível para Projetos",
-      headlineLine1: "ENGENHARIA",
-      headlineLine2: "FULL CYCLE",
-      subhead:
-        "ENGENHARIA FOCADA EM MODERNIZAÇÃO FULL-STACK, GOVERNANÇA DE DADOS E ARQUITETURAS RESILIENTES.",
-      scroll: "ROLE PARA EXPLORAR",
-    },
-  };
+  const { reaperMode, hasGPU, mouseX, mouseY, handleMouseMove } =
+    useHeroLogic();
 
   const dict = content[lang as keyof typeof content];
 
@@ -106,30 +52,40 @@ export default function HeroSection({ lang }: { lang: string }) {
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         {/* Dynamic Mouse Tracker */}
         <motion.div
-          className={`absolute top-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px] will-change-transform ${reaperMode ? "bg-primary/40" : "bg-primary/30"}`}
+          className={`absolute top-0 left-0 rounded-full will-change-transform ${
+            hasGPU === false
+              ? "w-[300px] h-[300px] blur-[60px]"
+              : "w-[500px] h-[500px] blur-[120px]"
+          } ${reaperMode ? "bg-primary/40" : "bg-primary/30"}`}
           style={{
             x: mouseX,
             y: mouseY,
-            // Offset by half the width/height to center the glow on the cursor
-            marginLeft: "-250px",
-            marginTop: "-250px",
+            marginLeft: hasGPU === false ? "-150px" : "-250px",
+            marginTop: hasGPU === false ? "-150px" : "-250px",
           }}
         />
 
         {/* Static Ambient Blobs */}
-
         {/* Light Yellow - Top Left Rim */}
         <motion.div
           animate={{ scale: [1, 1.05, 1], opacity: [0.1, 0.2, 0.1] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-30%] left-[20%] w-[500px] h-[500px] rounded-full bg-yellow-400 blur-[150px] will-change-transform"
+          className={`absolute top-[-30%] left-[20%] rounded-full bg-yellow-400 will-change-transform ${
+            hasGPU === false
+              ? "w-[300px] h-[300px] blur-[60px]"
+              : "w-[500px] h-[500px] blur-[150px]"
+          }`}
         />
 
         {/* Blue - Bottom Left Rim */}
         <motion.div
           animate={{ scale: [1, 1.05, 1], opacity: [0.15, 0.25, 0.15] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[-20%] left-[-5%] w-[600px] h-[600px] rounded-full bg-blue-500 blur-[200px] will-change-transform"
+          className={`absolute bottom-[-20%] left-[-5%] rounded-full bg-blue-500 will-change-transform ${
+            hasGPU === false
+              ? "w-[400px] h-[400px] blur-[80px]"
+              : "w-[600px] h-[600px] blur-[200px]"
+          }`}
         />
 
         {/* Neon Pink - Bottom Right Rim */}
@@ -140,19 +96,25 @@ export default function HeroSection({ lang }: { lang: string }) {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute bottom-[-10%] right-[-20%] w-[800px] h-[800px] rounded-full bg-pink-700 blur-[150px] will-change-transform"
+          className={`absolute bottom-[-10%] right-[-20%] rounded-full bg-pink-700 will-change-transform ${
+            hasGPU === false
+              ? "w-[500px] h-[500px] blur-[80px]"
+              : "w-[800px] h-[800px] blur-[150px]"
+          }`}
         />
       </div>
 
-      {/* 3D SCENE */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, delay: 3.8, ease: "easeOut" }}
-        className="absolute inset-0 w-full h-full z-0 hidden lg:block pointer-events-none"
-      >
-        {mount3D && <Scene3D reaperMode={reaperMode} />}
-      </motion.div>
+      {/* 3D Scene */}
+      {hasGPU === true && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, delay: 3.8, ease: "easeOut" }}
+          className="absolute inset-0 w-full h-full z-0 hidden lg:block pointer-events-none"
+        >
+          <Scene3D reaperMode={reaperMode} />
+        </motion.div>
+      )}
 
       {/* Text Grid Container */}
       <div className="relative z-10 w-full grid lg:grid-cols-12 gap-12 flex-1 pt-4 pointer-events-none">
@@ -272,9 +234,7 @@ export default function HeroSection({ lang }: { lang: string }) {
             {dict.scroll}
           </span>
           <div className="w-px h-16 bg-border relative overflow-hidden">
-            <div
-              className={`absolute top-0 left-0 w-full h-full animate-[bounce_2s_infinite] ${reaperMode ? "bg-destructive" : "bg-foreground"}`}
-            />
+            <div className="absolute top-0 left-0 w-full h-full animate-[bounce_2s_infinite] bg-foreground" />
           </div>
         </motion.div>
       </div>
